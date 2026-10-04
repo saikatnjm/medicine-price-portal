@@ -1,0 +1,39 @@
+services:
+  # Development server with hot reload: `docker compose up --build`
+  app:
+    build:
+      context: .
+      target: dev
+    image: medicine-price-portal:dev
+    ports:
+      - "3000:3000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      NEXT_TELEMETRY_DISABLED: "1"
+      # Uncomment if file changes are not detected (e.g. Docker Desktop on macOS/Windows):
+      # WATCHPACK_POLLING: "true"
+    volumes:
+      - .:/app
+      # Keep container-installed dependencies and build cache out of the host folder.
+      - node_modules:/app/node_modules
+      - next_cache:/app/.next
+
+  # Production image, for verifying the real build locally:
+  # `docker compose --profile prod up --build web`
+  web:
+    profiles: ["prod"]
+    build:
+      context: .
+      target: runner
+      args:
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3001}
+        SITE_INDEXABLE: ${SITE_INDEXABLE:-false}
+    image: medicine-price-portal:prod
+    ports:
+      - "3001:3000"
+
+volumes:
+  node_modules:
+  next_cache:

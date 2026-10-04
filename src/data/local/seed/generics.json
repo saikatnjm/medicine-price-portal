@@ -1,0 +1,158 @@
+[
+  {
+    "id": "gen_paracetamol",
+    "slug": "paracetamol",
+    "name": "Paracetamol",
+    "description": "Analgesic and antipyretic."
+  },
+  {
+    "id": "gen_paracetamol_caffeine",
+    "slug": "paracetamol-caffeine",
+    "name": "Paracetamol + Caffeine",
+    "description": "Paracetamol combined with caffeine."
+  },
+  {
+    "id": "gen_omeprazole",
+    "slug": "omeprazole",
+    "name": "Omeprazole",
+    "description": "Proton pump inhibitor."
+  },
+  {
+    "id": "gen_esomeprazole",
+    "slug": "esomeprazole",
+    "name": "Esomeprazole",
+    "description": "Proton pump inhibitor."
+  },
+  {
+    "id": "gen_pantoprazole",
+    "slug": "pantoprazole",
+    "name": "Pantoprazole",
+    "description": "Proton pump inhibitor."
+  },
+  {
+    "id": "gen_rabeprazole",
+    "slug": "rabeprazole",
+    "name": "Rabeprazole",
+    "description": "Proton pump inhibitor."
+  },
+  {
+    "id": "gen_fexofenadine",
+    "slug": "fexofenadine",
+    "name": "Fexofenadine Hydrochloride",
+    "description": "Second-generation antihistamine."
+  },
+  {
+    "id": "gen_cetirizine",
+    "slug": "cetirizine",
+    "name": "Cetirizine Hydrochloride",
+    "description": "Second-generation antihistamine."
+  },
+  {
+    "id": "gen_montelukast",
+    "slug": "montelukast",
+    "name": "Montelukast",
+    "description": "Leukotriene receptor antagonist."
+  },
+  {
+    "id": "gen_amlodipine",
+    "slug": "amlodipine",
+    "name": "Amlodipine",
+    "description": "Calcium channel blocker."
+  },
+  {
+    "id": "gen_losartan",
+    "slug": "losartan",
+    "name": "Losartan Potassium",
+    "description": "Angiotensin II receptor blocker."
+  },
+  {
+    "id": "gen_metformin",
+    "slug": "metformin",
+    "name": "Metformin Hydrochloride",
+    "description": "Biguanide antidiabetic."
+  },
+  {
+    "id": "gen_atorvastatin",
+    "slug": "atorvastatin",
+    "name": "Atorvastatin",
+    "description": "HMG-CoA reductase inhibitor (statin)."
+  },
+  {
+    "id": "gen_azithromycin",
+    "slug": "azithromycin",
+    "name": "Azithromycin",
+    "description": "Macrolide antibiotic."
+  },
+  {
+    "id": "gen_cefixime",
+    "slug": "cefixime",
+    "name": "Cefixime",
+    "description": "Third-generation cephalosporin antibiotic."
+  },
+  {
+    "id": "gen_ciprofloxacin",
+    "slug": "ciprofloxacin",
+    "name": "Ciprofloxacin",
+    "description": "Fluoroquinolone antibiotic."
+  },
+  {
+    "id": "gen_amoxicillin",
+    "slug": "amoxicillin",
+    "name": "Amoxicillin",
+    "description": "Penicillin antibiotic."
+  },
+  {
+    "id": "gen_metronidazole",
+    "slug": "metronidazole",
+    "name": "Metronidazole",
+    "description": "Nitroimidazole antimicrobial."
+  },
+  {
+    "id": "gen_domperidone",
+    "slug": "domperidone",
+    "name": "Domperidone",
+    "description": "Dopamine antagonist."
+  },
+  {
+    "id": "gen_ketorolac",
+    "slug": "ketorolac",
+    "name": "Ketorolac Tromethamine",
+    "description": "Non-steroidal anti-inflammatory drug (NSAID)."
+  },
+  {
+    "id": "gen_diclofenac",
+    "slug": "diclofenac",
+    "name": "Diclofenac Sodium",
+    "description": "Non-steroidal anti-inflammatory drug (NSAID)."
+  },
+  {
+    "id": "gen_vitamin_c",
+    "slug": "vitamin-c",
+    "name": "Ascorbic Acid (Vitamin C)",
+    "description": "Vitamin."
+  },
+  {
+    "id": "gen_calcium_vitamin_d3",
+    "slug": "calcium-vitamin-d3",
+    "name": "Calcium Carbonate + Vitamin D3",
+    "description": "Mineral and vitamin combination."
+  },
+  {
+    "id": "gen_salbutamol",
+    "slug": "salbutamol",
+    "name": "Salbutamol",
+    "description": "Short-acting beta-2 agonist."
+  },
+  {
+    "id": "gen_clopidogrel",
+    "slug": "clopidogrel",
+    "name": "Clopidogrel",
+    "description": "Antiplatelet agent."
+  },
+  {
+    "id": "gen_levothyroxine",
+    "slug": "levothyroxine",
+    "name": "Levothyroxine Sodium",
+    "description": "Thyroid hormone."
+  }
+]

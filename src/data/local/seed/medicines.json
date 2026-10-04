@@ -1,0 +1,1379 @@
+[
+  {
+    "id": "med_napa_500mg",
+    "slug": "napa-500mg",
+    "brandName": "Napa",
+    "genericId": "gen_paracetamol",
+    "manufacturerId": "mfr_beximco",
+    "strength": "500 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Pain & fever",
+    "description": "Napa 500 mg tablet by Beximco Pharmaceuticals Ltd., containing Paracetamol.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_napa_120mg_5ml_suspension",
+    "slug": "napa-120mg-5ml-suspension",
+    "brandName": "Napa",
+    "genericId": "gen_paracetamol",
+    "manufacturerId": "mfr_beximco",
+    "strength": "120 mg/5 ml",
+    "dosageForm": "suspension",
+    "packSize": {
+      "quantity": 60,
+      "unit": "ml"
+    },
+    "category": "Pain & fever",
+    "description": "Napa 120 mg/5 ml oral suspension by Beximco Pharmaceuticals Ltd., containing Paracetamol.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_napa_extend_665mg",
+    "slug": "napa-extend-665mg",
+    "brandName": "Napa Extend",
+    "genericId": "gen_paracetamol",
+    "manufacturerId": "mfr_beximco",
+    "strength": "665 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Pain & fever",
+    "description": "Napa Extend 665 mg tablet by Beximco Pharmaceuticals Ltd., containing Paracetamol. Extended-release tablet.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_napa_rapid_500mg",
+    "slug": "napa-rapid-500mg",
+    "brandName": "Napa Rapid",
+    "genericId": "gen_paracetamol",
+    "manufacturerId": "mfr_beximco",
+    "strength": "500 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Pain & fever",
+    "description": "Napa Rapid 500 mg tablet by Beximco Pharmaceuticals Ltd., containing Paracetamol.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_ace_500mg",
+    "slug": "ace-500mg",
+    "brandName": "Ace",
+    "genericId": "gen_paracetamol",
+    "manufacturerId": "mfr_square",
+    "strength": "500 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Pain & fever",
+    "description": "Ace 500 mg tablet by Square Pharmaceuticals PLC, containing Paracetamol.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_ace_120mg_5ml_suspension",
+    "slug": "ace-120mg-5ml-suspension",
+    "brandName": "Ace",
+    "genericId": "gen_paracetamol",
+    "manufacturerId": "mfr_square",
+    "strength": "120 mg/5 ml",
+    "dosageForm": "suspension",
+    "packSize": {
+      "quantity": 60,
+      "unit": "ml"
+    },
+    "category": "Pain & fever",
+    "description": "Ace 120 mg/5 ml oral suspension by Square Pharmaceuticals PLC, containing Paracetamol.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_ace_xr_665mg",
+    "slug": "ace-xr-665mg",
+    "brandName": "Ace XR",
+    "genericId": "gen_paracetamol",
+    "manufacturerId": "mfr_square",
+    "strength": "665 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Pain & fever",
+    "description": "Ace XR 665 mg tablet by Square Pharmaceuticals PLC, containing Paracetamol. Extended-release tablet.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_fast_500mg",
+    "slug": "fast-500mg",
+    "brandName": "Fast",
+    "genericId": "gen_paracetamol",
+    "manufacturerId": "mfr_acme",
+    "strength": "500 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Pain & fever",
+    "description": "Fast 500 mg tablet by The ACME Laboratories Ltd., containing Paracetamol.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_renova_500mg",
+    "slug": "renova-500mg",
+    "brandName": "Renova",
+    "genericId": "gen_paracetamol",
+    "manufacturerId": "mfr_opsonin",
+    "strength": "500 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Pain & fever",
+    "description": "Renova 500 mg tablet by Opsonin Pharma Ltd., containing Paracetamol.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_reset_500mg",
+    "slug": "reset-500mg",
+    "brandName": "Reset",
+    "genericId": "gen_paracetamol",
+    "manufacturerId": "mfr_incepta",
+    "strength": "500 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Pain & fever",
+    "description": "Reset 500 mg tablet by Incepta Pharmaceuticals Ltd., containing Paracetamol.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_napa_extra_500mg_65mg",
+    "slug": "napa-extra-500mg-65mg",
+    "brandName": "Napa Extra",
+    "genericId": "gen_paracetamol_caffeine",
+    "manufacturerId": "mfr_beximco",
+    "strength": "500 mg + 65 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Pain & fever",
+    "description": "Napa Extra 500 mg + 65 mg tablet by Beximco Pharmaceuticals Ltd., containing Paracetamol + Caffeine.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_ace_plus_500mg_65mg",
+    "slug": "ace-plus-500mg-65mg",
+    "brandName": "Ace Plus",
+    "genericId": "gen_paracetamol_caffeine",
+    "manufacturerId": "mfr_square",
+    "strength": "500 mg + 65 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Pain & fever",
+    "description": "Ace Plus 500 mg + 65 mg tablet by Square Pharmaceuticals PLC, containing Paracetamol + Caffeine.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_seclo_20mg",
+    "slug": "seclo-20mg",
+    "brandName": "Seclo",
+    "genericId": "gen_omeprazole",
+    "manufacturerId": "mfr_square",
+    "strength": "20 mg",
+    "dosageForm": "capsule",
+    "packSize": {
+      "quantity": 10,
+      "unit": "capsules"
+    },
+    "category": "Gastrointestinal",
+    "description": "Seclo 20 mg capsule by Square Pharmaceuticals PLC, containing Omeprazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_seclo_40mg",
+    "slug": "seclo-40mg",
+    "brandName": "Seclo",
+    "genericId": "gen_omeprazole",
+    "manufacturerId": "mfr_square",
+    "strength": "40 mg",
+    "dosageForm": "capsule",
+    "packSize": {
+      "quantity": 10,
+      "unit": "capsules"
+    },
+    "category": "Gastrointestinal",
+    "description": "Seclo 40 mg capsule by Square Pharmaceuticals PLC, containing Omeprazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_losectil_20mg",
+    "slug": "losectil-20mg",
+    "brandName": "Losectil",
+    "genericId": "gen_omeprazole",
+    "manufacturerId": "mfr_eskayef",
+    "strength": "20 mg",
+    "dosageForm": "capsule",
+    "packSize": {
+      "quantity": 10,
+      "unit": "capsules"
+    },
+    "category": "Gastrointestinal",
+    "description": "Losectil 20 mg capsule by Eskayef Pharmaceuticals Ltd., containing Omeprazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_losectil_40mg",
+    "slug": "losectil-40mg",
+    "brandName": "Losectil",
+    "genericId": "gen_omeprazole",
+    "manufacturerId": "mfr_eskayef",
+    "strength": "40 mg",
+    "dosageForm": "capsule",
+    "packSize": {
+      "quantity": 10,
+      "unit": "capsules"
+    },
+    "category": "Gastrointestinal",
+    "description": "Losectil 40 mg capsule by Eskayef Pharmaceuticals Ltd., containing Omeprazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_proceptin_20mg",
+    "slug": "proceptin-20mg",
+    "brandName": "Proceptin",
+    "genericId": "gen_omeprazole",
+    "manufacturerId": "mfr_general",
+    "strength": "20 mg",
+    "dosageForm": "capsule",
+    "packSize": {
+      "quantity": 10,
+      "unit": "capsules"
+    },
+    "category": "Gastrointestinal",
+    "description": "Proceptin 20 mg capsule by General Pharmaceuticals Ltd., containing Omeprazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_sergel_20mg",
+    "slug": "sergel-20mg",
+    "brandName": "Sergel",
+    "genericId": "gen_esomeprazole",
+    "manufacturerId": "mfr_healthcare",
+    "strength": "20 mg",
+    "dosageForm": "capsule",
+    "packSize": {
+      "quantity": 10,
+      "unit": "capsules"
+    },
+    "category": "Gastrointestinal",
+    "description": "Sergel 20 mg capsule by Healthcare Pharmaceuticals Ltd., containing Esomeprazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_sergel_40mg",
+    "slug": "sergel-40mg",
+    "brandName": "Sergel",
+    "genericId": "gen_esomeprazole",
+    "manufacturerId": "mfr_healthcare",
+    "strength": "40 mg",
+    "dosageForm": "capsule",
+    "packSize": {
+      "quantity": 10,
+      "unit": "capsules"
+    },
+    "category": "Gastrointestinal",
+    "description": "Sergel 40 mg capsule by Healthcare Pharmaceuticals Ltd., containing Esomeprazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_maxpro_20mg",
+    "slug": "maxpro-20mg",
+    "brandName": "Maxpro",
+    "genericId": "gen_esomeprazole",
+    "manufacturerId": "mfr_renata",
+    "strength": "20 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Gastrointestinal",
+    "description": "Maxpro 20 mg tablet by Renata PLC, containing Esomeprazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_maxpro_40mg",
+    "slug": "maxpro-40mg",
+    "brandName": "Maxpro",
+    "genericId": "gen_esomeprazole",
+    "manufacturerId": "mfr_renata",
+    "strength": "40 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Gastrointestinal",
+    "description": "Maxpro 40 mg tablet by Renata PLC, containing Esomeprazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_nexum_20mg",
+    "slug": "nexum-20mg",
+    "brandName": "Nexum",
+    "genericId": "gen_esomeprazole",
+    "manufacturerId": "mfr_square",
+    "strength": "20 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Gastrointestinal",
+    "description": "Nexum 20 mg tablet by Square Pharmaceuticals PLC, containing Esomeprazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_nexum_40mg",
+    "slug": "nexum-40mg",
+    "brandName": "Nexum",
+    "genericId": "gen_esomeprazole",
+    "manufacturerId": "mfr_square",
+    "strength": "40 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Gastrointestinal",
+    "description": "Nexum 40 mg tablet by Square Pharmaceuticals PLC, containing Esomeprazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_esoral_20mg",
+    "slug": "esoral-20mg",
+    "brandName": "Esoral",
+    "genericId": "gen_esomeprazole",
+    "manufacturerId": "mfr_eskayef",
+    "strength": "20 mg",
+    "dosageForm": "capsule",
+    "packSize": {
+      "quantity": 10,
+      "unit": "capsules"
+    },
+    "category": "Gastrointestinal",
+    "description": "Esoral 20 mg capsule by Eskayef Pharmaceuticals Ltd., containing Esomeprazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_esoral_40mg",
+    "slug": "esoral-40mg",
+    "brandName": "Esoral",
+    "genericId": "gen_esomeprazole",
+    "manufacturerId": "mfr_eskayef",
+    "strength": "40 mg",
+    "dosageForm": "capsule",
+    "packSize": {
+      "quantity": 10,
+      "unit": "capsules"
+    },
+    "category": "Gastrointestinal",
+    "description": "Esoral 40 mg capsule by Eskayef Pharmaceuticals Ltd., containing Esomeprazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_pantonix_20mg",
+    "slug": "pantonix-20mg",
+    "brandName": "Pantonix",
+    "genericId": "gen_pantoprazole",
+    "manufacturerId": "mfr_incepta",
+    "strength": "20 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Gastrointestinal",
+    "description": "Pantonix 20 mg tablet by Incepta Pharmaceuticals Ltd., containing Pantoprazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_pantonix_40mg",
+    "slug": "pantonix-40mg",
+    "brandName": "Pantonix",
+    "genericId": "gen_pantoprazole",
+    "manufacturerId": "mfr_incepta",
+    "strength": "40 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Gastrointestinal",
+    "description": "Pantonix 40 mg tablet by Incepta Pharmaceuticals Ltd., containing Pantoprazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_finix_20mg",
+    "slug": "finix-20mg",
+    "brandName": "Finix",
+    "genericId": "gen_rabeprazole",
+    "manufacturerId": "mfr_opsonin",
+    "strength": "20 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Gastrointestinal",
+    "description": "Finix 20 mg tablet by Opsonin Pharma Ltd., containing Rabeprazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_fexo_120mg",
+    "slug": "fexo-120mg",
+    "brandName": "Fexo",
+    "genericId": "gen_fexofenadine",
+    "manufacturerId": "mfr_square",
+    "strength": "120 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Allergy",
+    "description": "Fexo 120 mg tablet by Square Pharmaceuticals PLC, containing Fexofenadine Hydrochloride.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_fexo_180mg",
+    "slug": "fexo-180mg",
+    "brandName": "Fexo",
+    "genericId": "gen_fexofenadine",
+    "manufacturerId": "mfr_square",
+    "strength": "180 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Allergy",
+    "description": "Fexo 180 mg tablet by Square Pharmaceuticals PLC, containing Fexofenadine Hydrochloride.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_fexo_30mg_5ml_suspension",
+    "slug": "fexo-30mg-5ml-suspension",
+    "brandName": "Fexo",
+    "genericId": "gen_fexofenadine",
+    "manufacturerId": "mfr_square",
+    "strength": "30 mg/5 ml",
+    "dosageForm": "suspension",
+    "packSize": {
+      "quantity": 50,
+      "unit": "ml"
+    },
+    "category": "Allergy",
+    "description": "Fexo 30 mg/5 ml oral suspension by Square Pharmaceuticals PLC, containing Fexofenadine Hydrochloride.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_fenadin_120mg",
+    "slug": "fenadin-120mg",
+    "brandName": "Fenadin",
+    "genericId": "gen_fexofenadine",
+    "manufacturerId": "mfr_renata",
+    "strength": "120 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Allergy",
+    "description": "Fenadin 120 mg tablet by Renata PLC, containing Fexofenadine Hydrochloride.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_fenadin_180mg",
+    "slug": "fenadin-180mg",
+    "brandName": "Fenadin",
+    "genericId": "gen_fexofenadine",
+    "manufacturerId": "mfr_renata",
+    "strength": "180 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Allergy",
+    "description": "Fenadin 180 mg tablet by Renata PLC, containing Fexofenadine Hydrochloride.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_alatrol_10mg",
+    "slug": "alatrol-10mg",
+    "brandName": "Alatrol",
+    "genericId": "gen_cetirizine",
+    "manufacturerId": "mfr_square",
+    "strength": "10 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Allergy",
+    "description": "Alatrol 10 mg tablet by Square Pharmaceuticals PLC, containing Cetirizine Hydrochloride.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_alatrol_5mg_5ml_syrup",
+    "slug": "alatrol-5mg-5ml-syrup",
+    "brandName": "Alatrol",
+    "genericId": "gen_cetirizine",
+    "manufacturerId": "mfr_square",
+    "strength": "5 mg/5 ml",
+    "dosageForm": "syrup",
+    "packSize": {
+      "quantity": 60,
+      "unit": "ml"
+    },
+    "category": "Allergy",
+    "description": "Alatrol 5 mg/5 ml syrup by Square Pharmaceuticals PLC, containing Cetirizine Hydrochloride.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_atrizin_10mg",
+    "slug": "atrizin-10mg",
+    "brandName": "Atrizin",
+    "genericId": "gen_cetirizine",
+    "manufacturerId": "mfr_beximco",
+    "strength": "10 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Allergy",
+    "description": "Atrizin 10 mg tablet by Beximco Pharmaceuticals Ltd., containing Cetirizine Hydrochloride.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_monas_10mg",
+    "slug": "monas-10mg",
+    "brandName": "Monas",
+    "genericId": "gen_montelukast",
+    "manufacturerId": "mfr_acme",
+    "strength": "10 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Respiratory",
+    "description": "Monas 10 mg tablet by The ACME Laboratories Ltd., containing Montelukast.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_monas_5mg",
+    "slug": "monas-5mg",
+    "brandName": "Monas",
+    "genericId": "gen_montelukast",
+    "manufacturerId": "mfr_acme",
+    "strength": "5 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Respiratory",
+    "description": "Monas 5 mg tablet by The ACME Laboratories Ltd., containing Montelukast. Chewable tablet.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_monas_4mg",
+    "slug": "monas-4mg",
+    "brandName": "Monas",
+    "genericId": "gen_montelukast",
+    "manufacturerId": "mfr_acme",
+    "strength": "4 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Respiratory",
+    "description": "Monas 4 mg tablet by The ACME Laboratories Ltd., containing Montelukast. Chewable tablet.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_amdocal_5mg",
+    "slug": "amdocal-5mg",
+    "brandName": "Amdocal",
+    "genericId": "gen_amlodipine",
+    "manufacturerId": "mfr_beximco",
+    "strength": "5 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Cardiovascular",
+    "description": "Amdocal 5 mg tablet by Beximco Pharmaceuticals Ltd., containing Amlodipine.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_amdocal_10mg",
+    "slug": "amdocal-10mg",
+    "brandName": "Amdocal",
+    "genericId": "gen_amlodipine",
+    "manufacturerId": "mfr_beximco",
+    "strength": "10 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Cardiovascular",
+    "description": "Amdocal 10 mg tablet by Beximco Pharmaceuticals Ltd., containing Amlodipine.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_camlodin_5mg",
+    "slug": "camlodin-5mg",
+    "brandName": "Camlodin",
+    "genericId": "gen_amlodipine",
+    "manufacturerId": "mfr_square",
+    "strength": "5 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Cardiovascular",
+    "description": "Camlodin 5 mg tablet by Square Pharmaceuticals PLC, containing Amlodipine.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_camlodin_10mg",
+    "slug": "camlodin-10mg",
+    "brandName": "Camlodin",
+    "genericId": "gen_amlodipine",
+    "manufacturerId": "mfr_square",
+    "strength": "10 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Cardiovascular",
+    "description": "Camlodin 10 mg tablet by Square Pharmaceuticals PLC, containing Amlodipine.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_osartil_25mg",
+    "slug": "osartil-25mg",
+    "brandName": "Osartil",
+    "genericId": "gen_losartan",
+    "manufacturerId": "mfr_incepta",
+    "strength": "25 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Cardiovascular",
+    "description": "Osartil 25 mg tablet by Incepta Pharmaceuticals Ltd., containing Losartan Potassium.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_osartil_50mg",
+    "slug": "osartil-50mg",
+    "brandName": "Osartil",
+    "genericId": "gen_losartan",
+    "manufacturerId": "mfr_incepta",
+    "strength": "50 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Cardiovascular",
+    "description": "Osartil 50 mg tablet by Incepta Pharmaceuticals Ltd., containing Losartan Potassium.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_angilock_25mg",
+    "slug": "angilock-25mg",
+    "brandName": "Angilock",
+    "genericId": "gen_losartan",
+    "manufacturerId": "mfr_square",
+    "strength": "25 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Cardiovascular",
+    "description": "Angilock 25 mg tablet by Square Pharmaceuticals PLC, containing Losartan Potassium.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_angilock_50mg",
+    "slug": "angilock-50mg",
+    "brandName": "Angilock",
+    "genericId": "gen_losartan",
+    "manufacturerId": "mfr_square",
+    "strength": "50 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Cardiovascular",
+    "description": "Angilock 50 mg tablet by Square Pharmaceuticals PLC, containing Losartan Potassium.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_comet_500mg",
+    "slug": "comet-500mg",
+    "brandName": "Comet",
+    "genericId": "gen_metformin",
+    "manufacturerId": "mfr_square",
+    "strength": "500 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Diabetes",
+    "description": "Comet 500 mg tablet by Square Pharmaceuticals PLC, containing Metformin Hydrochloride.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_comet_850mg",
+    "slug": "comet-850mg",
+    "brandName": "Comet",
+    "genericId": "gen_metformin",
+    "manufacturerId": "mfr_square",
+    "strength": "850 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Diabetes",
+    "description": "Comet 850 mg tablet by Square Pharmaceuticals PLC, containing Metformin Hydrochloride.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_comet_1000mg",
+    "slug": "comet-1000mg",
+    "brandName": "Comet",
+    "genericId": "gen_metformin",
+    "manufacturerId": "mfr_square",
+    "strength": "1000 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Diabetes",
+    "description": "Comet 1000 mg tablet by Square Pharmaceuticals PLC, containing Metformin Hydrochloride.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_atova_10mg",
+    "slug": "atova-10mg",
+    "brandName": "Atova",
+    "genericId": "gen_atorvastatin",
+    "manufacturerId": "mfr_beximco",
+    "strength": "10 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Cardiovascular",
+    "description": "Atova 10 mg tablet by Beximco Pharmaceuticals Ltd., containing Atorvastatin.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_atova_20mg",
+    "slug": "atova-20mg",
+    "brandName": "Atova",
+    "genericId": "gen_atorvastatin",
+    "manufacturerId": "mfr_beximco",
+    "strength": "20 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Cardiovascular",
+    "description": "Atova 20 mg tablet by Beximco Pharmaceuticals Ltd., containing Atorvastatin.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_atova_40mg",
+    "slug": "atova-40mg",
+    "brandName": "Atova",
+    "genericId": "gen_atorvastatin",
+    "manufacturerId": "mfr_beximco",
+    "strength": "40 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Cardiovascular",
+    "description": "Atova 40 mg tablet by Beximco Pharmaceuticals Ltd., containing Atorvastatin.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_zimax_500mg",
+    "slug": "zimax-500mg",
+    "brandName": "Zimax",
+    "genericId": "gen_azithromycin",
+    "manufacturerId": "mfr_square",
+    "strength": "500 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 6,
+      "unit": "tablets"
+    },
+    "category": "Antibiotics",
+    "description": "Zimax 500 mg tablet by Square Pharmaceuticals PLC, containing Azithromycin.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_zimax_200mg_5ml_suspension",
+    "slug": "zimax-200mg-5ml-suspension",
+    "brandName": "Zimax",
+    "genericId": "gen_azithromycin",
+    "manufacturerId": "mfr_square",
+    "strength": "200 mg/5 ml",
+    "dosageForm": "suspension",
+    "packSize": {
+      "quantity": 15,
+      "unit": "ml"
+    },
+    "category": "Antibiotics",
+    "description": "Zimax 200 mg/5 ml oral suspension by Square Pharmaceuticals PLC, containing Azithromycin.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_azithrocin_500mg",
+    "slug": "azithrocin-500mg",
+    "brandName": "Azithrocin",
+    "genericId": "gen_azithromycin",
+    "manufacturerId": "mfr_beximco",
+    "strength": "500 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 6,
+      "unit": "tablets"
+    },
+    "category": "Antibiotics",
+    "description": "Azithrocin 500 mg tablet by Beximco Pharmaceuticals Ltd., containing Azithromycin.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_tridosil_500mg",
+    "slug": "tridosil-500mg",
+    "brandName": "Tridosil",
+    "genericId": "gen_azithromycin",
+    "manufacturerId": "mfr_incepta",
+    "strength": "500 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 6,
+      "unit": "tablets"
+    },
+    "category": "Antibiotics",
+    "description": "Tridosil 500 mg tablet by Incepta Pharmaceuticals Ltd., containing Azithromycin.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_cef_3_200mg",
+    "slug": "cef-3-200mg",
+    "brandName": "Cef-3",
+    "genericId": "gen_cefixime",
+    "manufacturerId": "mfr_square",
+    "strength": "200 mg",
+    "dosageForm": "capsule",
+    "packSize": {
+      "quantity": 10,
+      "unit": "capsules"
+    },
+    "category": "Antibiotics",
+    "description": "Cef-3 200 mg capsule by Square Pharmaceuticals PLC, containing Cefixime.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_cef_3_100mg_5ml_suspension",
+    "slug": "cef-3-100mg-5ml-suspension",
+    "brandName": "Cef-3",
+    "genericId": "gen_cefixime",
+    "manufacturerId": "mfr_square",
+    "strength": "100 mg/5 ml",
+    "dosageForm": "suspension",
+    "packSize": {
+      "quantity": 50,
+      "unit": "ml"
+    },
+    "category": "Antibiotics",
+    "description": "Cef-3 100 mg/5 ml oral suspension by Square Pharmaceuticals PLC, containing Cefixime.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_triocim_200mg",
+    "slug": "triocim-200mg",
+    "brandName": "Triocim",
+    "genericId": "gen_cefixime",
+    "manufacturerId": "mfr_eskayef",
+    "strength": "200 mg",
+    "dosageForm": "capsule",
+    "packSize": {
+      "quantity": 10,
+      "unit": "capsules"
+    },
+    "category": "Antibiotics",
+    "description": "Triocim 200 mg capsule by Eskayef Pharmaceuticals Ltd., containing Cefixime.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_ciprocin_250mg",
+    "slug": "ciprocin-250mg",
+    "brandName": "Ciprocin",
+    "genericId": "gen_ciprofloxacin",
+    "manufacturerId": "mfr_square",
+    "strength": "250 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Antibiotics",
+    "description": "Ciprocin 250 mg tablet by Square Pharmaceuticals PLC, containing Ciprofloxacin.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_ciprocin_500mg",
+    "slug": "ciprocin-500mg",
+    "brandName": "Ciprocin",
+    "genericId": "gen_ciprofloxacin",
+    "manufacturerId": "mfr_square",
+    "strength": "500 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Antibiotics",
+    "description": "Ciprocin 500 mg tablet by Square Pharmaceuticals PLC, containing Ciprofloxacin.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_neofloxin_250mg",
+    "slug": "neofloxin-250mg",
+    "brandName": "Neofloxin",
+    "genericId": "gen_ciprofloxacin",
+    "manufacturerId": "mfr_beximco",
+    "strength": "250 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Antibiotics",
+    "description": "Neofloxin 250 mg tablet by Beximco Pharmaceuticals Ltd., containing Ciprofloxacin.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_neofloxin_500mg",
+    "slug": "neofloxin-500mg",
+    "brandName": "Neofloxin",
+    "genericId": "gen_ciprofloxacin",
+    "manufacturerId": "mfr_beximco",
+    "strength": "500 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Antibiotics",
+    "description": "Neofloxin 500 mg tablet by Beximco Pharmaceuticals Ltd., containing Ciprofloxacin.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_moxacil_250mg",
+    "slug": "moxacil-250mg",
+    "brandName": "Moxacil",
+    "genericId": "gen_amoxicillin",
+    "manufacturerId": "mfr_square",
+    "strength": "250 mg",
+    "dosageForm": "capsule",
+    "packSize": {
+      "quantity": 10,
+      "unit": "capsules"
+    },
+    "category": "Antibiotics",
+    "description": "Moxacil 250 mg capsule by Square Pharmaceuticals PLC, containing Amoxicillin.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_moxacil_500mg",
+    "slug": "moxacil-500mg",
+    "brandName": "Moxacil",
+    "genericId": "gen_amoxicillin",
+    "manufacturerId": "mfr_square",
+    "strength": "500 mg",
+    "dosageForm": "capsule",
+    "packSize": {
+      "quantity": 10,
+      "unit": "capsules"
+    },
+    "category": "Antibiotics",
+    "description": "Moxacil 500 mg capsule by Square Pharmaceuticals PLC, containing Amoxicillin.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_tycil_500mg",
+    "slug": "tycil-500mg",
+    "brandName": "Tycil",
+    "genericId": "gen_amoxicillin",
+    "manufacturerId": "mfr_beximco",
+    "strength": "500 mg",
+    "dosageForm": "capsule",
+    "packSize": {
+      "quantity": 10,
+      "unit": "capsules"
+    },
+    "category": "Antibiotics",
+    "description": "Tycil 500 mg capsule by Beximco Pharmaceuticals Ltd., containing Amoxicillin.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_amodis_400mg",
+    "slug": "amodis-400mg",
+    "brandName": "Amodis",
+    "genericId": "gen_metronidazole",
+    "manufacturerId": "mfr_square",
+    "strength": "400 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Anti-infectives",
+    "description": "Amodis 400 mg tablet by Square Pharmaceuticals PLC, containing Metronidazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_amodis_200mg_5ml_suspension",
+    "slug": "amodis-200mg-5ml-suspension",
+    "brandName": "Amodis",
+    "genericId": "gen_metronidazole",
+    "manufacturerId": "mfr_square",
+    "strength": "200 mg/5 ml",
+    "dosageForm": "suspension",
+    "packSize": {
+      "quantity": 60,
+      "unit": "ml"
+    },
+    "category": "Anti-infectives",
+    "description": "Amodis 200 mg/5 ml oral suspension by Square Pharmaceuticals PLC, containing Metronidazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_filmet_400mg",
+    "slug": "filmet-400mg",
+    "brandName": "Filmet",
+    "genericId": "gen_metronidazole",
+    "manufacturerId": "mfr_beximco",
+    "strength": "400 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Anti-infectives",
+    "description": "Filmet 400 mg tablet by Beximco Pharmaceuticals Ltd., containing Metronidazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_filmet_200mg_5ml_suspension",
+    "slug": "filmet-200mg-5ml-suspension",
+    "brandName": "Filmet",
+    "genericId": "gen_metronidazole",
+    "manufacturerId": "mfr_beximco",
+    "strength": "200 mg/5 ml",
+    "dosageForm": "suspension",
+    "packSize": {
+      "quantity": 60,
+      "unit": "ml"
+    },
+    "category": "Anti-infectives",
+    "description": "Filmet 200 mg/5 ml oral suspension by Beximco Pharmaceuticals Ltd., containing Metronidazole.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_omidon_10mg",
+    "slug": "omidon-10mg",
+    "brandName": "Omidon",
+    "genericId": "gen_domperidone",
+    "manufacturerId": "mfr_opsonin",
+    "strength": "10 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Gastrointestinal",
+    "description": "Omidon 10 mg tablet by Opsonin Pharma Ltd., containing Domperidone.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_rolac_10mg",
+    "slug": "rolac-10mg",
+    "brandName": "Rolac",
+    "genericId": "gen_ketorolac",
+    "manufacturerId": "mfr_renata",
+    "strength": "10 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Pain & inflammation",
+    "description": "Rolac 10 mg tablet by Renata PLC, containing Ketorolac Tromethamine.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_clofenac_50mg",
+    "slug": "clofenac-50mg",
+    "brandName": "Clofenac",
+    "genericId": "gen_diclofenac",
+    "manufacturerId": "mfr_square",
+    "strength": "50 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Pain & inflammation",
+    "description": "Clofenac 50 mg tablet by Square Pharmaceuticals PLC, containing Diclofenac Sodium.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_ceevit_250mg",
+    "slug": "ceevit-250mg",
+    "brandName": "Ceevit",
+    "genericId": "gen_vitamin_c",
+    "manufacturerId": "mfr_square",
+    "strength": "250 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Vitamins & minerals",
+    "description": "Ceevit 250 mg tablet by Square Pharmaceuticals PLC, containing Ascorbic Acid (Vitamin C). Chewable tablet.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_calbo_d_500mg_200iu",
+    "slug": "calbo-d-500mg-200iu",
+    "brandName": "Calbo-D",
+    "genericId": "gen_calcium_vitamin_d3",
+    "manufacturerId": "mfr_square",
+    "strength": "500 mg + 200 IU",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Vitamins & minerals",
+    "description": "Calbo-D 500 mg + 200 IU tablet by Square Pharmaceuticals PLC, containing Calcium Carbonate + Vitamin D3.",
+    "prescriptionRequired": false,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_azmasol_100mcg_puff_inhaler",
+    "slug": "azmasol-100mcg-puff-inhaler",
+    "brandName": "Azmasol",
+    "genericId": "gen_salbutamol",
+    "manufacturerId": "mfr_beximco",
+    "strength": "100 mcg/puff",
+    "dosageForm": "inhaler",
+    "packSize": {
+      "quantity": 200,
+      "unit": "doses"
+    },
+    "category": "Respiratory",
+    "description": "Azmasol 100 mcg/puff inhaler by Beximco Pharmaceuticals Ltd., containing Salbutamol.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_anclog_75mg",
+    "slug": "anclog-75mg",
+    "brandName": "Anclog",
+    "genericId": "gen_clopidogrel",
+    "manufacturerId": "mfr_square",
+    "strength": "75 mg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Cardiovascular",
+    "description": "Anclog 75 mg tablet by Square Pharmaceuticals PLC, containing Clopidogrel.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_thyrox_25mcg",
+    "slug": "thyrox-25mcg",
+    "brandName": "Thyrox",
+    "genericId": "gen_levothyroxine",
+    "manufacturerId": "mfr_square",
+    "strength": "25 mcg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Hormones",
+    "description": "Thyrox 25 mcg tablet by Square Pharmaceuticals PLC, containing Levothyroxine Sodium.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_thyrox_50mcg",
+    "slug": "thyrox-50mcg",
+    "brandName": "Thyrox",
+    "genericId": "gen_levothyroxine",
+    "manufacturerId": "mfr_square",
+    "strength": "50 mcg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Hormones",
+    "description": "Thyrox 50 mcg tablet by Square Pharmaceuticals PLC, containing Levothyroxine Sodium.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  },
+  {
+    "id": "med_thyrox_100mcg",
+    "slug": "thyrox-100mcg",
+    "brandName": "Thyrox",
+    "genericId": "gen_levothyroxine",
+    "manufacturerId": "mfr_square",
+    "strength": "100 mcg",
+    "dosageForm": "tablet",
+    "packSize": {
+      "quantity": 10,
+      "unit": "tablets"
+    },
+    "category": "Hormones",
+    "description": "Thyrox 100 mcg tablet by Square Pharmaceuticals PLC, containing Levothyroxine Sodium.",
+    "prescriptionRequired": true,
+    "updatedAt": "2026-10-01T00:00:00.000Z"
+  }
+]

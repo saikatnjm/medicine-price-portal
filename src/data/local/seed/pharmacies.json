@@ -1,0 +1,92 @@
+[
+  {
+    "id": "ph_shapla_pharmacy",
+    "slug": "shapla-pharmacy",
+    "name": "Shapla Pharmacy",
+    "area": "Dhanmondi",
+    "city": "Dhaka",
+    "address": "Sample address, Dhanmondi, Dhaka",
+    "description": "Fictional pharmacy created for this demonstration. Not a real business."
+  },
+  {
+    "id": "ph_nirob_medicine_corner",
+    "slug": "nirob-medicine-corner",
+    "name": "Nirob Medicine Corner",
+    "area": "Mirpur",
+    "city": "Dhaka",
+    "address": "Sample address, Mirpur, Dhaka",
+    "description": "Fictional pharmacy created for this demonstration. Not a real business."
+  },
+  {
+    "id": "ph_lifeline_pharma_point",
+    "slug": "lifeline-pharma-point",
+    "name": "Lifeline Pharma Point",
+    "area": "Uttara",
+    "city": "Dhaka",
+    "address": "Sample address, Uttara, Dhaka",
+    "description": "Fictional pharmacy created for this demonstration. Not a real business."
+  },
+  {
+    "id": "ph_green_leaf_pharmacy",
+    "slug": "green-leaf-pharmacy",
+    "name": "Green Leaf Pharmacy",
+    "area": "Gulshan",
+    "city": "Dhaka",
+    "address": "Sample address, Gulshan, Dhaka",
+    "description": "Fictional pharmacy created for this demonstration. Not a real business."
+  },
+  {
+    "id": "ph_padma_medicine_store",
+    "slug": "padma-medicine-store",
+    "name": "Padma Medicine Store",
+    "area": "Mohammadpur",
+    "city": "Dhaka",
+    "address": "Sample address, Mohammadpur, Dhaka",
+    "description": "Fictional pharmacy created for this demonstration. Not a real business."
+  },
+  {
+    "id": "ph_care_plus_drug_house",
+    "slug": "care-plus-drug-house",
+    "name": "Care Plus Drug House",
+    "area": "Agrabad",
+    "city": "Chattogram",
+    "address": "Sample address, Agrabad, Chattogram",
+    "description": "Fictional pharmacy created for this demonstration. Not a real business."
+  },
+  {
+    "id": "ph_karnaphuli_medicine_point",
+    "slug": "karnaphuli-medicine-point",
+    "name": "Karnaphuli Medicine Point",
+    "area": "Nasirabad",
+    "city": "Chattogram",
+    "address": "Sample address, Nasirabad, Chattogram",
+    "description": "Fictional pharmacy created for this demonstration. Not a real business."
+  },
+  {
+    "id": "ph_city_health_pharmacy",
+    "slug": "city-health-pharmacy",
+    "name": "City Health Pharmacy",
+    "area": "Zindabazar",
+    "city": "Sylhet",
+    "address": "Sample address, Zindabazar, Sylhet",
+    "description": "Fictional pharmacy created for this demonstration. Not a real business."
+  },
+  {
+    "id": "ph_meghna_drug_centre",
+    "slug": "meghna-drug-centre",
+    "name": "Meghna Drug Centre",
+    "area": "Shaheb Bazar",
+    "city": "Rajshahi",
+    "address": "Sample address, Shaheb Bazar, Rajshahi",
+    "description": "Fictional pharmacy created for this demonstration. Not a real business."
+  },
+  {
+    "id": "ph_jamuna_health_pharmacy",
+    "slug": "jamuna-health-pharmacy",
+    "name": "Jamuna Health Pharmacy",
+    "area": "Sonadanga",
+    "city": "Khulna",
+    "address": "Sample address, Sonadanga, Khulna",
+    "description": "Fictional pharmacy created for this demonstration. Not a real business."
+  }
+]

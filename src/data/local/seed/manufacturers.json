@@ -1,0 +1,47 @@
+[
+  {
+    "id": "mfr_beximco",
+    "slug": "beximco-pharmaceuticals-ltd",
+    "name": "Beximco Pharmaceuticals Ltd."
+  },
+  {
+    "id": "mfr_square",
+    "slug": "square-pharmaceuticals-plc",
+    "name": "Square Pharmaceuticals PLC"
+  },
+  {
+    "id": "mfr_acme",
+    "slug": "the-acme-laboratories-ltd",
+    "name": "The ACME Laboratories Ltd."
+  },
+  {
+    "id": "mfr_opsonin",
+    "slug": "opsonin-pharma-ltd",
+    "name": "Opsonin Pharma Ltd."
+  },
+  {
+    "id": "mfr_eskayef",
+    "slug": "eskayef-pharmaceuticals-ltd",
+    "name": "Eskayef Pharmaceuticals Ltd."
+  },
+  {
+    "id": "mfr_renata",
+    "slug": "renata-plc",
+    "name": "Renata PLC"
+  },
+  {
+    "id": "mfr_incepta",
+    "slug": "incepta-pharmaceuticals-ltd",
+    "name": "Incepta Pharmaceuticals Ltd."
+  },
+  {
+    "id": "mfr_healthcare",
+    "slug": "healthcare-pharmaceuticals-ltd",
+    "name": "Healthcare Pharmaceuticals Ltd."
+  },
+  {
+    "id": "mfr_general",
+    "slug": "general-pharmaceuticals-ltd",
+    "name": "General Pharmaceuticals Ltd."
+  }
+]
