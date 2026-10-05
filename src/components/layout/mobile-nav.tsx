@@ -7,13 +7,16 @@ import type { NavItem } from "./nav-items";
 
 /** Disclosure menu for small screens. Hidden from md upwards, where the inline nav shows. */
 export function MobileNav({ items }: { items: readonly NavItem[] }) {
-  const [open, setOpen] = useState(false);
   const pathname = usePathname();
-
-  // Close after navigating.
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  // The menu belongs to the page it was opened on, so it closes after navigating
+  // without an effect: it is open only while the path is unchanged.
+  const [openOn, setOpenOn] = useState<string | null>(null);
+  const open = openOn === pathname;
+  const setOpen = (value: boolean | ((current: boolean) => boolean)) =>
+    setOpenOn((current) => {
+      const next = typeof value === "function" ? value(current === pathname) : value;
+      return next ? pathname : null;
+    });
 
   // Escape closes the menu.
   useEffect(() => {

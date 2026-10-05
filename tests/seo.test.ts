@@ -65,7 +65,7 @@ describe("SEO helpers", () => {
   });
 
   it("describes the site as a WebSite with a search action built from siteConfig.url", () => {
-    const data = websiteJsonLd() as Record<string, any>;
+    const data = websiteJsonLd() as Record<string, unknown>;
     expect(data["@type"]).toBe("WebSite");
     expect(data["name"]).toBe(siteConfig.name);
     expect(data["url"]).toBe(absoluteUrl("/"));

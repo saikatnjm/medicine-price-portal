@@ -36,18 +36,16 @@ export function SearchAutocomplete({
   const [status, setStatus] = useState("");
   const typed = useRef(false);
 
-  const flat = useMemo(() => groups.flatMap((group) => group.items), [groups]);
+  // Suggestions only apply to queries long enough to search; derived, not reset in an effect.
+  const query = value.replace(/\s+/g, " ").trim();
+  const tooShort = query.length < SEARCH_MIN_QUERY_LENGTH;
+  const visibleGroups = useMemo(() => (tooShort ? [] : groups), [tooShort, groups]);
+  const flat = useMemo(() => visibleGroups.flatMap((group) => group.items), [visibleGroups]);
   const showList = open && flat.length > 0;
+  const liveStatus = tooShort ? "" : status;
 
   useEffect(() => {
-    if (!typed.current) return;
-    const query = value.replace(/\s+/g, " ").trim();
-    if (query.length < SEARCH_MIN_QUERY_LENGTH) {
-      setGroups([]);
-      setActiveIndex(-1);
-      setStatus("");
-      return;
-    }
+    if (!typed.current || tooShort) return;
     const controller = new AbortController();
     const timer = setTimeout(async () => {
       try {
@@ -72,7 +70,7 @@ export function SearchAutocomplete({
       clearTimeout(timer);
       controller.abort();
     };
-  }, [value]);
+  }, [query, tooShort]);
 
   function go(item: SuggestionItem) {
     setOpen(false);
@@ -147,7 +145,7 @@ export function SearchAutocomplete({
         className={className}
       />
       <div role="status" aria-live="polite" className="sr-only">
-        {open ? status : ""}
+        {open ? liveStatus : ""}
       </div>
       <div
         id={listboxId}
@@ -157,7 +155,7 @@ export function SearchAutocomplete({
         className="absolute inset-x-0 top-full z-30 mt-1 max-h-96 overflow-y-auto rounded-md border border-slate-300 bg-white py-1 shadow-md"
       >
         {showList &&
-          groups.map((group, groupIndex) => {
+          visibleGroups.map((group, groupIndex) => {
             const headingId = `${inputId}-group-${reactId}-${groupIndex}`;
             return (
               <div key={group.type} role="group" aria-labelledby={headingId}>

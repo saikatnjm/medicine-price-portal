@@ -8,8 +8,8 @@ export interface DoctorImportInput {
   now?: string;
 }
 export interface DoctorImportResult {
-  doctors: Record<string, any>[];
-  sources: Record<string, any>[];
+  doctors: Record<string, unknown>[];
+  sources: Record<string, unknown>[];
   errors: string[];
   warnings: string[];
   report: { rows: number; doctors: number; chambers: number; now: string };
@@ -18,5 +18,5 @@ export declare const COLUMNS: string[];
 export declare function parseCsv(text: string): { line: number; cells: string[] }[];
 export declare function isValidPhone(value: string): boolean;
 export declare function buildDoctors(input: DoctorImportInput): DoctorImportResult;
-export declare function mergeSources(existing: Record<string, any>[], imported: Record<string, any>[]): Record<string, any>[];
+export declare function mergeSources(existing: Record<string, unknown>[], imported: Record<string, unknown>[]): Record<string, unknown>[];
 export declare function renderReport(result: DoctorImportResult, opts?: { allowExamples?: boolean }): string;

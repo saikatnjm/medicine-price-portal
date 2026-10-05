@@ -144,7 +144,6 @@ export function ResultsMap({ markers, children }: ResultsMapProps) {
     if (!open) return;
     let cancelled = false;
     let map: LeafletMap | null = null;
-    setStatus("loading");
     loadLeaflet().then(
       (L) => {
         const element = containerRef.current;
@@ -171,7 +170,11 @@ export function ResultsMap({ markers, children }: ResultsMapProps) {
         type="button"
         aria-expanded={open}
         aria-controls={regionId}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          // Reset the status here (not in the effect) so opening starts from "loading".
+          if (!open) setStatus("loading");
+          setOpen(!open);
+        }}
         className="mb-4 inline-flex min-h-11 items-center rounded-md border border-slate-300 px-4 text-sm font-medium text-slate-800 hover:bg-slate-50"
       >
         {open ? "Hide map" : "Show map"}
