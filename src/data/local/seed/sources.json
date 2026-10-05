@@ -1,0 +1,3 @@
+[
+  {"id":"dgda-registry","name":"DGDA Registered Drug Products","publisher":"Directorate General of Drug Administration (DGDA), via DGHS national terminology server","url":"https://fhir.dghs.gov.bd/core/CodeSystem-dgda-drug-registry.html","apiUrl":"https://api.tr.ocl.dghs.gov.bd/orgs/MoHFW/sources/DGDA-Drugs/","retrievedAt":"2026-10-04T09:04:26.709Z","note":"Official registration data. It does not include prices, pack sizes or prescription status."}
+]
