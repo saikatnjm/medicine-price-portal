@@ -1,41 +1,85 @@
 # Data Model
 
-Source of truth: `src/domain/types.ts`. IDs are opaque strings; dates are ISO-8601 strings.
+Source of truth: `src/domain/types.ts` (medicines) and `src/domain/healthcare.ts` (directory). IDs are opaque strings; dates are ISO-8601 strings.
 
-## Generic
+## Medicines
 
+### Generic
 id, slug, name, description?
 
-## Manufacturer
-
+### Manufacturer
 id, slug, name
 
-## Medicine
+### Medicine
+id, slug, brandName, registeredName?, genericId → Generic, manufacturerId → Manufacturer, strength (as registered), dosageForm (controlled category), dosageFormLabel (precise, e.g. "SR Tablet"), packSize?, category?, description?, prescriptionRequired?, updatedAt, provenance { sourceId → DataSource, recordId, darNumber?, status: "registered" }
 
-id, slug, brandName, genericId → Generic, manufacturerId → Manufacturer, strength, dosageForm (enum), packSize { quantity, unit }, category, description?, prescriptionRequired, updatedAt
+Optional fields are only present when a source publishes them. The DGDA registry omits pack size, category, description and prescription status.
 
-## Pharmacy
+### DataSource
+id, name, publisher, url, apiUrl?, retrievedAt, note?
 
-id, slug, name, area, city, address?, phone?, website?, description?
+### MedicinePrice
+id, medicineId → Medicine, pharmacyId → Pharmacy, amount (price of one packSize in BDT major units), currency ("BDT"), availability (in_stock | limited | out_of_stock | unknown), source (sample | manual | integration), updatedAt
 
-## MedicinePrice
+At most one price per (medicine, pharmacy). Currently empty: no verified source exists.
 
-id, medicineId → Medicine, pharmacyId → Pharmacy, amount (price of one packSize, BDT), currency ("BDT"), availability (in_stock | limited | out_of_stock | unknown), source (sample | manual | integration), updatedAt
+## Healthcare Directory
 
-At most one price per (medicine, pharmacy).
+### Location (Administrative)
+id, slug, name, nameBn?, level (division | district | area), parentId → Location?
+
+Bangladesh: 8 divisions → 64 districts → upazila/thana areas. Provided by OpenStreetMap (admin_level boundaries).
+
+### Specialty
+id, slug, name, practitionerTitle, aliases, description (neutral, not medical advice)
+
+Curated taxonomy (22 specialties) mapped to OSM `healthcare:speciality` values.
+
+### Coordinates
+lat, lon (stored to 5 decimals; ~1 meter precision)
+
+### GooglePlaceRef
+placeId, lastChecked (ISO-8601)
+
+Only the place ID is stored for long-term use per Google's terms. Ratings and reviews are not stored or shown.
+
+### PostalLocation (shared by Facility, Pharmacy, DoctorChamber)
+districtId?, areaId? (assigned from coordinates via point-in-polygon), locality?, city?, address?, postalCode?, coordinates?, ownership? (government | private | non_profit | military)
+
+Every field optional; only published values are stored (never inferred).
+
+### Facility (Hospital, Clinic, etc.)
+id, slug, name, altName?, kind (hospital | clinic | diagnostic_centre | dental_clinic | doctors_practice | blood_bank), + PostalLocation, phone?, website?, email?, openingHours?, emergencyServices?, description?, sourceRef?, google?, provenance { sourceId → DataSource, recordId, status: "unverified" | "verified" | "needs_review" | "registered" }
+
+### Pharmacy
+id, slug, name, + PostalLocation, phone?, website?, email?, openingHours?, sourceRef?, google?, provenance { sourceId, recordId, status }
+
+### Doctor (with one or more chambers)
+id, slug, name, nameBn?, specialties → [Specialty]*, chambers → [DoctorChamber]*, phone?, qualifications?, biography?, sourceRef?, provenance { sourceId, recordId, status: "unverified" | "verified" | "needs_review" | "registered" }
+
+**Doctor records are intentionally empty.** Only verified, consented individuals will be added. The model supports multiple chambers per doctor.
+
+### DoctorChamber (practice location)
+id, facilityId? → Facility, + PostalLocation, phone?, openingHours?, sourceRef?
 
 ## Alternatives (derived, not stored)
 
-Same genericId + strength + dosageForm, excluding the medicine itself. A stored relationship table can be introduced later if curated relationships are needed.
+Same genericId + strength + dosageFormLabel, excluding the medicine itself.
 
 ## Read models (not stored)
 
-MedicineSummary, MedicineDetail, PriceWithPharmacy, PriceStats, PharmacyDetail, SearchResult — see `src/domain/read-models.ts`.
+Medicine*, Facility*, Doctor*, Pharmacy*, Specialty*, Location*, Directory* summaries, MedicineDetail, PriceStats, SearchResult, SearchIntent — see `src/domain/read-models.ts`.
 
 ## Mapping to Django/PostgreSQL
 
-Each entity maps to one model; `*Id` fields become ForeignKeys; enums become choices; `amount` becomes DecimalField; `slug` is unique. Phase-1 UI models expose no database concepts.
+Each entity maps to one model; `*Id` fields become ForeignKeys; enums become choices; numeric types become DecimalField; `slug` is unique; coordinates become PointField; `PostalLocation` is embedded or inherited. Phase-1 UI models expose no database concepts.
 
 ## Seed data
 
-`src/data/local/seed/*.json`, validated by `tests/seed-integrity.test.ts`. Generated by `scripts/generate-seed-data.mjs`: 81 medicines, 26 generics, 9 manufacturers, 10 fictional pharmacies, 531 prices, plus `popular.json` (homepage list). All prices are `source: "sample"`. Brand/manufacturer/strength/prescription data are illustrative and must be verified before a public launch.
+Generated by pipelines in [DATA-PIPELINE.md](DATA-PIPELINE.md) into `src/data/local/seed/`:
+- **From DGDA:** medicines (36,328), generics (1,520), manufacturers (276), sources
+- **From OSM:** facilities (3,447), pharmacies (3,712), locations (8 divisions, 64 districts), directory-sources
+- **Curated:** specialties (22)
+- **Intentionally empty:** prices.json (no verified source), pharmacies.json (replaced by directory), doctors.json (no open source)
+
+Validate with `npm run validate:data`.

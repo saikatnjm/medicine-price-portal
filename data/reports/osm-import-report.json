@@ -1,0 +1,3510 @@
+{
+  "retrievedAt": "2026-10-04T12:52:19.032Z",
+  "osmTimestamp": "2026-10-04T12:50:21Z",
+  "rawFeatures": 7866,
+  "facilities": 3447,
+  "pharmacies": 3710,
+  "rejected": 512,
+  "rejectedByReason": {
+    "missing_name": 465,
+    "veterinary": 35,
+    "generic_name_only": 10,
+    "invalid_name": 2
+  },
+  "duplicatesRemoved": 197,
+  "slugCollisionsResolved": 362,
+  "divisions": 8,
+  "districts": 64,
+  "areas": 475,
+  "withArea": 7135,
+  "facilitiesByKind": {
+    "hospital": 2025,
+    "clinic": 853,
+    "dental_clinic": 295,
+    "doctors_practice": 219,
+    "diagnostic_centre": 43,
+    "blood_bank": 12
+  },
+  "withoutDistrict": 0,
+  "fieldCoverage": {
+    "altName": 376,
+    "locality": 1262,
+    "address": 1724,
+    "postalCode": 1089,
+    "phone": 217,
+    "website": 59,
+    "email": 50,
+    "openingHours": 442,
+    "coordinates": 7157
+  },
+  "facilityFieldCoverage": {
+    "ownership": 66,
+    "emergency": 158,
+    "beds": 2,
+    "specialties": 150
+  },
+  "byDistrict": {
+    "Dhaka": 2852,
+    "Chattogram": 679,
+    "Rangpur": 234,
+    "Tangail": 213,
+    "Bogura": 188,
+    "Gazipur": 170,
+    "Mymensingh": 168,
+    "Satkhira": 150,
+    "Khulna": 142,
+    "Jashore": 126,
+    "Rajshahi": 122,
+    "Faridpur": 109,
+    "Bagerhat": 108,
+    "Cox's Bazar": 107,
+    "Sylhet": 107,
+    "Naogaon": 91,
+    "Sherpur": 87,
+    "Kishoreganj": 82,
+    "Nilphamari": 82,
+    "Cumilla": 77,
+    "Dinajpur": 76,
+    "Munshiganj": 68,
+    "Natore": 67,
+    "Barisal": 66,
+    "Manikganj": 55,
+    "Narail": 54,
+    "Netrokona": 54,
+    "Jamalpur": 53,
+    "Pabna": 49,
+    "Panchagarh": 43,
+    "Moulvibazar": 41,
+    "Gaibandha": 39,
+    "Jhenaidah": 39,
+    "Sirajganj": 38,
+    "Bhola": 36,
+    "Kurigram": 36,
+    "Patuakhali": 33,
+    "Habiganj": 29,
+    "Sunamganj": 27,
+    "Chapai Nawabganj": 23,
+    "Shariatpur": 23,
+    "Magura": 22,
+    "Meherpur": 22,
+    "Noakhali": 22,
+    "Feni": 21,
+    "Narayanganj": 21,
+    "Narsingdi": 20,
+    "Thakurgaon": 20,
+    "Barguna": 16,
+    "Gopalganj": 16,
+    "Madaripur": 16,
+    "Kushtia": 15,
+    "Rajbari": 13,
+    "Brahmanbaria": 12,
+    "Lalmonirhat": 12,
+    "Khagrachari": 9,
+    "Pirojpur": 9,
+    "Bandarban": 8,
+    "Chandpur": 8,
+    "Lakshmipur": 8,
+    "Rangamati": 7,
+    "Jhalokathi": 6,
+    "Joypurhat": 6,
+    "Chuadanga": 5
+  },
+  "unmappedSpecialities": {
+    "emergency": 13,
+    "community": 9,
+    "vaccination": 7,
+    "clinical_pathology": 6,
+    "blood_check": 6,
+    "clinic": 6,
+    "fertility": 5,
+    "chiropractic": 5,
+    "allergology": 4,
+    "biology": 4,
+    "physiotherapy": 3,
+    "diabetes": 3,
+    "intensive": 3,
+    "pathology": 2,
+    "homeopathy": 1,
+    "sam_management": 1,
+    "tooth_whitening": 1,
+    "stomatology": 1,
+    "dental": 1,
+    "primary_health_service": 1,
+    "classical_homeopathy": 1,
+    "health_complex": 1,
+    "x-ray": 1,
+    "ultrasonography": 1,
+    "general_practice": 1,
+    "plastic_surgery": 1,
+    "telemedicine": 1,
+    "neunatal": 1,
+    "veterinary": 1,
+    "pharmacology": 1,
+    "ayurvedic": 1,
+    "herbalist": 1,
+    "neuropsychiatry": 1,
+    "humanistic": 1,
+    "psychology": 1,
+    "psychologist": 1,
+    "counseling": 1,
+    "tb": 1,
+    "tubicolous": 1,
+    "#endorcinology": 1,
+    "gynochology": 1,
+    "consultancy": 1,
+    "diagonosys": 1,
+    "pharmacy": 1
+  },
+  "rejectedRecords": [
+    {
+      "recordId": "node/540061901",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/621454556",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/1271733436",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/1271733441",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/1754690506",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/1800648820",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/1800922292",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/1801018910",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/1801030078",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/1801775451",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/1803234982",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/1950880927",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/1950881523",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/1950881564",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/1950881937",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/2332856859",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/2365517019",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/2529403544",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/2552266475",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3084100546",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3084100547",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3084100548",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3084100549",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3084100553",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3084125981",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3084125984",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3096862814",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3098705400",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3104950858",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3236788370",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3236788375",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3283392703",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3448098923",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3525241959",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3525259305",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3525274393",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3525277473",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3525280932",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3525355760",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3530286987",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532154102",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532286140",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532287229",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532297041",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532297970",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532309346",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532312532",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532321294",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532321312",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532321319",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532321321",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532321328",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532321334",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532335534",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532369416",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532398796",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532650677",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3532756320",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3554885804",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3574675994",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3574675995",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3575114300",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3575114301",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3578173295",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3578175343",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3578176821",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3578176864",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3578177056",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3578177059",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3578177132",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3578177133",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3578177138",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3578177564",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3578177565",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3606455985",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3712960338",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3732014453",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3732015526",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3732024134",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3732024135",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3732024972",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3732024974",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3732027724",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3734289774",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3734921272",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3737692458",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3740863562",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3740891207",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3740896193",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3740911034",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3740913660",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3740913725",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3740939526",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3740965856",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3740984672",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3744968441",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3744968784",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3744969535",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3745037320",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3745093266",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3745112047",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3745114437",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3745114880",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3745190739",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3745193143",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3745296142",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3745348429",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3745351886",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3745368669",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3745431283",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3776240715",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3794027244",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3794105985",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3796357334",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3796358529",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/3796422153",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4062904828",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4071740298",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4071740305",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4071740310",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4072831286",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4077212343",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4077212374",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4077212805",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4077579338",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4077668489",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4077729247",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4310966038",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4312345867",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4316689210",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4322833416",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4333962673",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4334202685",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4348283298",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4357401918",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4362851715",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4364261075",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4365087444",
+      "reason": "generic_name_only",
+      "name": "pharmacy"
+    },
+    {
+      "recordId": "node/4365984245",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4368347136",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4368350032",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4370012579",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4405259593",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4405282192",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4442711765",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4449241791",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4458337197",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4458340000",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4458343867",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4466306092",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4466319793",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4527944134",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4567165290",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4583648693",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4634235837",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4702369341",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4718786289",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/4976689758",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5104644465",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5104644502",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5121614522",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5121901801",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5144531475",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5156477093",
+      "reason": "veterinary",
+      "name": "Rohanpur Animal Hospital"
+    },
+    {
+      "recordId": "node/5160433414",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5162359113",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5162404754",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5172423968",
+      "reason": "invalid_name",
+      "name": "23.541480, 89.165644"
+    },
+    {
+      "recordId": "node/5179682697",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5179692243",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5185200957",
+      "reason": "veterinary",
+      "name": "Aual Pharmacy and Animal Health Care"
+    },
+    {
+      "recordId": "node/5187928416",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5187938906",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5209803627",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5215407221",
+      "reason": "generic_name_only",
+      "name": "Pharmacy"
+    },
+    {
+      "recordId": "node/5219394411",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5273669313",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5273696059",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5273696073",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5312108180",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5339377496",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5469170396",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5580727724",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5584735762",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5592844083",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5622153421",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5622154303",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5623591578",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5643886632",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5664297559",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5685674279",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5719985850",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5730090442",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5894264987",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/5894705974",
+      "reason": "veterinary",
+      "name": "East Khada Animal Hospital"
+    },
+    {
+      "recordId": "node/6069914495",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/6069917285",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/6100698986",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/6102351354",
+      "reason": "generic_name_only",
+      "name": "Clinic"
+    },
+    {
+      "recordId": "node/6102352003",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/6112326874",
+      "reason": "generic_name_only",
+      "name": "Clinic"
+    },
+    {
+      "recordId": "node/6112326880",
+      "reason": "generic_name_only",
+      "name": "Clinic"
+    },
+    {
+      "recordId": "node/6123392282",
+      "reason": "generic_name_only",
+      "name": "Clinic"
+    },
+    {
+      "recordId": "node/6123464514",
+      "reason": "generic_name_only",
+      "name": "Health centre"
+    },
+    {
+      "recordId": "node/6205494354",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/6262440360",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/6643499955",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/6661642892",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/6661642898",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/6661642906",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/6661642907",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/6870166043",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/6875230307",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/6902628683",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/6906320136",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/7152112885",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/7398586993",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/7398715364",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/7410102058",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/7410340010",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/7410340021",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/7410340022",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/7410340023",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/7410340024",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/7410340025",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/7410655942",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/7418816428",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/7466289937",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/7527000085",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/8396423729",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9519012506",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9520099757",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9520876186",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9520908615",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9520917384",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9521023340",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9526358685",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9526358696",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9526358697",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9526358698",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9526358700",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9526475084",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9526511999",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9526512013",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9526512014",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9526512015",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9526512016",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9526525250",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9526558249",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9529696556",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9529696557",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9530276404",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9530276405",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9530311578",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9530311579",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9530311590",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9530788909",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9575488452",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9575854333",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9575854336",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9575854337",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9575854339",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9575854341",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9575854343",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9576105493",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9578084302",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9579004304",
+      "reason": "veterinary",
+      "name": "Upazila Veterinary Hospital"
+    },
+    {
+      "recordId": "node/9584887629",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9585705169",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9590441322",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9595160222",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9595160226",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603093059",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603772503",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603772504",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603772505",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603772506",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603772507",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603772510",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603772511",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603772512",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603772513",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603772514",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603772515",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603778619",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603778621",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603778622",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603808922",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603808926",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603808929",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603808930",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603841745",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603841746",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603841747",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603841748",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603841749",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603841750",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603841751",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9603841752",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9685439897",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9685461252",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9685461253",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9685461254",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9688662607",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9688662608",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9688662615",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694564825",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694564826",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694564827",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694564828",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694564829",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694564830",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694564831",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694564832",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694564833",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694564834",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694564835",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694564836",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694573648",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694573650",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694616957",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694616963",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694674625",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9694889857",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9695867043",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9695867044",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9737252817",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9777029449",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9812652721",
+      "reason": "generic_name_only",
+      "name": "Medical Store"
+    },
+    {
+      "recordId": "node/9838027497",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9904306705",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9916643514",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9928920004",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/9947994041",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/10047119749",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/10047119750",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/10262777719",
+      "reason": "veterinary",
+      "name": "Upazila Animal Resources Department and Veterinary Hospital"
+    },
+    {
+      "recordId": "node/10711901696",
+      "reason": "veterinary",
+      "name": "Animal Hospital, Bhandarpur, Naogaon"
+    },
+    {
+      "recordId": "node/10961938696",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/11028293708",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/11029954793",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/11030546903",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/11046234532",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/11188175635",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/11217361512",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/11597419541",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/11730680056",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/11756420086",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/11801306198",
+      "reason": "veterinary",
+      "name": "National Veterinary Hospital, Bangabazar Chakkar, Dhaka"
+    },
+    {
+      "recordId": "node/11868705703",
+      "reason": "veterinary",
+      "name": "Noor Veterinary Pharmacy, Shariatpur Road, Shibchar"
+    },
+    {
+      "recordId": "node/11878655441",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/11900951413",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/11900970617",
+      "reason": "veterinary",
+      "name": "Animal Hospital Madaripur, Hospital, Madaripur"
+    },
+    {
+      "recordId": "node/11900982403",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/11971880749",
+      "reason": "veterinary",
+      "name": "Upazilla Livestock Office & Veterinary Hospital"
+    },
+    {
+      "recordId": "node/11979006250",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/11990780946",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/11990853358",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/11990867588",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/12172092919",
+      "reason": "veterinary",
+      "name": "Bhaluka Livestock office and Veterinary Hospital, Government office"
+    },
+    {
+      "recordId": "node/12189611352",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/12189611353",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/12198821914",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/12198821915",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/12198821922",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/12211453694",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/12301129028",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/12390047637",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/12415498416",
+      "reason": "veterinary",
+      "name": "Ghatail Animal Hospital"
+    },
+    {
+      "recordId": "node/12441369373",
+      "reason": "veterinary",
+      "name": "Muktagachha Animal Hospital"
+    },
+    {
+      "recordId": "node/12478337771",
+      "reason": "veterinary",
+      "name": "Islam Medicine Center, Veterinary, Veterinary pharmacy"
+    },
+    {
+      "recordId": "node/12535027048",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/12548621364",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/12556301242",
+      "reason": "veterinary",
+      "name": "M/S Asma Enterprise, Veterinary pharmacy"
+    },
+    {
+      "recordId": "node/12573810516",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/12581921181",
+      "reason": "veterinary",
+      "name": "Animal Hospital, Hospital"
+    },
+    {
+      "recordId": "node/12595575531",
+      "reason": "veterinary",
+      "name": "Ma Medicine And Veterinary Corner, Pharmacy"
+    },
+    {
+      "recordId": "node/12617919030",
+      "reason": "veterinary",
+      "name": "Shad Model Medicine Shop (Veterinary), Pharmacy"
+    },
+    {
+      "recordId": "node/12629844453",
+      "reason": "veterinary",
+      "name": "Maliha Poultry Feed - medicine corner, Veterinary pharmacy"
+    },
+    {
+      "recordId": "node/12638115087",
+      "reason": "veterinary",
+      "name": "Animal Hospital Bhuapur, Animal hospital"
+    },
+    {
+      "recordId": "node/12692485893",
+      "reason": "veterinary",
+      "name": "Upazila Livestock Department and Veterinary Hospital, Hospital"
+    },
+    {
+      "recordId": "node/12757317607",
+      "reason": "veterinary",
+      "name": "Tawheeda Pharmacy and Veterinary, Pharmacy"
+    },
+    {
+      "recordId": "node/12762126086",
+      "reason": "veterinary",
+      "name": "Dr. Veterinary And Feeds, Pharmacy"
+    },
+    {
+      "recordId": "node/12762177422",
+      "reason": "veterinary",
+      "name": "Garden - Nalitabari Animal Hospital"
+    },
+    {
+      "recordId": "node/12775705022",
+      "reason": "veterinary",
+      "name": "Upazilla Veterinary Hospital, Veterans hospital"
+    },
+    {
+      "recordId": "node/12778360469",
+      "reason": "veterinary",
+      "name": "Veterinary Hospital, Hospital"
+    },
+    {
+      "recordId": "node/12791462537",
+      "reason": "veterinary",
+      "name": "Tanjil Medicine And Feed Corner, Veterinary pharmacy"
+    },
+    {
+      "recordId": "node/12814130108",
+      "reason": "veterinary",
+      "name": "Veterinary Pharmacy, Pharmacy"
+    },
+    {
+      "recordId": "node/12862435147",
+      "reason": "veterinary",
+      "name": "ABC Pharmacy, Veterinary pharmacy"
+    },
+    {
+      "recordId": "node/12864427791",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/12969315090",
+      "reason": "veterinary",
+      "name": "District Veterinary Hospital, Hospital"
+    },
+    {
+      "recordId": "node/12973590170",
+      "reason": "veterinary",
+      "name": "District Veterinary Hospital"
+    },
+    {
+      "recordId": "node/13020718642",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13045035357",
+      "reason": "invalid_name",
+      "name": "25.539267, 89.282983"
+    },
+    {
+      "recordId": "node/13062233984",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13062866313",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13149385525",
+      "reason": "veterinary",
+      "name": "District Animal Resources Office, Animal hospital"
+    },
+    {
+      "recordId": "node/13200518824",
+      "reason": "veterinary",
+      "name": "Beanibazar animal hospital, Hospital"
+    },
+    {
+      "recordId": "node/13230242902",
+      "reason": "veterinary",
+      "name": "Upazila Livestock Department and Veterinary Hospital, Animal hospital"
+    },
+    {
+      "recordId": "node/13439890100",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13525605602",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13525606102",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13526047601",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13526299702",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13743283943",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13743283944",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13743364901",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13743364903",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13743364904",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13743364910",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13743364921",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13744158076",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13744158097",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13753005131",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13753005132",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13753005168",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/13970576502",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/14100452884",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/14219792419",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/14230586301",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/14230586401",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/14231725903",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "node/14231726601",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/224994111",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/275464598",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/321032560",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/334629872",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/343362456",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/343466263",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/345322224",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/350559678",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/350559682",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/350559689",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/369254447",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/375098414",
+      "reason": "generic_name_only",
+      "name": "ক্লিনিক"
+    },
+    {
+      "recordId": "way/377688421",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/377688600",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/404138622",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/421053087",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/433216770",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/433216774",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/436048723",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/441259656",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/448861425",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/450707323",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/456707640",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/473484236",
+      "reason": "generic_name_only",
+      "name": "Hospital"
+    },
+    {
+      "recordId": "way/483465802",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/490365836",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/508160532",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/521300782",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/527573012",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/530767165",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/531627765",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/537955797",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/537956557",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/539361524",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/541103144",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/541129375",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/544571544",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/545677937",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/547890925",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/553096257",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/553907429",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/556409856",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/556412063",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/556413137",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/558368063",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/558368065",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/558368067",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/568474944",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/586940254",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/608008830",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/621299474",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/674855729",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/674859435",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/681160765",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/681333077",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/682677861",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/747258164",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/768709073",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/791022175",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/840825808",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/896737490",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/934029799",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/991623767",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/999897547",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/999897548",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/999897549",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/999897550",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1041583524",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1066410382",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1076141155",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1076141160",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1085835917",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1086185419",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1090522962",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1214509196",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1249394115",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1267355747",
+      "reason": "veterinary",
+      "name": "Satkhira Animal Hospital"
+    },
+    {
+      "recordId": "way/1267365752",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1287915413",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1287921477",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1324343963",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1338347793",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1339874375",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1376927984",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1432706636",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1432706637",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1432707054",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1478513844",
+      "reason": "missing_name",
+      "name": ""
+    },
+    {
+      "recordId": "way/1564643963",
+      "reason": "missing_name",
+      "name": ""
+    }
+  ],
+  "duplicateRecords": [
+    {
+      "recordId": "node/9596436427",
+      "keptId": "node/9596434711"
+    },
+    {
+      "recordId": "node/4845546824",
+      "keptId": "node/4845545530"
+    },
+    {
+      "recordId": "node/6126592807",
+      "keptId": "node/6039685706"
+    },
+    {
+      "recordId": "node/5909299469",
+      "keptId": "node/5983449612"
+    },
+    {
+      "recordId": "node/9596532346",
+      "keptId": "way/447857761"
+    },
+    {
+      "recordId": "node/11777847648",
+      "keptId": "way/1268097948"
+    },
+    {
+      "recordId": "way/1041682454",
+      "keptId": "node/9589956981"
+    },
+    {
+      "recordId": "node/5909299474",
+      "keptId": "node/5983449617"
+    },
+    {
+      "recordId": "node/3566600297",
+      "keptId": "way/350947243"
+    },
+    {
+      "recordId": "node/13434315000",
+      "keptId": "way/1464577310"
+    },
+    {
+      "recordId": "way/610529765",
+      "keptId": "node/5781733629"
+    },
+    {
+      "recordId": "way/377084882",
+      "keptId": "node/3804558630"
+    },
+    {
+      "recordId": "node/9589861821",
+      "keptId": "way/605244002"
+    },
+    {
+      "recordId": "node/9576105484",
+      "keptId": "node/11777847637"
+    },
+    {
+      "recordId": "node/3606431697",
+      "keptId": "way/354996591"
+    },
+    {
+      "recordId": "node/5647230890",
+      "keptId": "way/591527847"
+    },
+    {
+      "recordId": "node/6039694264",
+      "keptId": "node/5983449610"
+    },
+    {
+      "recordId": "node/5909299467",
+      "keptId": "node/5983449610"
+    },
+    {
+      "recordId": "node/11771201151",
+      "keptId": "node/11770577950"
+    },
+    {
+      "recordId": "node/11777847691",
+      "keptId": "node/11771028230"
+    },
+    {
+      "recordId": "node/11143301063",
+      "keptId": "way/1201907043"
+    },
+    {
+      "recordId": "way/589604743",
+      "keptId": "node/5642267075"
+    },
+    {
+      "recordId": "node/13849517401",
+      "keptId": "node/13845120302"
+    },
+    {
+      "recordId": "node/13972109401",
+      "keptId": "node/13969885201"
+    },
+    {
+      "recordId": "node/9520905069",
+      "keptId": "node/6968431039"
+    },
+    {
+      "recordId": "way/506174604",
+      "keptId": "way/337739360"
+    },
+    {
+      "recordId": "node/11950091175",
+      "keptId": "node/11949576863"
+    },
+    {
+      "recordId": "way/533504783",
+      "keptId": "node/7387955487"
+    },
+    {
+      "recordId": "node/13952233846",
+      "keptId": "way/1530853738"
+    },
+    {
+      "recordId": "node/10716172336",
+      "keptId": "node/10716121188"
+    },
+    {
+      "recordId": "node/11765674620",
+      "keptId": "node/11765674618"
+    },
+    {
+      "recordId": "node/11765674621",
+      "keptId": "node/11765674618"
+    },
+    {
+      "recordId": "node/2343411488",
+      "keptId": "node/9692896254"
+    },
+    {
+      "recordId": "node/12009447140",
+      "keptId": "node/6968431040"
+    },
+    {
+      "recordId": "node/364419618",
+      "keptId": "node/6968431016"
+    },
+    {
+      "recordId": "node/12012276822",
+      "keptId": "node/1787174815"
+    },
+    {
+      "recordId": "node/4977329873",
+      "keptId": "way/508427366"
+    },
+    {
+      "recordId": "node/10315954847",
+      "keptId": "way/1132394635"
+    },
+    {
+      "recordId": "node/1329007641",
+      "keptId": "node/2209597822"
+    },
+    {
+      "recordId": "node/9575842322",
+      "keptId": "way/589226576"
+    },
+    {
+      "recordId": "node/2333164533",
+      "keptId": "node/6120545702"
+    },
+    {
+      "recordId": "node/2332856867",
+      "keptId": "way/558368069"
+    },
+    {
+      "recordId": "node/2381392623",
+      "keptId": "way/684180575"
+    },
+    {
+      "recordId": "node/1801796034",
+      "keptId": "node/1801801222"
+    },
+    {
+      "recordId": "node/2332856875",
+      "keptId": "way/723080799"
+    },
+    {
+      "recordId": "node/11328746544",
+      "keptId": "way/1221478014"
+    },
+    {
+      "recordId": "node/12056962174",
+      "keptId": "way/974287986"
+    },
+    {
+      "recordId": "node/2365517022",
+      "keptId": "node/9692137610"
+    },
+    {
+      "recordId": "node/2813443337",
+      "keptId": "way/972289231"
+    },
+    {
+      "recordId": "node/2333176631",
+      "keptId": "way/972288122"
+    },
+    {
+      "recordId": "node/11204043265",
+      "keptId": "node/3559086357"
+    },
+    {
+      "recordId": "node/1787175313",
+      "keptId": "node/6968431018"
+    },
+    {
+      "recordId": "node/11939914491",
+      "keptId": "node/4322832764"
+    },
+    {
+      "recordId": "node/12056962193",
+      "keptId": "way/375518677"
+    },
+    {
+      "recordId": "node/3315890963",
+      "keptId": "way/262511010"
+    },
+    {
+      "recordId": "node/2211572833",
+      "keptId": "node/2211572832"
+    },
+    {
+      "recordId": "node/2382262625",
+      "keptId": "node/2333164537"
+    },
+    {
+      "recordId": "node/2382263483",
+      "keptId": "way/660867780"
+    },
+    {
+      "recordId": "way/938321798",
+      "keptId": "node/8692906995"
+    },
+    {
+      "recordId": "node/8813733736",
+      "keptId": "way/604872659"
+    },
+    {
+      "recordId": "node/265945386",
+      "keptId": "way/368010825"
+    },
+    {
+      "recordId": "node/12541281035",
+      "keptId": "way/1355134416"
+    },
+    {
+      "recordId": "node/11997576500",
+      "keptId": "node/2571053072"
+    },
+    {
+      "recordId": "way/324365704",
+      "keptId": "way/402318150"
+    },
+    {
+      "recordId": "node/2344312573",
+      "keptId": "way/547967442"
+    },
+    {
+      "recordId": "way/957593891",
+      "keptId": "node/9610301355"
+    },
+    {
+      "recordId": "node/10970475800",
+      "keptId": "node/10963292533"
+    },
+    {
+      "recordId": "way/499441489",
+      "keptId": "way/1100986259"
+    },
+    {
+      "recordId": "node/12056985340",
+      "keptId": "way/1100986259"
+    },
+    {
+      "recordId": "node/2343411551",
+      "keptId": "way/438169614"
+    },
+    {
+      "recordId": "way/1376927983",
+      "keptId": "way/972300624"
+    },
+    {
+      "recordId": "node/12056962192",
+      "keptId": "node/2993197559"
+    },
+    {
+      "recordId": "way/305117870",
+      "keptId": "way/305109465"
+    },
+    {
+      "recordId": "way/305118924",
+      "keptId": "way/305109465"
+    },
+    {
+      "recordId": "node/2365535325",
+      "keptId": "node/2332804905"
+    },
+    {
+      "recordId": "node/2365532473",
+      "keptId": "way/540123465"
+    },
+    {
+      "recordId": "node/3734803537",
+      "keptId": "way/369448879"
+    },
+    {
+      "recordId": "node/2349386848",
+      "keptId": "node/9692896249"
+    },
+    {
+      "recordId": "way/1447378455",
+      "keptId": "way/1040919993"
+    },
+    {
+      "recordId": "node/5836010389",
+      "keptId": "relation/8536925"
+    },
+    {
+      "recordId": "node/5836135506",
+      "keptId": "relation/8536925"
+    },
+    {
+      "recordId": "node/2365539233",
+      "keptId": "node/9692896250"
+    },
+    {
+      "recordId": "way/1065856280",
+      "keptId": "node/9692137604"
+    },
+    {
+      "recordId": "node/2349386854",
+      "keptId": "node/9692911670"
+    },
+    {
+      "recordId": "node/11425781538",
+      "keptId": "way/1231918450"
+    },
+    {
+      "recordId": "node/2344448874",
+      "keptId": "way/499248787"
+    },
+    {
+      "recordId": "node/9529696591",
+      "keptId": "way/344940612"
+    },
+    {
+      "recordId": "node/9923632476",
+      "keptId": "node/9923632475"
+    },
+    {
+      "recordId": "node/6517470807",
+      "keptId": "node/6517499159"
+    },
+    {
+      "recordId": "node/6900268958",
+      "keptId": "node/6902632998"
+    },
+    {
+      "recordId": "node/4976689785",
+      "keptId": "node/6908693957"
+    },
+    {
+      "recordId": "node/12196650689",
+      "keptId": "node/12196548217"
+    },
+    {
+      "recordId": "node/12218393997",
+      "keptId": "node/12196548217"
+    },
+    {
+      "recordId": "node/6900269040",
+      "keptId": "node/6900269028"
+    },
+    {
+      "recordId": "node/4432181523",
+      "keptId": "node/4432181521"
+    },
+    {
+      "recordId": "node/11246211517",
+      "keptId": "node/11246202577"
+    },
+    {
+      "recordId": "node/5622154847",
+      "keptId": "node/5622154857"
+    },
+    {
+      "recordId": "node/6900269045",
+      "keptId": "node/6900269042"
+    },
+    {
+      "recordId": "node/12198821947",
+      "keptId": "node/4432181546"
+    },
+    {
+      "recordId": "node/9603063261",
+      "keptId": "node/9603063257"
+    },
+    {
+      "recordId": "node/9695027551",
+      "keptId": "node/9695017386"
+    },
+    {
+      "recordId": "node/12218393996",
+      "keptId": "node/12196751279"
+    },
+    {
+      "recordId": "node/6908693971",
+      "keptId": "node/6908693951"
+    },
+    {
+      "recordId": "node/4331663678",
+      "keptId": "node/4331663677"
+    },
+    {
+      "recordId": "node/4976689757",
+      "keptId": "node/6908693951"
+    },
+    {
+      "recordId": "node/4976689768",
+      "keptId": "node/6908693951"
+    },
+    {
+      "recordId": "node/12218492204",
+      "keptId": "node/12196751275"
+    },
+    {
+      "recordId": "node/7711621470",
+      "keptId": "node/8498629224"
+    },
+    {
+      "recordId": "node/4077615437",
+      "keptId": "node/4077609165"
+    },
+    {
+      "recordId": "node/12218547154",
+      "keptId": "node/12197156167"
+    },
+    {
+      "recordId": "node/3794108602",
+      "keptId": "node/3794104490"
+    },
+    {
+      "recordId": "node/9596436431",
+      "keptId": "node/9596436420"
+    },
+    {
+      "recordId": "node/4976689781",
+      "keptId": "node/6908693952"
+    },
+    {
+      "recordId": "node/9589195182",
+      "keptId": "node/9587894875"
+    },
+    {
+      "recordId": "node/9603054363",
+      "keptId": "way/533934520"
+    },
+    {
+      "recordId": "node/9809237858",
+      "keptId": "way/533934520"
+    },
+    {
+      "recordId": "node/5622154229",
+      "keptId": "node/5622155057"
+    },
+    {
+      "recordId": "node/3741031995",
+      "keptId": "node/3741012860"
+    },
+    {
+      "recordId": "node/3741032090",
+      "keptId": "node/3741012860"
+    },
+    {
+      "recordId": "node/9811016568",
+      "keptId": "node/9810811874"
+    },
+    {
+      "recordId": "node/8883113958",
+      "keptId": "node/8883113957"
+    },
+    {
+      "recordId": "node/5346365227",
+      "keptId": "way/528076331"
+    },
+    {
+      "recordId": "node/5622157120",
+      "keptId": "node/5622158821"
+    },
+    {
+      "recordId": "node/9809665559",
+      "keptId": "node/9809659277"
+    },
+    {
+      "recordId": "node/4976689777",
+      "keptId": "node/6908693978"
+    },
+    {
+      "recordId": "way/530735033",
+      "keptId": "way/520971710"
+    },
+    {
+      "recordId": "node/11246220431",
+      "keptId": "node/11246165565"
+    },
+    {
+      "recordId": "node/4410318393",
+      "keptId": "node/4422091795"
+    },
+    {
+      "recordId": "node/6902633012",
+      "keptId": "node/6908693919"
+    },
+    {
+      "recordId": "node/6902633014",
+      "keptId": "node/6908693919"
+    },
+    {
+      "recordId": "node/6900269044",
+      "keptId": "node/6900269043"
+    },
+    {
+      "recordId": "node/9521023359",
+      "keptId": "node/7410655944"
+    },
+    {
+      "recordId": "node/5622153442",
+      "keptId": "node/5622158010"
+    },
+    {
+      "recordId": "node/5622157990",
+      "keptId": "node/5622158010"
+    },
+    {
+      "recordId": "node/4322832767",
+      "keptId": "node/4322832768"
+    },
+    {
+      "recordId": "node/8883113960",
+      "keptId": "node/8883113959"
+    },
+    {
+      "recordId": "node/14061437654",
+      "keptId": "way/1545989475"
+    },
+    {
+      "recordId": "node/4976689787",
+      "keptId": "node/6908693948"
+    },
+    {
+      "recordId": "node/9768603911",
+      "keptId": "node/9768603908"
+    },
+    {
+      "recordId": "node/8788554838",
+      "keptId": "way/376358169"
+    },
+    {
+      "recordId": "node/4976689788",
+      "keptId": "node/6908693945"
+    },
+    {
+      "recordId": "node/6908693980",
+      "keptId": "node/6908693975"
+    },
+    {
+      "recordId": "node/6908693907",
+      "keptId": "node/6908693901"
+    },
+    {
+      "recordId": "node/5622154843",
+      "keptId": "node/8883113961"
+    },
+    {
+      "recordId": "node/11594452840",
+      "keptId": "way/1247191469"
+    },
+    {
+      "recordId": "node/7239100643",
+      "keptId": "node/8883113988"
+    },
+    {
+      "recordId": "node/8234550769",
+      "keptId": "node/8234534646"
+    },
+    {
+      "recordId": "node/9578084305",
+      "keptId": "node/8234534646"
+    },
+    {
+      "recordId": "node/9589945336",
+      "keptId": "way/374788662"
+    },
+    {
+      "recordId": "node/5622154297",
+      "keptId": "node/5622156317"
+    },
+    {
+      "recordId": "node/4072750117",
+      "keptId": "node/4070628514"
+    },
+    {
+      "recordId": "node/6900268928",
+      "keptId": "node/7419126619"
+    },
+    {
+      "recordId": "node/5622157370",
+      "keptId": "node/5622156286"
+    },
+    {
+      "recordId": "node/9811018981",
+      "keptId": "node/9592449085"
+    },
+    {
+      "recordId": "node/6900268955",
+      "keptId": "node/6902633000"
+    },
+    {
+      "recordId": "node/6968440911",
+      "keptId": "node/6968440909"
+    },
+    {
+      "recordId": "node/11878568294",
+      "keptId": "node/11878545368"
+    },
+    {
+      "recordId": "node/3449987022",
+      "keptId": "node/5248383234"
+    },
+    {
+      "recordId": "node/4579982490",
+      "keptId": "node/3810908251"
+    },
+    {
+      "recordId": "node/9578084314",
+      "keptId": "node/9578084308"
+    },
+    {
+      "recordId": "node/10164936724",
+      "keptId": "way/547892794"
+    },
+    {
+      "recordId": "node/5130483149",
+      "keptId": "node/6782045716"
+    },
+    {
+      "recordId": "node/9590478356",
+      "keptId": "node/9586296815"
+    },
+    {
+      "recordId": "node/7394788054",
+      "keptId": "way/791022914"
+    },
+    {
+      "recordId": "node/9798962860",
+      "keptId": "node/9798953629"
+    },
+    {
+      "recordId": "node/11246218450",
+      "keptId": "node/11246127317"
+    },
+    {
+      "recordId": "node/8883113972",
+      "keptId": "node/5622155087"
+    },
+    {
+      "recordId": "node/5622154318",
+      "keptId": "node/5622155087"
+    },
+    {
+      "recordId": "node/12218492213",
+      "keptId": "node/12198360343"
+    },
+    {
+      "recordId": "node/4322833077",
+      "keptId": "node/4322833078"
+    },
+    {
+      "recordId": "node/11994239666",
+      "keptId": "node/9601138204"
+    },
+    {
+      "recordId": "node/12218492231",
+      "keptId": "node/12196548212"
+    },
+    {
+      "recordId": "node/8883113991",
+      "keptId": "node/8883113990"
+    },
+    {
+      "recordId": "node/8883113994",
+      "keptId": "node/8883113990"
+    },
+    {
+      "recordId": "node/6900268899",
+      "keptId": "node/6900248773"
+    },
+    {
+      "recordId": "node/12218492202",
+      "keptId": "node/12197284170"
+    },
+    {
+      "recordId": "node/3449987476",
+      "keptId": "node/5248383837"
+    },
+    {
+      "recordId": "node/9771922578",
+      "keptId": "node/9771922569"
+    },
+    {
+      "recordId": "node/9770423018",
+      "keptId": "node/9770418107"
+    },
+    {
+      "recordId": "node/11949327414",
+      "keptId": "node/8089998427"
+    },
+    {
+      "recordId": "node/6900269032",
+      "keptId": "node/6900269023"
+    },
+    {
+      "recordId": "node/3737705896",
+      "keptId": "node/11736176296"
+    },
+    {
+      "recordId": "node/11773356915",
+      "keptId": "node/11773041146"
+    },
+    {
+      "recordId": "node/11773356916",
+      "keptId": "node/11773041146"
+    },
+    {
+      "recordId": "node/9575842325",
+      "keptId": "node/11773041146"
+    },
+    {
+      "recordId": "node/9575854330",
+      "keptId": "node/11773041146"
+    },
+    {
+      "recordId": "way/372260344",
+      "keptId": "node/3781602856"
+    },
+    {
+      "recordId": "node/3781626626",
+      "keptId": "node/3781602856"
+    },
+    {
+      "recordId": "node/13743283938",
+      "keptId": "node/12961391180"
+    },
+    {
+      "recordId": "node/13743283940",
+      "keptId": "node/12961391180"
+    },
+    {
+      "recordId": "node/13742302390",
+      "keptId": "node/13742302388"
+    },
+    {
+      "recordId": "node/13742302391",
+      "keptId": "node/13742302388"
+    },
+    {
+      "recordId": "node/6451134180",
+      "keptId": "node/6367270120"
+    },
+    {
+      "recordId": "node/6451147638",
+      "keptId": "node/6367270120"
+    },
+    {
+      "recordId": "node/7410655943",
+      "keptId": "node/5222706225"
+    },
+    {
+      "recordId": "node/5982049523",
+      "keptId": "node/5935073588"
+    },
+    {
+      "recordId": "node/5172525130",
+      "keptId": "node/5172524179"
+    }
+  ]
+}

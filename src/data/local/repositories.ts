@@ -7,8 +7,10 @@ import type {
   PharmacyRepository,
   PriceRepository,
   Repositories,
+  SourceRepository,
 } from "../../repositories";
 import type { LocalDataset } from "./dataset";
+import { createLocalDirectoryRepositories } from "./directory-repositories";
 import { buildSearchIndex, compareMedicines, searchIndex } from "./search";
 
 function byKey<T, K extends keyof T>(items: readonly T[], key: K): Map<T[K], T> {
@@ -35,6 +37,7 @@ function groupBy<T>(items: readonly T[], key: (item: T) => ID): Map<ID, T[]> {
 
 /** Builds repositories backed by an in-memory dataset (seed data or a test fixture). */
 export function createLocalRepositories(dataset: LocalDataset): Repositories {
+  let medicineSourceIds: string[] | null = null;
   const medicinesById = byKey(dataset.medicines, "id");
   const medicinesBySlug = byKey(dataset.medicines, "slug");
   const genericsById = byKey(dataset.generics, "id");
@@ -43,7 +46,10 @@ export function createLocalRepositories(dataset: LocalDataset): Repositories {
   const pharmaciesBySlug = byKey(dataset.pharmacies, "slug");
   const pricesByMedicine = groupBy(dataset.prices, (p) => p.medicineId);
   const pricesByPharmacy = groupBy(dataset.prices, (p) => p.pharmacyId);
-  const searchIdx = buildSearchIndex(dataset.medicines, genericsById);
+  const sourcesById = byKey(dataset.sources, "id");
+  // Built lazily: pages that never search do not pay for indexing the catalogue.
+  let searchIdx: ReturnType<typeof buildSearchIndex> | null = null;
+  let medicinesByGeneric: Map<ID, Medicine[]> | null = null;
 
   const medicines: MedicineRepository = {
     async findBySlug(slug) {
@@ -53,18 +59,27 @@ export function createLocalRepositories(dataset: LocalDataset): Repositories {
       return pickByIds(medicinesById, ids);
     },
     async search({ query, page, pageSize }: MedicineSearchParams): Promise<Page<Medicine>> {
+      searchIdx ??= buildSearchIndex(dataset.medicines, genericsById);
       const all = searchIndex(searchIdx, query);
       const start = (page - 1) * pageSize;
       return { items: all.slice(start, start + pageSize), total: all.length, page, pageSize };
     },
     async findByGeneric(genericId) {
-      return dataset.medicines.filter((m) => m.genericId === genericId).sort(compareMedicines);
+      medicinesByGeneric ??= groupBy(dataset.medicines, (m) => m.genericId);
+      return [...(medicinesByGeneric.get(genericId) ?? [])].sort(compareMedicines);
     },
     async listPopular() {
       return pickByIds(medicinesById, dataset.popularMedicineIds);
     },
     async listIndex() {
       return dataset.medicines.map(({ slug, updatedAt }) => ({ slug, updatedAt }));
+    },
+    async count() {
+      return dataset.medicines.length;
+    },
+    async listSourceIds() {
+      medicineSourceIds ??= [...new Set(dataset.medicines.map((m) => m.provenance.sourceId))].sort();
+      return [...medicineSourceIds];
     },
   };
 
@@ -102,7 +117,27 @@ export function createLocalRepositories(dataset: LocalDataset): Repositories {
     async listByPharmacy(pharmacyId) {
       return [...(pricesByPharmacy.get(pharmacyId) ?? [])];
     },
+    async count() {
+      return dataset.prices.length;
+    },
   };
 
-  return { medicines, generics, manufacturers, pharmacies, prices };
+  const sources: SourceRepository = {
+    async findByIds(ids) {
+      return pickByIds(sourcesById, ids);
+    },
+    async listAll() {
+      return [...dataset.sources];
+    },
+  };
+
+  return {
+    medicines,
+    generics,
+    manufacturers,
+    pharmacies,
+    prices,
+    sources,
+    ...createLocalDirectoryRepositories(dataset),
+  };
 }

@@ -5,6 +5,7 @@ import type { MedicineDetail } from "@/domain/read-models";
 import {
   formatDate,
   formatPackSize,
+  formatPlace,
   formatPrice,
   formatPriceRange,
   formatUnitPrice,
@@ -16,12 +17,13 @@ import { routes } from "@/lib/routes";
 const HEADING_ID = "price-comparison";
 
 /**
- * Sample prices across pharmacies, lowest first. A responsive list rather than
+ * Pharmacy prices, lowest first. Shows a clear "not available yet" state when no
+ * sourced price data exists (prices are never invented). A responsive list rather than
  * a wide table so it stays readable on narrow screens.
  */
 export function PriceComparison({ detail }: { detail: MedicineDetail }) {
   const { medicine, prices, priceStats } = detail;
-  const packLabel = formatPackSize(medicine.packSize);
+  const packLabel = medicine.packSize ? `per pack of ${formatPackSize(medicine.packSize)}` : "";
 
   return (
     <section aria-labelledby={HEADING_ID}>
@@ -29,7 +31,7 @@ export function PriceComparison({ detail }: { detail: MedicineDetail }) {
         id={HEADING_ID}
         description={
           priceStats
-            ? `${pricesLabel(priceStats.hasSampleData)} ${formatPriceRange(priceStats)} per pack of ${packLabel}, from ${pluralize(priceStats.count, "pharmacy", "pharmacies")}. Lowest first.`
+            ? `${pricesLabel(priceStats.hasSampleData)} ${formatPriceRange(priceStats)}${packLabel ? ` ${packLabel}` : ""}, from ${pluralize(priceStats.count, "pharmacy", "pharmacies")}. Lowest first.`
             : undefined
         }
       >
@@ -37,9 +39,19 @@ export function PriceComparison({ detail }: { detail: MedicineDetail }) {
       </SectionHeading>
 
       {prices.length === 0 || !priceStats ? (
-        <p className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700">
-          No prices are listed for this medicine yet.
-        </p>
+        <div className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700">
+          <p className="font-medium text-slate-900">Price information coming soon.</p>
+          <p className="mt-1 text-sm">
+            We only show prices from a verified source, and none is available for this medicine yet.
+            Prices and availability vary by pharmacy.
+          </p>
+          <p className="mt-2 text-sm">
+            <Link href={routes.pharmacies()} className="font-medium text-brand-800 underline">
+              Browse pharmacies
+            </Link>{" "}
+            (listings only, without prices).
+          </p>
+        </div>
       ) : (
         <ol className="divide-y divide-slate-200 border-y border-slate-200">
           {prices.map(({ price, pharmacy }) => {
@@ -55,7 +67,7 @@ export function PriceComparison({ detail }: { detail: MedicineDetail }) {
                     {pharmacy.name}
                   </Link>
                   <p className="text-sm text-slate-600">
-                    {pharmacy.area}, {pharmacy.city}
+                    {formatPlace(pharmacy.locality, pharmacy.city)}
                   </p>
                   <div className="mt-1">
                     <AvailabilityStatus status={price.availability} />

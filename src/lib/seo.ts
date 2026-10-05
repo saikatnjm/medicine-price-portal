@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import type { MedicineDetail, PharmacyDetail } from "../domain/read-models";
-import { formatDosageForm, formatMedicineName, pluralize, pricesLabel } from "./format";
+import type { MedicineDetail } from "../domain/read-models";
+import { formatMedicineName, pluralize, pricesLabel } from "./format";
 import { routes } from "./routes";
 import { siteConfig } from "./site-config";
 
@@ -31,31 +31,60 @@ export function openGraph(path: string, title: string, description: string): Met
   };
 }
 
+export interface PageMetadataInput {
+  /** Page title without the site name (the layout template appends it). */
+  title: string;
+  description: string;
+  /** Canonical path, e.g. "/hospitals/dhaka". */
+  path: string;
+  /** False for thin, empty or filtered pages: noindex (still followed). */
+  indexable?: boolean;
+}
+
+/** Standard metadata for a page: title, description, canonical, OpenGraph and robots. */
+export function pageMetadata({ title, description, path, indexable = true }: PageMetadataInput): Metadata {
+  return {
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: openGraph(path, title, description),
+    robots: pageRobots(indexable),
+  };
+}
+
+const TITLE_MAX_LENGTH = 70;
+
+/** Longest prefix of a generic list ("A + B + C", "A, B") that fits, cut at an item boundary. */
+function fitGenerics(generic: string, maxLength: number): string | null {
+  if (generic.length <= maxLength) return generic;
+  const parts = generic.split(/\s*(?:\+|,|;)\s*/).filter(Boolean);
+  let fitted = "";
+  for (const part of parts) {
+    const next = fitted ? `${fitted} + ${part}` : part;
+    if (next.length + 7 > maxLength) break; // room for " + more"
+    fitted = next;
+  }
+  return fitted && fitted !== generic ? `${fitted} + more` : null;
+}
+
 export function medicineTitle(detail: MedicineDetail): string {
-  const { medicine, generic, hasSampleData } = detail;
-  return `${formatMedicineName(medicine)} ${formatDosageForm(medicine.dosageForm)} (${generic.name}) – ${hasSampleData ? "Sample Prices" : "Prices"} & Alternatives`;
+  const { medicine, generic, priceStats } = detail;
+  const name = `${formatMedicineName(medicine)} ${medicine.dosageFormLabel}`.trim();
+  const suffix = ` — Medicine Information & ${priceStats ? "Price" : "Alternatives"}`;
+  // Include the generic name only while the whole title stays short enough.
+  const room = TITLE_MAX_LENGTH - name.length - suffix.length - 3; // " (" + ")"
+  const fitted = room > 0 ? fitGenerics(generic.name, room) : null;
+  return `${name}${fitted ? ` (${fitted})` : ""}${suffix}`;
 }
 
 export function medicineDescription(detail: MedicineDetail): string {
   const { medicine, generic, manufacturer, priceStats } = detail;
   const maker = manufacturer.name.replace(/\.$/, "");
-  const intro = `${formatMedicineName(medicine)} ${formatDosageForm(medicine.dosageForm).toLowerCase()} by ${maker}. Generic: ${generic.name}.`;
+  const intro = `${formatMedicineName(medicine)} ${medicine.dosageFormLabel.toLowerCase()} by ${maker}, registered with DGDA Bangladesh. Generic: ${generic.name}.`;
   const prices = priceStats
-    ? ` Compare ${pricesLabel(priceStats.hasSampleData).toLowerCase()} from ${pluralize(priceStats.count, "pharmacy", "pharmacies")} in Bangladesh and see same-generic alternatives.`
-    : " See generic information and same-generic alternatives.";
+    ? ` Compare ${pricesLabel(priceStats.hasSampleData).toLowerCase()} from ${pluralize(priceStats.count, "pharmacy", "pharmacies")} and see same-generic brands.`
+    : ` See ${detail.alternativesTotal > 0 ? `${pluralize(detail.alternativesTotal, "other brand", "other brands")} of the same generic, strength and form` : "other strengths and forms of the same generic"}.`;
   return intro + prices;
-}
-
-export function pharmacyTitle(detail: PharmacyDetail): string {
-  const { pharmacy, hasSampleData } = detail;
-  const suffix = hasSampleData ? " – Sample Pharmacy Listing" : "";
-  return `${pharmacy.name}, ${pharmacy.area}, ${pharmacy.city}${suffix}`;
-}
-
-export function pharmacyDescription(detail: PharmacyDetail): string {
-  const { pharmacy, prices, hasSampleData } = detail;
-  const base = `${pricesLabel(hasSampleData)} for ${pluralize(prices.length, "medicine", "medicines")} at ${pharmacy.name} in ${pharmacy.area}, ${pharmacy.city}.`;
-  return hasSampleData ? `${base} Demonstration data, not live pharmacy information.` : base;
 }
 
 // ------------------------------------------------------------ structured data
@@ -82,8 +111,8 @@ export function breadcrumbJsonLd(items: readonly BreadcrumbItem[], currentPath: 
 }
 
 /**
- * schema.org Drug. Deliberately contains no offers/prices: Phase-1 prices are
- * sample data and must not appear as real prices in search results.
+ * schema.org Drug. Deliberately contains no offers/prices. Prescription status
+ * is included only when a source publishes it.
  */
 export function medicineJsonLd(detail: MedicineDetail): JsonLd {
   const { medicine, generic, manufacturer } = detail;
@@ -95,11 +124,15 @@ export function medicineJsonLd(detail: MedicineDetail): JsonLd {
     description: medicine.description,
     nonProprietaryName: generic.name,
     activeIngredient: generic.name,
-    dosageForm: formatDosageForm(medicine.dosageForm),
+    dosageForm: medicine.dosageFormLabel,
     manufacturer: { "@type": "Organization", name: manufacturer.name },
-    prescriptionStatus: medicine.prescriptionRequired
-      ? "https://schema.org/PrescriptionOnly"
-      : "https://schema.org/OTC",
+    ...(medicine.prescriptionRequired === undefined
+      ? {}
+      : {
+          prescriptionStatus: medicine.prescriptionRequired
+            ? "https://schema.org/PrescriptionOnly"
+            : "https://schema.org/OTC",
+        }),
   };
 }
 

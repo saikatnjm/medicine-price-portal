@@ -6,22 +6,39 @@
  * contain no presentation fields. IDs are opaque strings so any backend
  * (UUID, integer, slug) can supply them.
  */
+import type { GooglePlaceRef, PostalLocation } from "./healthcare";
 
 export type ID = string;
 
 /** ISO-8601 date-time string, e.g. "2026-10-01T00:00:00Z". */
 export type ISODateString = string;
 
+/**
+ * Controlled dosage-form categories. The precise registered form (e.g. "SR Tablet",
+ * "Eye Drops") is kept in Medicine.dosageFormLabel. Keep in sync with
+ * scripts/data/lib/normalize.mjs (enforced by tests/data-pipeline.test.ts).
+ */
 export const DOSAGE_FORMS = [
   "tablet",
   "capsule",
   "syrup",
   "suspension",
+  "solution",
+  "drops",
   "injection",
+  "inhaler",
+  "spray",
   "cream",
   "ointment",
-  "drops",
-  "inhaler",
+  "gel",
+  "lotion",
+  "powder",
+  "granules",
+  "suppository",
+  "patch",
+  "mouthwash",
+  "shampoo",
+  "other",
 ] as const;
 export type DosageForm = (typeof DOSAGE_FORMS)[number];
 
@@ -58,33 +75,81 @@ export interface PackSize {
   unit: string;
 }
 
+/**
+ * - registered: present in an official registry (e.g. DGDA); not independently checked further.
+ * - unverified: community or secondary source (e.g. OpenStreetMap); not checked by us.
+ * - needs_review: flagged during import for manual review.
+ * - verified: confirmed by us against an authoritative source (no records yet).
+ */
+export const PROVENANCE_STATUSES = ["registered", "unverified", "needs_review", "verified"] as const;
+export type ProvenanceStatus = (typeof PROVENANCE_STATUSES)[number];
+
+/** Where a record came from. Never claim more than the source supports. */
+export interface Provenance {
+  sourceId: ID;
+  /** Record identifier in the source system. */
+  recordId: string;
+  /** DGDA registration (DAR) number, when the source value passed quality checks. */
+  darNumber?: string;
+  /** Link to the record at the source, when one exists. */
+  recordUrl?: string;
+  status: ProvenanceStatus;
+}
+
+export interface DataSource {
+  id: ID;
+  name: string;
+  publisher: string;
+  url: string;
+  apiUrl?: string;
+  /** Licence and attribution text, when the source requires it (e.g. ODbL). */
+  licence?: string;
+  licenceUrl?: string;
+  attribution?: string;
+  retrievedAt: ISODateString;
+  note?: string;
+}
+
 export interface Medicine {
   id: ID;
   slug: string;
+  /** Brand as displayed (strength suffix removed when it duplicates `strength`). */
   brandName: string;
+  /** Name exactly as registered, when it differs from `brandName`. */
+  registeredName?: string;
   genericId: ID;
   manufacturerId: ID;
-  /** Human-readable strength, e.g. "500 mg" or "120 mg/5 ml". */
+  /** Strength as registered, e.g. "500 mg" or "200 mg/5 mL". Empty when not published. */
   strength: string;
   dosageForm: DosageForm;
-  /** The pack that MedicinePrice.amount refers to. */
-  packSize: PackSize;
-  category: string;
+  /** Precise registered dosage form, e.g. "SR Tablet", "Eye Drops". */
+  dosageFormLabel: string;
+  /** Optional fields: only present when a source publishes them. */
+  packSize?: PackSize;
+  category?: string;
   description?: string;
-  prescriptionRequired: boolean;
+  prescriptionRequired?: boolean;
   updatedAt: ISODateString;
+  provenance: Provenance;
 }
 
-export interface Pharmacy {
+/**
+ * A pharmacy. Location fields come from PostalLocation and are present only
+ * when the source publishes them.
+ */
+export interface Pharmacy extends PostalLocation {
   id: ID;
   slug: string;
   name: string;
-  area: string;
-  city: string;
-  address?: string;
+  /** Name in another script when both are published (e.g. Bangla). */
+  altName?: string;
   phone?: string;
   website?: string;
+  openingHours?: string;
   description?: string;
+  google?: GooglePlaceRef;
+  updatedAt: ISODateString;
+  provenance: Provenance;
 }
 
 export interface MedicinePrice {

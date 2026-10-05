@@ -20,3 +20,6 @@ coverage/
 .DS_Store
 *.log
 .vercel
+
+# OSM area fetch resume cache (temporary)
+data/raw/.osm-areas-cache/

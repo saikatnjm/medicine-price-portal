@@ -1,0 +1,41 @@
+import Link from "next/link";
+
+export type SearchView = "all" | "medicine";
+
+const TABS: readonly { view: SearchView; label: string }[] = [
+  { view: "all", label: "All results" },
+  { view: "medicine", label: "Medicines only" },
+];
+
+export function searchViewHref(query: string, view: SearchView, page = 1): string {
+  const params = new URLSearchParams({ q: query });
+  if (view !== "all") params.set("type", view);
+  if (page > 1) params.set("page", String(page));
+  return `/search?${params.toString()}`;
+}
+
+/** Links (not ARIA tabs) that switch between the grouped and the medicine-only view. */
+export function SearchTabs({ query, active }: { query: string; active: SearchView }) {
+  if (!query) return null;
+  return (
+    <nav aria-label="Search views" className="mb-6">
+      <ul className="flex gap-2">
+        {TABS.map(({ view, label }) => (
+          <li key={view}>
+            <Link
+              href={searchViewHref(query, view)}
+              aria-current={view === active ? "page" : undefined}
+              className={`inline-flex min-h-11 items-center rounded-md border px-3 text-sm font-medium ${
+                view === active
+                  ? "border-brand-700 bg-brand-50 text-brand-800"
+                  : "border-slate-300 text-slate-700 hover:bg-slate-50"
+              }`}
+            >
+              {label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}

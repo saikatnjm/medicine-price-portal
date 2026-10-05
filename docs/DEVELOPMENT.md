@@ -28,17 +28,30 @@ docker compose down -v         # also drop node_modules / .next volumes
 ## Validation (before committing)
 
 ```bash
-docker compose run --rm app npm run validate     # lint + typecheck + test + build
+docker compose run --rm app npm run validate     # data + lint + typecheck + test + build
 docker compose --profile prod up --build web     # production image on http://localhost:3001
 ```
 
-## Seed data
+## Data Management
+
+### Medicine data (DGDA registry)
 
 ```bash
-docker compose run --rm app node scripts/generate-seed-data.mjs
+docker compose run --rm app npm run data:fetch      # download DGDA snapshot (network, polite)
+docker compose run --rm app npm run data:build      # DGDA → medicines + generics + manufacturers (deterministic)
+docker compose run --rm app npm run validate:data   # validate all seed data
 ```
 
-Regenerates `src/data/local/seed/*.json` deterministically. Edit the catalogue in the script, not the JSON.
+### Healthcare directory (OpenStreetMap)
+
+```bash
+docker compose run --rm app npm run data:fetch-osm             # fetch health facilities and pharmacies (Overpass API)
+docker compose run --rm app npm run data:fetch-osm-areas       # fetch district/area boundaries (resumable cache)
+docker compose run --rm app npm run data:build-healthcare      # OSM → facilities + pharmacies + locations (deterministic)
+docker compose run --rm app npm run validate:data              # validate all seed data
+```
+
+Never edit generated JSON by hand. Change rules in `scripts/data/` and rebuild. See [DATA-PIPELINE.md](DATA-PIPELINE.md) for details and refresh policies.
 
 ## Git
 
@@ -46,7 +59,7 @@ Focused commits. Never commit `.env`, `.env.local`, `node_modules`, `.next`, sec
 
 ## Vercel
 
-Deploys from GitHub. Node.js 24.x. Set `NEXT_PUBLIC_SITE_URL` for production. Do not set `SITE_INDEXABLE=true` while data is sample data.
+Deploys from GitHub. Node.js 24.x. Set `NEXT_PUBLIC_SITE_URL` for production. Decide on indexing (`SITE_INDEXABLE`) deliberately; preview deployments are never indexed.
 
 ## Dependencies
 

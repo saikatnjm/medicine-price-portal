@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createLocalRepositories } from "@/data/local/repositories";
-import { MedicineService } from "@/services/medicine-service";
+import { MedicineService, RELATED_LIST_LIMIT } from "@/services/medicine-service";
 import { computePriceStats } from "@/services/summaries";
 import { fixtureDataset } from "./fixtures";
 
@@ -52,7 +52,13 @@ describe("MedicineService", () => {
 
   it("lists other strengths and forms of the same generic separately", async () => {
     const detail = await service.getMedicineDetail("napa-500mg");
-    expect(detail?.otherForms.map((a) => a.medicine.slug)).toEqual(["napa-120mg-5ml-suspension"]);
+    // "SR Tablet" is a different precise form from "Tablet", so it is not a same-form alternative.
+    expect(detail?.otherForms.map((a) => a.medicine.slug)).toEqual([
+      "napa-120mg-5ml-suspension",
+      "napa-sr-500mg-sr-tablet",
+    ]);
+    expect(detail?.alternativesTotal).toBe(2);
+    expect(detail?.otherFormsTotal).toBe(2);
   });
 
   it("handles medicines without prices or alternatives", async () => {
@@ -62,6 +68,35 @@ describe("MedicineService", () => {
     expect(detail?.alternatives).toEqual([]);
     expect(detail?.otherForms).toEqual([]);
     expect(detail?.hasSampleData).toBe(false);
+  });
+
+  it("includes the data source", async () => {
+    const detail = await service.getMedicineDetail("napa-500mg");
+    expect(detail?.source?.name).toBe("Test Registry");
+  });
+
+  it("summarises the catalogue for data disclosure", async () => {
+    const summary = await service.getCatalogSummary();
+    expect(summary.medicineCount).toBe(fixtureDataset.medicines.length);
+    expect(summary.hasPrices).toBe(true);
+    // The fixture also carries directory sources (OpenStreetMap etc.), which the repository lists too.
+    expect(summary.sources.map((s) => s.id)).toContain("src1");
+  });
+
+  it("caps related lists and reports the full count", async () => {
+    const many = Array.from({ length: RELATED_LIST_LIMIT + 5 }, (_, i) => ({
+      ...fixtureDataset.medicines[1]!,
+      id: `alt${i}`,
+      slug: `alt-${i}`,
+      brandName: `Alt ${String(i).padStart(2, "0")}`,
+    }));
+    const repos = createLocalRepositories({
+      ...fixtureDataset,
+      medicines: [...fixtureDataset.medicines, ...many],
+    });
+    const detail = await new MedicineService(repos).getMedicineDetail("napa-500mg");
+    expect(detail?.alternatives).toHaveLength(RELATED_LIST_LIMIT);
+    expect(detail?.alternativesTotal).toBe(RELATED_LIST_LIMIT + 5 + 2);
   });
 
   it("lists popular medicines in curated order, skipping unknown ids", async () => {

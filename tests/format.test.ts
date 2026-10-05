@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   formatAvailability,
   formatDate,
-  formatDosageForm,
+  formatMedicineName,
   formatPackSize,
   formatPrice,
   formatPriceRange,
@@ -29,13 +29,16 @@ describe("formatting", () => {
   it("formats unit prices only for countable forms", () => {
     const tablet = fixtureDataset.medicines[0]!;
     const suspension = fixtureDataset.medicines[2]!;
+    const tabletWithoutPack = fixtureDataset.medicines[1]!;
     expect(formatUnitPrice(12, tablet)).toBe("৳1.20 per tablet");
     expect(formatUnitPrice(35, suspension)).toBeNull();
+    expect(formatUnitPrice(12, tabletWithoutPack)).toBeNull();
   });
 
-  it("formats dosage forms and pack sizes", () => {
-    expect(formatDosageForm("suspension")).toBe("Oral suspension");
+  it("formats pack sizes and medicine names", () => {
     expect(formatPackSize({ quantity: 10, unit: "tablets" })).toBe("10 tablets");
+    expect(formatMedicineName({ brandName: "Napa", strength: "500 mg" })).toBe("Napa 500 mg");
+    expect(formatMedicineName({ brandName: "Kit", strength: "" })).toBe("Kit");
   });
 
   it("gives availability a text label", () => {

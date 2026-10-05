@@ -21,9 +21,12 @@ describe("SEO helpers", () => {
     const seclo = await service.getMedicineDetail("seclo-20mg");
     if (!napa || !seclo) throw new Error("fixture missing");
     expect(medicineTitle(napa)).toBe(
-      "Napa 500 mg Tablet (Paracetamol) – Sample Prices & Alternatives",
+      "Napa 500 mg Tablet (Paracetamol) — Medicine Information & Price",
     );
-    expect(medicineTitle(seclo)).not.toBe(medicineTitle(napa));
+    expect(medicineTitle(seclo)).toBe(
+      "Seclo 20 mg Capsule (Omeprazole) — Medicine Information & Alternatives",
+    );
+    expect(medicineDescription(seclo)).toContain("registered with DGDA Bangladesh");
     expect(medicineDescription(napa)).toContain("sample prices from 2 pharmacies");
     expect(medicineDescription(seclo)).not.toContain("sample prices");
     expect(medicineDescription(napa)).not.toContain("..");
@@ -35,6 +38,12 @@ describe("SEO helpers", () => {
     const json = JSON.stringify(medicineJsonLd(napa));
     expect(json).not.toMatch(/offers|price/i);
     expect(medicineJsonLd(napa)["prescriptionStatus"]).toBe("https://schema.org/OTC");
+  });
+
+  it("omits prescription status when the source does not publish it", async () => {
+    const ace = await service.getMedicineDetail("ace-500mg");
+    if (!ace) throw new Error("fixture missing");
+    expect(medicineJsonLd(ace)).not.toHaveProperty("prescriptionStatus");
   });
 
   it("builds breadcrumbs with absolute URLs", () => {

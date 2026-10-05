@@ -17,8 +17,8 @@ describe("PharmacyService", () => {
   });
 
   it("lists all pharmacies sorted by name", async () => {
-    const pharmacies = await service.listPharmacies();
-    expect(pharmacies.map((p) => p.slug)).toEqual(["alpha-pharmacy", "beta-pharmacy"]);
+    const { results } = await service.listPharmacies();
+    expect(results.items.map((p) => p.pharmacy.slug)).toEqual(["alpha-pharmacy", "beta-pharmacy"]);
   });
 
   it("returns an empty price list for a pharmacy without prices", async () => {

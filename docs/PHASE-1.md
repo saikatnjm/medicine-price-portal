@@ -2,117 +2,149 @@
 
 ## Objective
 
-Build and deploy a free, production-quality pilot of the Medicine Price Portal.
+Build and deploy a free, production-quality pilot combining medicine search (DGDA registry) and a healthcare directory (OpenStreetMap).
 
 ## Success Criteria
 
 A visitor can:
 
 1. Open the homepage.
-2. Search for a medicine.
-3. See relevant results.
-4. Open a medicine.
-5. See medicine information.
-6. See sample prices.
-7. Compare pharmacy prices.
-8. See same-generic alternatives.
-9. Open pharmacy information.
-10. Navigate back through the site.
-11. Use the site comfortably on mobile.
-12. Find medicine pages through search engines.
+2. Search for medicines or healthcare providers (hospitals, clinics, doctors, pharmacies).
+3. See relevant results grouped by type.
+4. Open a medicine detail page (brand, generic, strength, dosage form, manufacturer, alternatives).
+5. Open a healthcare provider detail page (contact, location, hours, specialties).
+6. Navigate by location (district) and/or specialty (for facilities and doctors).
+7. View directions and contact information.
+8. Use the site comfortably on mobile.
+9. Find content through search engines (medicine pages, provider pages, location/specialty pages with ≥3 results).
+10. See source attribution (DGDA for medicines, © OpenStreetMap contributors for directory).
 
 ## Pages
 
-### Homepage
+### Homepage `/`
 
-Route:
+- Search field (prominent)
+- Popular medicine examples
+- Healthcare provider examples (facilities, doctors)
+- Product explanation
+- Source attribution
+- Demo-data disclaimer (when applicable)
+- Responsive layout
 
-/
+### Search `/search?q=...`
 
-Requirements:
+- Grouped results: medicines, facilities, pharmacies, doctors
+- Result count per group
+- Pagination for each group
+- Empty state
+- Loading state
+- Query analysis (search intent: entity, specialty, location)
+- SEO: always noindex with canonical to `/search`
 
-- clear product branding
-- primary search field
-- search CTA
-- popular medicine examples
-- explanation of product
-- demo-data disclaimer
-- footer
+### Medicine `/medicine/[slug]`
 
-### Search
+- Brand name, generic name, strength, dosage form
+- Manufacturer, registeredName (if different)
+- Same-generic alternatives (same ingredient, strength, form)
+- Provenance (DGDA registry reference)
+- Price comparison placeholder ("coming soon")
+- Related medicines (same generic)
+- SEO: indexable when SITE_INDEXABLE=true
 
-Route:
+### Healthcare Facility `/hospital/[slug]`
 
-/search?q={query}
+- Name, kind (hospital/clinic/etc.)
+- Location (address, district, area)
+- Contact (phone, website, email)
+- Opening hours
+- Specialties (if tagged)
+- "Get directions" (Google Maps URL)
+- Map preview (click-to-load OSM or Google Embed)
+- Provenance (OpenStreetMap, unverified)
+- SEO: indexable when SITE_INDEXABLE=true
 
-Requirements:
+### Doctor `/doctor/[slug]`
 
-- query displayed
-- results
-- result count
-- empty state
-- loading state where applicable
-- medicine cards/list
-- clear navigation
+- Name, specialties
+- Chambers (practice locations with facility/address/hours)
+- Contact information
+- Biography (if available)
+- Provenance (source and status)
+- SEO: indexable if verified
 
-### Medicine
+### Pharmacy `/pharmacy/[slug]`
 
-Route:
+- Name, location, contact
+- Hours, website
+- Map, directions
+- Provenance
+- SEO: indexable
 
-/medicine/[slug]
+### Facility List `/hospitals`, `/clinics`, etc.
 
-Requirements:
+- Filterable by location (district/area) and specialty
+- Sorted by location/distance/name
+- Combination pages (location + specialty) indexable only if ≥3 results
+- Load more / pagination
+- SEO: filtered views noindex with canonical to clean path
 
-- brand
-- generic
-- strength
-- dosage form
-- manufacturer
-- pack size
-- price comparison
-- alternatives
-- disclaimer
-- SEO metadata
+### Doctor List `/doctors`, `/doctors/[location]`, `/doctors/[location]/[specialty]`
 
-### Pharmacy
+- Filterable by location and specialty
+- Sorted by specialty/name/distance
+- Similar indexing rules as facilities
 
-Route:
+### Pharmacy List `/pharmacies`, `/pharmacies/[location]`
 
-/pharmacy/[slug]
+- Filterable by location
+- Similar indexing rules
 
-Requirements:
+### Location `/locations/[slug]`, `/locations`
 
-- pharmacy name
-- location information
-- medicine price examples
-- disclaimer
+- District or area details
+- Facilities count, doctors count, etc.
+- Links to filtered facility/doctor lists
+- SEO: indexable if ≥3 related records
 
-## Search Requirements
+### Specialty `/specialties/[slug]`, `/specialties`
 
-Search fields:
+- Specialty description
+- Practitioner title, aliases
+- Links to filtered facility/doctor lists
+- SEO: indexable if ≥3 related records
 
-- brand name
-- generic name
-- slug
+### API
 
-Search must be:
+`/api/suggest?q=...` — Autocomplete (GET, cached 5 min). Suggests medicines, providers, specialties, locations based on query intent.
 
-- case insensitive
-- partial match capable
-- deterministic
-- fast for Phase-1 dataset
+## Search & Query Handling
+
+Unified search that:
+- Indexes medicines (brand, generic, strength, slug)
+- Indexes healthcare providers (name, specialty, location)
+- Indexes specialties and locations
+- Uses deterministic intent parser: entity words (doctor, hospital, pharmacy), specialty titles/aliases, location names
+- Case-insensitive, word-prefix matching
+- Returns grouped results (medicines, facilities, doctors, pharmacies) with top results per group
 
 ## Data
 
-Initial dataset target:
+**Medicines:** 36,328 from DGDA registry
+- Generics: 1,520
+- Manufacturers: 276
+- Providers: DGDA Registered Drug Products (published by DGHS Ministry of Health)
 
-100 medicines
-10 pharmacies
-500 price records
+**Healthcare directory:** 7,866 OSM features
+- Facilities (hospitals, clinics, diagnostic centres, etc.): 3,447
+- Pharmacies: 3,712
+- Locations: 8 divisions, 64 districts
+- Specialties: 22 curated, mapped to OSM values
 
-The dataset is sample/demo data.
+**Prices:** None yet (no verified source). Price comparison infrastructure ready; UI shows placeholder.
 
-Do not imply real-time accuracy.
+**Doctors:** Intentionally empty (no open source; only verified/consented data will be added).
+
+Data sources disclosed on every page; unverified OSM records marked as such.
 
 ## SEO
 

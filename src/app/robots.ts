@@ -1,14 +1,15 @@
 import type { MetadataRoute } from "next";
-import { absoluteUrl } from "@/lib/seo";
+import { listSitemapIds } from "@/lib/sitemap-ids";
 import { siteConfig } from "@/lib/site-config";
 
-export default function robots(): MetadataRoute.Robots {
+export default async function robots(): Promise<MetadataRoute.Robots> {
   if (!siteConfig.indexable) {
     return { rules: { userAgent: "*", disallow: "/" } };
   }
+  const ids = await listSitemapIds();
   return {
-    rules: { userAgent: "*", allow: "/" },
-    sitemap: absoluteUrl("/sitemap.xml"),
+    rules: { userAgent: "*", allow: "/", disallow: ["/api/", "/search"] },
+    sitemap: ids.map((id) => `${siteConfig.url}/sitemap/${id}.xml`),
     host: siteConfig.url,
   };
 }

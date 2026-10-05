@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MedicineList } from "@/components/medicine/medicine-list";
 import type { MedicineListItem, SearchResult } from "@/domain/read-models";
+import { pluralize } from "@/lib/format";
 import { searchHref } from "@/lib/search-params";
 import { SEARCH_MIN_QUERY_LENGTH } from "@/lib/search-config";
 
@@ -8,6 +9,8 @@ interface SearchResultsProps {
   result: SearchResult;
   /** Suggestions shown when there is nothing to display. */
   suggestions: readonly MedicineListItem[];
+  /** Builds the URL of another results page; defaults to /search?q=…&page=…. */
+  pageHref?: (query: string, page: number) => string;
 }
 
 function Suggestions({ items }: { items: readonly MedicineListItem[] }) {
@@ -20,7 +23,13 @@ function Suggestions({ items }: { items: readonly MedicineListItem[] }) {
   );
 }
 
-function Pagination({ result }: { result: SearchResult }) {
+function Pagination({
+  result,
+  pageHref,
+}: {
+  result: SearchResult;
+  pageHref: (query: string, page: number) => string;
+}) {
   if (result.totalPages <= 1) return null;
   const { page, totalPages, query } = result;
   return (
@@ -29,7 +38,7 @@ function Pagination({ result }: { result: SearchResult }) {
       className="mt-6 flex items-center justify-between text-sm"
     >
       {page > 1 ? (
-        <Link href={searchHref(query, page - 1)} className="font-medium text-brand-800 underline">
+        <Link href={pageHref(query, page - 1)} className="font-medium text-brand-800 underline">
           Previous
         </Link>
       ) : (
@@ -39,7 +48,7 @@ function Pagination({ result }: { result: SearchResult }) {
         Page {page} of {totalPages}
       </span>
       {page < totalPages ? (
-        <Link href={searchHref(query, page + 1)} className="font-medium text-brand-800 underline">
+        <Link href={pageHref(query, page + 1)} className="font-medium text-brand-800 underline">
           Next
         </Link>
       ) : (
@@ -50,7 +59,7 @@ function Pagination({ result }: { result: SearchResult }) {
 }
 
 /** Renders every search state: prompt, too short, no results, results. */
-export function SearchResults({ result, suggestions }: SearchResultsProps) {
+export function SearchResults({ result, suggestions, pageHref = searchHref }: SearchResultsProps) {
   if (result.status === "empty_query") {
     return (
       <>
@@ -88,12 +97,15 @@ export function SearchResults({ result, suggestions }: SearchResultsProps) {
   return (
     <>
       <p role="status" className="mb-4 text-slate-700">
-        {result.total} {result.total === 1 ? "medicine" : "medicines"} found for “{result.query}”
+        {result.matchedQuery !== result.query && (
+          <>No medicines match every word of “{result.query}”. </>
+        )}
+        {pluralize(result.total, "medicine", "medicines")} found for “{result.matchedQuery}”
       </p>
       {outOfRange ? (
         <p className="text-slate-700">
           This page has no results.{" "}
-          <Link href={searchHref(result.query)} className="text-brand-800 underline">
+          <Link href={pageHref(result.query, 1)} className="text-brand-800 underline">
             Go to the first page
           </Link>
           .
@@ -101,7 +113,7 @@ export function SearchResults({ result, suggestions }: SearchResultsProps) {
       ) : (
         <MedicineList items={result.items} headingLevel="h2" />
       )}
-      <Pagination result={result} />
+      <Pagination result={result} pageHref={pageHref} />
     </>
   );
 }

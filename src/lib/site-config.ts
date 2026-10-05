@@ -27,9 +27,10 @@ function resolveIndexable(): boolean {
 }
 
 export const siteConfig = {
-  name: "Medicine Price Portal",
+  name: "Bangladesh Healthcare Search",
+  shortName: "BD Healthcare Search",
   description:
-    "Search medicines, see generic information and compare sample pharmacy prices in Bangladesh.",
+    "Find medicines, hospitals, clinics, pharmacies and specialties across Bangladesh: registered medicine information, locations, contact details and directions.",
   locale: "en_BD",
   url: resolveSiteUrl(),
   indexable: resolveIndexable(),

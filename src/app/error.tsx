@@ -18,7 +18,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
     <Container className="py-16">
       <h1 className="text-2xl font-semibold">Something went wrong</h1>
       <p className="mt-2 text-slate-600">
-        Please try again. If the problem continues, come back later.
+        We could not load this page. Please try again, and if the problem continues, come back later.
       </p>
       <button
         type="button"

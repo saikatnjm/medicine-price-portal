@@ -3,35 +3,62 @@ import { MedicalDisclaimer } from "@/components/common/medical-disclaimer";
 import { Container } from "@/components/ui/container";
 import { routes } from "@/lib/routes";
 import { siteConfig } from "@/lib/site-config";
+import { NAV_ITEMS } from "./nav-items";
 
 export function SiteFooter() {
   return (
     <footer className="mt-16 border-t border-slate-200 bg-slate-50 py-8">
       <Container className="space-y-4">
-        <p className="text-sm text-slate-700">
-          <strong className="font-semibold">Pilot with sample data.</strong> Prices, availability
-          and pharmacies on this site are for demonstration only and are not live information.
-        </p>
-        <MedicalDisclaimer />
-        <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600">
+        <nav aria-label="Footer">
+          <ul className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-slate-700">
+            <li>
+              <Link href={routes.home()} className="inline-flex min-h-8 items-center underline-offset-2 hover:underline">
+                Home
+              </Link>
+            </li>
+            {NAV_ITEMS.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href} className="inline-flex min-h-8 items-center underline-offset-2 hover:underline">
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+            <li>
+              <Link href={routes.specialties()} className="inline-flex min-h-8 items-center underline-offset-2 hover:underline">
+                Specialties
+              </Link>
+            </li>
+          </ul>
+        </nav>
+        <div className="space-y-2 text-sm text-slate-700">
           <p>
-            © {new Date().getFullYear()} {siteConfig.name}
+            Medicine information comes from the DGDA list of registered drug products. Hospital,
+            clinic and pharmacy listings are community-mapped data from{" "}
+            <a
+              href="https://www.openstreetmap.org/copyright"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              © OpenStreetMap contributors
+            </a>{" "}
+            and have not been verified. Call ahead before visiting. Upazila and thana boundaries:{" "}
+            <a
+              href="https://www.geoboundaries.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              geoBoundaries
+            </a>{" "}
+            (BBS, OCHA; CC BY 3.0 IGO).
           </p>
-          <nav aria-label="Footer">
-            <ul className="flex gap-4">
-              <li>
-                <Link href={routes.home()} className="hover:underline">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href={routes.search()} className="hover:underline">
-                  Search medicines
-                </Link>
-              </li>
-            </ul>
-          </nav>
+          <p>Prices and doctor profiles are not available yet.</p>
         </div>
+        <MedicalDisclaimer />
+        <p className="text-sm text-slate-600">
+          © {new Date().getFullYear()} {siteConfig.name}
+        </p>
       </Container>
     </footer>
   );

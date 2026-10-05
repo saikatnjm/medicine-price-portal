@@ -30,6 +30,6 @@ describe("PriceComparison", () => {
     const detail = await service.getMedicineDetail("seclo-20mg");
     if (!detail) throw new Error("fixture missing");
     render(<PriceComparison detail={detail} />);
-    expect(screen.getByText(/No prices are listed/)).toBeTruthy();
+    expect(screen.getByText("Price information coming soon.")).toBeTruthy();
   });
 });

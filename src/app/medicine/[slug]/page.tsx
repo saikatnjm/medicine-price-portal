@@ -30,10 +30,16 @@ interface MedicinePageProps {
 /** Deduplicates the lookup between generateMetadata and the page render. */
 const getMedicineDetail = cache((slug: string) => services.medicines.getMedicineDetail(slug));
 
+/**
+ * Only the homepage examples are prerendered; the rest of the catalogue
+ * (tens of thousands of products) is rendered on first request and then cached.
+ */
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
-  const index = await services.medicines.listMedicineIndex();
-  return index.map(({ slug }) => ({ slug }));
+  const popular = await services.medicines.listPopularMedicines();
+  return popular.map(({ medicine }) => ({ slug: medicine.slug }));
 }
+
+export const dynamicParams = true;
 
 export async function generateMetadata({ params }: MedicinePageProps): Promise<Metadata> {
   const detail = await getMedicineDetail((await params).slug);

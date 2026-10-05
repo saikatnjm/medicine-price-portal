@@ -1,47 +1,18 @@
-import type { Pharmacy } from "@/domain/types";
+import type { PharmacyDetail } from "@/domain/read-models";
 
-export function PharmacyOverview({ pharmacy }: { pharmacy: Pharmacy }) {
+/** h1, Bangla name, place and description. */
+export function PharmacyOverview({ detail }: { detail: PharmacyDetail }) {
+  const { pharmacy, place } = detail;
   return (
     <header className="space-y-2">
-      <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-        {pharmacy.name}
-      </h1>
-      <p className="text-lg text-slate-800">
-        {pharmacy.area}, {pharmacy.city}
-      </p>
-      <dl className="space-y-1 text-slate-700">
-        {pharmacy.address && (
-          <div className="flex gap-2">
-            <dt className="font-medium">Address:</dt>
-            <dd>{pharmacy.address}</dd>
-          </div>
-        )}
-        {pharmacy.phone && (
-          <div className="flex gap-2">
-            <dt className="font-medium">Phone:</dt>
-            <dd>
-              <a href={`tel:${pharmacy.phone}`} className="text-brand-800 underline">
-                {pharmacy.phone}
-              </a>
-            </dd>
-          </div>
-        )}
-        {pharmacy.website && (
-          <div className="flex gap-2">
-            <dt className="font-medium">Website:</dt>
-            <dd>
-              <a
-                href={pharmacy.website}
-                rel="nofollow noopener"
-                className="text-brand-800 underline"
-              >
-                {pharmacy.website}
-              </a>
-            </dd>
-          </div>
-        )}
-      </dl>
-      {pharmacy.description && <p className="text-slate-700">{pharmacy.description}</p>}
+      <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">{pharmacy.name}</h1>
+      {pharmacy.altName && (
+        <p lang="bn" className="text-lg text-slate-700">
+          {pharmacy.altName}
+        </p>
+      )}
+      {place.label && <p className="text-lg text-slate-800">{place.label}</p>}
+      {pharmacy.description && <p className="max-w-3xl text-slate-700">{pharmacy.description}</p>}
     </header>
   );
 }

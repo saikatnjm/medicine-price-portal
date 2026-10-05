@@ -15,7 +15,14 @@
     "test:watch": "vitest",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "validate": "npm run lint && npm run typecheck && npm run test && npm run build"
+    "validate": "npm run validate:data && npm run lint && npm run typecheck && npm run test && npm run build",
+    "data:fetch": "node scripts/data/fetch-dgda.mjs",
+    "data:build": "node scripts/data/build-catalog.mjs",
+    "validate:data": "node scripts/data/validate-data.mjs",
+    "data:fetch-osm": "node scripts/data/fetch-osm-health.mjs",
+    "data:fetch-areas": "node scripts/data/fetch-areas.mjs",
+    "data:fetch-osm-areas": "node scripts/data/fetch-osm-areas.mjs",
+    "data:build-healthcare": "node scripts/data/build-healthcare.mjs"
   },
   "dependencies": {
     "next": "^16.0.0",

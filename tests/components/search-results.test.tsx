@@ -14,7 +14,7 @@ const search = new SearchService(createLocalRepositories(fixtureDataset));
 describe("SearchResults", () => {
   it("shows the count and links to medicine pages", async () => {
     render(<SearchResults result={await search.searchMedicines("napa")} suggestions={[]} />);
-    expect(screen.getByRole("status").textContent).toBe("3 medicines found for “napa”");
+    expect(screen.getByRole("status").textContent).toBe("4 medicines found for “napa”");
     const link = screen.getByRole("link", { name: "Napa 500 mg" });
     expect(link.getAttribute("href")).toBe("/medicine/napa-500mg");
   });

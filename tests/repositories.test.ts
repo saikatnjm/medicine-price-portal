@@ -18,6 +18,7 @@ describe("local repositories", () => {
       "ace-500mg",
       "napa-500mg",
       "napa-120mg-5ml-suspension",
+      "napa-sr-500mg-sr-tablet",
       "napadol-500mg",
     ]);
   });
@@ -25,9 +26,9 @@ describe("local repositories", () => {
   it("paginates search results", async () => {
     const page1 = await repos.medicines.search({ query: "napa", page: 1, pageSize: 2 });
     const page2 = await repos.medicines.search({ query: "napa", page: 2, pageSize: 2 });
-    expect(page1.total).toBe(3);
+    expect(page1.total).toBe(4);
     expect(page1.items).toHaveLength(2);
-    expect(page2.items.map((m) => m.slug)).toEqual(["napadol-500mg"]);
+    expect(page2.items.map((m) => m.slug)).toEqual(["napa-sr-500mg-sr-tablet", "napadol-500mg"]);
   });
 
   it("looks up pharmacies", async () => {

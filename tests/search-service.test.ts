@@ -11,38 +11,52 @@ describe("SearchService", () => {
   it("matches brand names case-insensitively and partially", async () => {
     const result = await search.searchMedicines("NAP");
     expect(result.status).toBe("ok");
-    // Same brand: tablets before liquids.
-    expect(slugs(result)).toEqual(["napa-500mg", "napa-120mg-5ml-suspension", "napadol-500mg"]);
+    // Same brand: tablets before liquids; "Napa SR" sorts before "Napadol".
+    expect(slugs(result)).toEqual([
+      "napa-500mg",
+      "napa-120mg-5ml-suspension",
+      "napa-sr-500mg-sr-tablet",
+      "napadol-500mg",
+    ]);
   });
 
   it("ranks exact brand matches before other matches", async () => {
     expect(slugs(await search.searchMedicines("napadol"))).toEqual(["napadol-500mg"]);
-    const ace = await search.searchMedicines("ace");
     // Exact brand first; generic "paracetamol" must not match mid-word.
-    expect(slugs(ace)).toEqual(["ace-500mg"]);
+    expect(slugs(await search.searchMedicines("ace"))).toEqual(["ace-500mg"]);
   });
 
   it("matches generic names by prefix", async () => {
-    const result = await search.searchMedicines("para");
-    expect(result.total).toBe(4);
+    expect((await search.searchMedicines("para")).total).toBe(5);
+    expect(slugs(await search.searchMedicines("omepra"))).toEqual(["seclo-20mg"]);
   });
 
-  it("matches generic names", async () => {
-    const result = await search.searchMedicines("omepra");
-    expect(slugs(result)).toEqual(["seclo-20mg"]);
-  });
-
-  it("matches slugs and multi-word queries with strength", async () => {
+  it("matches slugs, registered names and multi-word queries with strength", async () => {
     expect(slugs(await search.searchMedicines("ace-500mg"))).toEqual(["ace-500mg"]);
+    expect(slugs(await search.searchMedicines("Napa SR 500"))).toEqual(["napa-sr-500mg-sr-tablet"]);
     expect(slugs(await search.searchMedicines("napa 500"))).toEqual([
       "napa-500mg",
+      "napa-sr-500mg-sr-tablet",
       "napadol-500mg",
     ]);
+  });
+
+  it("tolerates missing spaces between words", async () => {
+    expect(slugs(await search.searchMedicines("napasr"))).toEqual(["napa-sr-500mg-sr-tablet"]);
+    expect(slugs(await search.searchMedicines("napa500"))[0]).toBe("napa-500mg");
+  });
+
+  it("falls back to the first word when no medicine matches every word", async () => {
+    const result = await search.searchMedicines("napa extra");
+    expect(result.matchedQuery).toBe("napa");
+    expect(result.query).toBe("napa extra");
+    expect(slugs(result)[0]).toBe("napa-500mg");
   });
 
   it("reports paging and price ranges", async () => {
     const result = await search.searchMedicines("napa");
     expect(result.totalPages).toBe(1);
+    expect(result.matchedQuery).toBe("napa");
     const napa = result.items.find((i) => i.medicine.slug === "napa-500mg");
     expect(napa?.priceStats).toEqual({ lowest: 11.5, highest: 12, count: 2, hasSampleData: true });
   });
@@ -53,7 +67,7 @@ describe("SearchService", () => {
     expect(first?.manufacturer.name).toBe("Maker Ltd.");
   });
 
-  it("handles empty, too-short and unmatched queries", async () => {
+  it("handles empty, too-short, unmatched and special-character queries", async () => {
     expect((await search.searchMedicines("   ")).status).toBe("empty_query");
     expect((await search.searchMedicines(undefined)).status).toBe("empty_query");
     expect((await search.searchMedicines("a")).status).toBe("query_too_short");
@@ -61,6 +75,7 @@ describe("SearchService", () => {
     expect(none.status).toBe("ok");
     expect(none.total).toBe(0);
     expect(none.items).toEqual([]);
+    expect((await search.searchMedicines("<script>%$#")).total).toBe(0);
   });
 
   it("falls back to page 1 for invalid page numbers", async () => {

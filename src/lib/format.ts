@@ -1,12 +1,6 @@
 import { isUnitDosageForm } from "../domain/medicine";
 import type { PriceStats } from "../domain/read-models";
-import type {
-  AvailabilityStatus,
-  CurrencyCode,
-  DosageForm,
-  Medicine,
-  PackSize,
-} from "../domain/types";
+import type { AvailabilityStatus, CurrencyCode, Medicine, PackSize } from "../domain/types";
 
 const CURRENCY_SYMBOL: Record<CurrencyCode, string> = { BDT: "৳" };
 
@@ -27,9 +21,9 @@ export function formatPriceRange(stats: PriceStats, currency: CurrencyCode = "BD
     : `${formatPrice(stats.lowest, currency)}–${formatPrice(stats.highest, currency)}`;
 }
 
-/** "1 pharmacy", "6 pharmacies". */
+/** "1 pharmacy", "6 pharmacies", "1,560 facilities". */
 export function pluralize(count: number, singular: string, plural: string): string {
-  return `${count} ${count === 1 ? singular : plural}`;
+  return `${count.toLocaleString("en-US")} ${count === 1 ? singular : plural}`;
 }
 
 /** "Sample prices" while data is sample data, otherwise "Prices". */
@@ -49,25 +43,9 @@ export function formatAvailability(status: AvailabilityStatus): string {
   return AVAILABILITY_LABEL[status];
 }
 
-const DOSAGE_FORM_LABEL: Record<DosageForm, string> = {
-  tablet: "Tablet",
-  capsule: "Capsule",
-  syrup: "Syrup",
-  suspension: "Oral suspension",
-  injection: "Injection",
-  cream: "Cream",
-  ointment: "Ointment",
-  drops: "Drops",
-  inhaler: "Inhaler",
-};
-
-export function formatDosageForm(form: DosageForm): string {
-  return DOSAGE_FORM_LABEL[form];
-}
-
-/** "Napa 500 mg". */
+/** "Napa 500 mg"; just the brand when no strength is published. */
 export function formatMedicineName(medicine: Pick<Medicine, "brandName" | "strength">): string {
-  return `${medicine.brandName} ${medicine.strength}`;
+  return medicine.strength ? `${medicine.brandName} ${medicine.strength}` : medicine.brandName;
 }
 
 /** "10 tablets", "60 ml". */
@@ -77,7 +55,9 @@ export function formatPackSize(packSize: PackSize): string {
 
 /** "৳1.20 per tablet" for tablets/capsules; null for forms where a unit price is not meaningful. */
 export function formatUnitPrice(amount: number, medicine: Medicine): string | null {
-  if (!isUnitDosageForm(medicine) || medicine.packSize.quantity <= 0) return null;
+  if (!isUnitDosageForm(medicine) || !medicine.packSize || medicine.packSize.quantity <= 0) {
+    return null;
+  }
   return `${formatPrice(amount / medicine.packSize.quantity)} per ${medicine.dosageForm}`;
 }
 
@@ -91,4 +71,17 @@ const dateFormatter = new Intl.DateTimeFormat("en-GB", {
 /** Formats an ISO date, e.g. "1 Oct 2026". */
 export function formatDate(iso: string): string {
   return dateFormatter.format(new Date(iso));
+}
+
+/** "Dhanmondi, Dhaka"; skips missing parts and repeats ("Dhaka, Dhaka" → "Dhaka"). Empty string when unknown. */
+export function formatPlace(...parts: ReadonlyArray<string | null | undefined>): string {
+  const seen = new Set<string>();
+  return parts
+    .map((p) => p?.trim())
+    .filter((p): p is string => {
+      if (!p || seen.has(p.toLowerCase())) return false;
+      seen.add(p.toLowerCase());
+      return true;
+    })
+    .join(", ");
 }

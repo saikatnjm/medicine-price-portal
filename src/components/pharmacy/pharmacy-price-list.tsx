@@ -3,7 +3,6 @@ import { AvailabilityStatus } from "@/components/common/availability-status";
 import { SectionHeading } from "@/components/common/section-heading";
 import type { PharmacyPriceEntry } from "@/domain/read-models";
 import {
-  formatDosageForm,
   formatMedicineName,
   formatPackSize,
   formatPrice,
@@ -48,7 +47,12 @@ export function PharmacyPriceList({ prices, hasSampleData }: PharmacyPriceListPr
                   {formatMedicineName(medicine)}
                 </Link>
                 <p className="text-sm text-slate-600">
-                  {formatDosageForm(medicine.dosageForm)} · {formatPackSize(medicine.packSize)}
+                  {[
+                    medicine.dosageFormLabel,
+                    medicine.packSize && formatPackSize(medicine.packSize),
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
                 </p>
               </div>
               <div className="shrink-0 text-right">

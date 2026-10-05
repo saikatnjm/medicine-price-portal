@@ -1,4 +1,4 @@
-# Medicine Price Portal — Engineering Rules
+# Bangladesh Healthcare Search — Engineering Rules
 
 Read these documents before making architectural changes:
 
@@ -10,6 +10,7 @@ Read these documents before making architectural changes:
 - docs/ROADMAP.md
 - docs/DEVELOPMENT.md
 - docs/DECISIONS.md
+- docs/DATA-PIPELINE.md
 
 ## Current Phase
 
@@ -60,6 +61,8 @@ Before completion:
 ## Product Safety
 
 Sample data must not be presented as live medical/pharmacy data.
+
+Never invent medicine data, prices or pharmacies. Medicine data comes from the DGDA registry pipeline (docs/DATA-PIPELINE.md).
 
 Do not provide diagnosis or medical treatment recommendations.
 

@@ -11,11 +11,13 @@ The interface should communicate:
 - accuracy
 - usefulness
 
-## Primary Action
+## Primary Actions
 
-Search medicine.
+1. Search for a medicine
+2. Search for a healthcare provider (hospital, clinic, doctor, pharmacy)
+3. Browse by specialty or location
 
-The search box should be visually prominent.
+The search box should be visually prominent; it should accept both medicines and provider names/specialties/locations.
 
 ## Visual Style
 

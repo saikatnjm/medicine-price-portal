@@ -1,8 +1,8 @@
 interface PrescriptionTagProps {
-  required: boolean;
+  /** Only shown when a source states the medicine is prescription-only. */
+  required?: boolean;
 }
 
-/** Text tag; only shown for prescription medicines. */
 export function PrescriptionTag({ required }: PrescriptionTagProps) {
   if (!required) return null;
   return (

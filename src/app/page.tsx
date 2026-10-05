@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { SampleDataNotice } from "@/components/common/sample-data-notice";
-import { AboutTheData } from "@/components/home/about-the-data";
-import { HowItWorks } from "@/components/home/how-it-works";
+import { CategoryLinks } from "@/components/home/category-links";
+import { DataSourcesNote } from "@/components/home/data-sources-note";
+import { DivisionLinks } from "@/components/home/division-links";
 import { PopularMedicines } from "@/components/home/popular-medicines";
+import { ExampleSearches } from "@/components/search/example-searches";
 import { SearchForm } from "@/components/search/search-form";
 import { Container } from "@/components/ui/container";
 import { services } from "@/data";
@@ -11,36 +12,42 @@ import { openGraph } from "@/lib/seo";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
-  title: { absolute: `${siteConfig.name} – Compare medicine prices in Bangladesh (pilot)` },
+  title: { absolute: `${siteConfig.name} – Medicines, hospitals, clinics and pharmacies` },
   description: siteConfig.description,
   alternates: { canonical: routes.home() },
   openGraph: openGraph(routes.home(), siteConfig.name, siteConfig.description),
 };
 
 export default async function HomePage() {
-  const popular = await services.medicines.listPopularMedicines();
+  const [popular, summary, divisions] = await Promise.all([
+    services.medicines.listPopularMedicines(),
+    services.directory.getSummary(),
+    services.locations.listLocationTree(),
+  ]);
 
   return (
     <>
       <div className="border-b border-slate-200 bg-brand-50/60">
-        <Container className="py-12 sm:py-20">
-          <h1 className="max-w-3xl text-3xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-            What medicine are you looking for?
+        <Container className="py-10 sm:py-14">
+          <h1 className="max-w-3xl text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+            What are you looking for?
           </h1>
-          <p className="mt-4 max-w-2xl text-lg text-slate-700">
-            Find a medicine by brand or generic name, check its strength and form, and compare
-            pharmacy prices and same-generic brands in one place.
+          <p className="mt-3 max-w-2xl text-lg text-slate-700">
+            Medicines, hospitals, clinics, pharmacies and specialists across Bangladesh.
           </p>
-          <div className="mt-8 max-w-2xl">
+          <div className="mt-6 max-w-2xl">
             <SearchForm size="lg" id="home-search" />
           </div>
-          <SampleDataNotice className="mt-6 max-w-2xl" />
+          <div className="mt-4">
+            <ExampleSearches />
+          </div>
         </Container>
       </div>
-      <Container className="space-y-12 py-12">
+      <Container className="space-y-12 py-10">
+        <CategoryLinks summary={summary} />
+        <DivisionLinks divisions={divisions} />
         <PopularMedicines items={popular} />
-        <HowItWorks />
-        <AboutTheData />
+        <DataSourcesNote />
       </Container>
     </>
   );
