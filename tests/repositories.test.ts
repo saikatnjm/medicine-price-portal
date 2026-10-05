@@ -31,6 +31,37 @@ describe("local repositories", () => {
     expect(page2.items.map((m) => m.slug)).toEqual(["napa-sr-500mg-sr-tablet", "napadol-500mg"]);
   });
 
+  it("returns facets over all matches and applies filters", async () => {
+    const all = await repos.medicines.search({ query: "napa", page: 1, pageSize: 10 });
+    expect(all.facets.generics).toEqual([{ id: "g1", count: 4 }]);
+    expect(all.facets.manufacturers).toEqual([{ id: "mf1", count: 4 }]);
+    expect(all.facets.dosageForms).toEqual([
+      { value: "tablet", count: 3 },
+      { value: "suspension", count: 1 },
+    ]);
+    const filtered = await repos.medicines.search({
+      query: "napa",
+      page: 1,
+      pageSize: 10,
+      dosageForm: "tablet",
+      genericId: "g1",
+    });
+    expect(filtered.total).toBe(3);
+    expect(filtered.items.map((m) => m.slug)).toEqual([
+      "napa-500mg",
+      "napa-sr-500mg-sr-tablet",
+      "napadol-500mg",
+    ]);
+    expect(filtered.facets).toEqual(all.facets);
+  });
+
+  it("looks up generics and manufacturers by slug", async () => {
+    expect((await repos.generics.findBySlug("omeprazole"))?.id).toBe("g2");
+    expect(await repos.generics.findBySlug("nope")).toBeNull();
+    expect((await repos.manufacturers.findBySlug("maker"))?.id).toBe("mf1");
+    expect(await repos.manufacturers.findBySlug("nope")).toBeNull();
+  });
+
   it("looks up pharmacies", async () => {
     expect((await repos.pharmacies.findBySlug("beta-pharmacy"))?.id).toBe("p2");
     expect(await repos.pharmacies.findBySlug("missing")).toBeNull();

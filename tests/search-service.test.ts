@@ -82,4 +82,64 @@ describe("SearchService", () => {
     expect((await search.searchMedicines("napa", -3)).page).toBe(1);
     expect((await search.searchMedicines("napa", Number.NaN)).page).toBe(1);
   });
+
+  describe("filters and facets", () => {
+    it("offers facets over all matches with counts, sorted by count", async () => {
+      const { facets } = await search.searchMedicines("napa");
+      expect(facets.generics).toEqual([
+        { value: "paracetamol", label: "Paracetamol", count: 4, selected: false },
+      ]);
+      expect(facets.manufacturers).toHaveLength(1);
+      expect(facets.dosageForms).toEqual([
+        { value: "tablet", label: "Tablet", count: 3, selected: false },
+        { value: "suspension", label: "Suspension", count: 1, selected: false },
+      ]);
+    });
+
+    it("filters by dosage form and keeps facets unfiltered", async () => {
+      const result = await search.searchMedicines("napa", 1, { form: "suspension" });
+      expect(slugs(result)).toEqual(["napa-120mg-5ml-suspension"]);
+      expect(result.total).toBe(1);
+      expect(result.appliedFilters).toEqual({ form: "suspension" });
+      expect(result.facets.dosageForms.map((f) => [f.value, f.count, f.selected])).toEqual([
+        ["tablet", 3, false],
+        ["suspension", 1, true],
+      ]);
+    });
+
+    it("filters by generic and manufacturer slug", async () => {
+      const result = await search.searchMedicines("napa", 1, {
+        generic: "paracetamol",
+        manufacturer: "maker",
+      });
+      expect(result.total).toBe(4);
+      expect(result.appliedFilters).toEqual({ generic: "paracetamol", manufacturer: "maker" });
+      expect(result.facets.generics[0]?.selected).toBe(true);
+      const none = await search.searchMedicines("napa", 1, { generic: "omeprazole" });
+      expect(none.total).toBe(0);
+      expect(none.facets.generics).toHaveLength(1);
+      expect(none.status).toBe("ok");
+    });
+
+    it("ignores unknown filter values", async () => {
+      const result = await search.searchMedicines("napa", 1, {
+        generic: "nope",
+        manufacturer: "",
+        form: "bogus",
+      });
+      expect(result.total).toBe(4);
+      expect(result.appliedFilters).toEqual({});
+    });
+
+    it("keeps the first-word fallback with filters", async () => {
+      const result = await search.searchMedicines("napa extra", 1, { form: "tablet" });
+      expect(result.matchedQuery).toBe("napa");
+      expect(result.total).toBe(3);
+    });
+
+    it("returns no facets for empty queries", async () => {
+      const result = await search.searchMedicines("", 1, { form: "tablet" });
+      expect(result.facets).toEqual({ generics: [], manufacturers: [], dosageForms: [] });
+    });
+  });
 });

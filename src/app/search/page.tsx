@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { GlobalSearchResults } from "@/components/search/global-search-results";
 import { SearchForm } from "@/components/search/search-form";
+import { MedicineFilters } from "@/components/search/medicine-filters";
 import { SearchResults } from "@/components/search/search-results";
 import { searchViewHref, SearchTabs, type SearchView } from "@/components/search/search-tabs";
 import { Container } from "@/components/ui/container";
@@ -36,13 +37,19 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   const medicineResult =
     view === "medicine"
-      ? await services.search.searchMedicines(query, parsePageParam(params.page))
+      ? await services.search.searchMedicines(query, parsePageParam(params.page), {
+          generic: firstParam(params.generic),
+          manufacturer: firstParam(params.manufacturer),
+          form: firstParam(params.form),
+        })
       : null;
   const globalResult = view === "all" ? await services.search.searchAll(query) : null;
 
   const needsSuggestions = medicineResult
     ? medicineResult.status === "empty_query" ||
-      (medicineResult.status === "ok" && medicineResult.total === 0)
+      (medicineResult.status === "ok" &&
+        medicineResult.total === 0 &&
+        medicineResult.facets.generics.length === 0)
     : globalResult !== null && (globalResult.status === "empty_query" || globalResult.total === 0);
   const suggestions = needsSuggestions ? await services.medicines.listPopularMedicines() : [];
 
@@ -56,11 +63,16 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       </div>
       <SearchTabs query={query} active={view} />
       {medicineResult ? (
-        <SearchResults
-          result={medicineResult}
-          suggestions={suggestions}
-          pageHref={(q, page) => searchViewHref(q, "medicine", page)}
-        />
+        <>
+          <MedicineFilters result={medicineResult} />
+          <SearchResults
+            result={medicineResult}
+            suggestions={suggestions}
+            pageHref={(q, page) =>
+              searchViewHref(q, "medicine", page, medicineResult.appliedFilters)
+            }
+          />
+        </>
       ) : globalResult ? (
         <GlobalSearchResults result={globalResult} suggestions={suggestions} />
       ) : null}

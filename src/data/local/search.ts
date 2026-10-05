@@ -1,5 +1,6 @@
 import { isUnitDosageForm } from "../../domain/medicine";
-import type { Generic, Medicine } from "../../domain/types";
+import type { MedicineSearchFacets } from "../../domain/read-models";
+import type { DosageForm, Generic, ID, Manufacturer, Medicine } from "../../domain/types";
 import { normalizeSearchText } from "../../lib/text";
 
 /**
@@ -108,4 +109,52 @@ export function searchIndex(index: readonly IndexedMedicine[], rawQuery: string)
   }
   hits.sort((a, b) => a.score - b.score || a.entry.order - b.entry.order);
   return hits.map(({ entry }) => entry.medicine);
+}
+
+/** Counts matches per generic, manufacturer and dosage form in one pass. */
+export function computeFacets(
+  matches: readonly Medicine[],
+  genericsById: ReadonlyMap<ID, Generic>,
+  manufacturersById: ReadonlyMap<ID, Manufacturer>,
+): MedicineSearchFacets {
+  const generics = new Map<ID, number>();
+  const manufacturers = new Map<ID, number>();
+  const forms = new Map<DosageForm, number>();
+  for (const m of matches) {
+    generics.set(m.genericId, (generics.get(m.genericId) ?? 0) + 1);
+    manufacturers.set(m.manufacturerId, (manufacturers.get(m.manufacturerId) ?? 0) + 1);
+    forms.set(m.dosageForm, (forms.get(m.dosageForm) ?? 0) + 1);
+  }
+  const sorted = <K extends string>(counts: Map<K, number>, name: (key: K) => string) =>
+    [...counts].sort(([a, ca], [b, cb]) => cb - ca || collator.compare(name(a), name(b)));
+  return {
+    generics: sorted(generics, (id) => genericsById.get(id)?.name ?? id).map(([id, count]) => ({
+      id,
+      count,
+    })),
+    manufacturers: sorted(manufacturers, (id) => manufacturersById.get(id)?.name ?? id).map(
+      ([id, count]) => ({ id, count }),
+    ),
+    dosageForms: sorted(forms, (value) => value).map(([value, count]) => ({ value, count })),
+  };
+}
+
+export interface MedicineFilters {
+  genericId?: ID;
+  manufacturerId?: ID;
+  dosageForm?: DosageForm;
+}
+
+/** Keeps the order of `matches`. */
+export function applyFilters(
+  matches: readonly Medicine[],
+  { genericId, manufacturerId, dosageForm }: MedicineFilters,
+): Medicine[] {
+  if (!genericId && !manufacturerId && !dosageForm) return [...matches];
+  return matches.filter(
+    (m) =>
+      (!genericId || m.genericId === genericId) &&
+      (!manufacturerId || m.manufacturerId === manufacturerId) &&
+      (!dosageForm || m.dosageForm === dosageForm),
+  );
 }

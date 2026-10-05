@@ -1,3 +1,4 @@
+import type { MedicineSearchFacets } from "../../domain/read-models";
 import type { ID, Medicine, Page } from "../../domain/types";
 import type {
   GenericRepository,
@@ -11,7 +12,13 @@ import type {
 } from "../../repositories";
 import type { LocalDataset } from "./dataset";
 import { createLocalDirectoryRepositories } from "./directory-repositories";
-import { buildSearchIndex, compareMedicines, searchIndex } from "./search";
+import {
+  applyFilters,
+  buildSearchIndex,
+  compareMedicines,
+  computeFacets,
+  searchIndex,
+} from "./search";
 
 function byKey<T, K extends keyof T>(items: readonly T[], key: K): Map<T[K], T> {
   return new Map(items.map((item) => [item[key], item]));
@@ -41,7 +48,9 @@ export function createLocalRepositories(dataset: LocalDataset): Repositories {
   const medicinesById = byKey(dataset.medicines, "id");
   const medicinesBySlug = byKey(dataset.medicines, "slug");
   const genericsById = byKey(dataset.generics, "id");
+  const genericsBySlug = byKey(dataset.generics, "slug");
   const manufacturersById = byKey(dataset.manufacturers, "id");
+  const manufacturersBySlug = byKey(dataset.manufacturers, "slug");
   const pharmaciesById = byKey(dataset.pharmacies, "id");
   const pharmaciesBySlug = byKey(dataset.pharmacies, "slug");
   const pricesByMedicine = groupBy(dataset.prices, (p) => p.medicineId);
@@ -58,11 +67,24 @@ export function createLocalRepositories(dataset: LocalDataset): Repositories {
     async findByIds(ids) {
       return pickByIds(medicinesById, ids);
     },
-    async search({ query, page, pageSize }: MedicineSearchParams): Promise<Page<Medicine>> {
+    async search({
+      query,
+      page,
+      pageSize,
+      ...filters
+    }: MedicineSearchParams): Promise<Page<Medicine> & { facets: MedicineSearchFacets }> {
       searchIdx ??= buildSearchIndex(dataset.medicines, genericsById);
-      const all = searchIndex(searchIdx, query);
+      const matches = searchIndex(searchIdx, query);
+      const facets = computeFacets(matches, genericsById, manufacturersById);
+      const all = applyFilters(matches, filters);
       const start = (page - 1) * pageSize;
-      return { items: all.slice(start, start + pageSize), total: all.length, page, pageSize };
+      return {
+        items: all.slice(start, start + pageSize),
+        total: all.length,
+        page,
+        pageSize,
+        facets,
+      };
     },
     async findByGeneric(genericId) {
       medicinesByGeneric ??= groupBy(dataset.medicines, (m) => m.genericId);
@@ -84,12 +106,18 @@ export function createLocalRepositories(dataset: LocalDataset): Repositories {
   };
 
   const generics: GenericRepository = {
+    async findBySlug(slug) {
+      return genericsBySlug.get(slug) ?? null;
+    },
     async findByIds(ids) {
       return pickByIds(genericsById, ids);
     },
   };
 
   const manufacturers: ManufacturerRepository = {
+    async findBySlug(slug) {
+      return manufacturersBySlug.get(slug) ?? null;
+    },
     async findByIds(ids) {
       return pickByIds(manufacturersById, ids);
     },

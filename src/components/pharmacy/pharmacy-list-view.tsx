@@ -8,7 +8,9 @@ import { OsmCredit } from "@/components/facility/osm-credit";
 import { NearMeButton } from "@/components/directory/near-me-button";
 import { buildHref, Pagination } from "@/components/directory/pagination";
 import { PharmacyCard, ResultList } from "@/components/directory/result-cards";
+import { ResultsMap } from "@/components/directory/results-map";
 import { Container } from "@/components/ui/container";
+import { pharmacyMarkers } from "@/lib/map-markers";
 import { routes } from "@/lib/routes";
 import { breadcrumbJsonLd } from "@/lib/seo";
 import {
@@ -100,11 +102,13 @@ export function PharmacyListView({ data }: { data: PharmacyListData }) {
         ) : (
           <>
             <ResultCount total={results.total} page={results.page} pageSize={results.pageSize} noun="pharmacies" singular="pharmacy" />
-            <ResultList label="Pharmacies">
-              {results.items.map((item) => (
-                <PharmacyCard key={item.pharmacy.id} item={item} headingLevel="h2" />
-              ))}
-            </ResultList>
+            <ResultsMap markers={pharmacyMarkers(results.items)}>
+              <ResultList label="Pharmacies">
+                {results.items.map((item) => (
+                  <PharmacyCard key={item.pharmacy.id} item={item} headingLevel="h2" />
+                ))}
+              </ResultList>
+            </ResultsMap>
             <Pagination page={results.page} totalPages={results.totalPages} hrefFor={hrefFor} />
           </>
         )}

@@ -1,7 +1,12 @@
 import { FACILITY_KIND_LABEL } from "../domain/healthcare";
+import { DOSAGE_FORMS, type DosageForm } from "../domain/types";
 import type {
+  FacetOption,
   GlobalSearchResult,
   LocationListItem,
+  MedicineFacetOptions,
+  MedicineFilterValues,
+  MedicineSearchFacets,
   SearchGroup,
   SearchIntent,
   SearchResult,
@@ -23,6 +28,15 @@ import { toMedicineListItems } from "./summaries";
 export const GLOBAL_GROUP_LIMIT = 5;
 export const SUGGESTION_GROUP_LIMIT = 4;
 
+const EMPTY_FACETS: MedicineFacetOptions = { generics: [], manufacturers: [], dosageForms: [] };
+
+const dosageFormLabel = (form: string) => form.charAt(0).toUpperCase() + form.slice(1);
+
+/** Raw filter values as they appear in the URL. */
+export type RawMedicineFilters = {
+  [K in keyof MedicineFilterValues]?: string | null;
+};
+
 function emptyGroup<T>(): SearchGroup<T> {
   return { items: [], total: 0 };
 }
@@ -34,6 +48,7 @@ export class SearchService {
   async searchMedicines(
     rawQuery: string | null | undefined,
     rawPage: number = 1,
+    rawFilters: RawMedicineFilters = {},
   ): Promise<SearchResult> {
     const query = cleanSearchQuery(rawQuery);
     const page = Number.isInteger(rawPage) && rawPage > 0 ? rawPage : 1;
@@ -45,34 +60,97 @@ export class SearchService {
       pageSize: SEARCH_PAGE_SIZE,
       query,
       matchedQuery: query,
+      facets: EMPTY_FACETS,
+      appliedFilters: {},
     };
 
     if (query.length === 0) return { ...empty, status: "empty_query" };
     if (query.length < SEARCH_MIN_QUERY_LENGTH) return { ...empty, status: "query_too_short" };
 
+    // Unknown filter values are ignored.
+    const genericSlug = rawFilters.generic?.trim();
+    const manufacturerSlug = rawFilters.manufacturer?.trim();
+    const form = DOSAGE_FORMS.find((f) => f === rawFilters.form?.trim());
+    const [generic, manufacturer] = await Promise.all([
+      genericSlug ? this.repos.generics.findBySlug(genericSlug) : null,
+      manufacturerSlug ? this.repos.manufacturers.findBySlug(manufacturerSlug) : null,
+    ]);
+    const appliedFilters: MedicineFilterValues = {
+      ...(generic && { generic: generic.slug }),
+      ...(manufacturer && { manufacturer: manufacturer.slug }),
+      ...(form && { form }),
+    };
+
     const search = (q: string) =>
-      this.repos.medicines.search({ query: q, page, pageSize: SEARCH_PAGE_SIZE });
+      this.repos.medicines.search({
+        query: q,
+        page,
+        pageSize: SEARCH_PAGE_SIZE,
+        genericId: generic?.id,
+        manufacturerId: manufacturer?.id,
+        dosageForm: form,
+      });
 
     let matchedQuery = query;
     let result = await search(query);
     // Nothing matched every word: fall back to the first word ("napa extra" → "napa").
     const firstWord = query.split(" ")[0] ?? "";
-    if (result.total === 0 && firstWord !== query && firstWord.length >= SEARCH_MIN_QUERY_LENGTH) {
+    // Facets count matches before filters, so "no facets" means nothing matched at all.
+    if (result.facets.generics.length === 0 && firstWord !== query && firstWord.length >= SEARCH_MIN_QUERY_LENGTH) {
       const fallback = await search(firstWord);
-      if (fallback.total > 0) {
+      if (fallback.facets.generics.length > 0) {
         result = fallback;
         matchedQuery = firstWord;
       }
     }
 
-    const items = await toMedicineListItems(result.items, this.repos);
+    const [items, facets] = await Promise.all([
+      toMedicineListItems(result.items, this.repos),
+      this.resolveFacets(result.facets, appliedFilters),
+    ]);
     return {
       ...result,
       items,
+      facets,
+      appliedFilters,
       query,
       matchedQuery,
       status: "ok",
       totalPages: Math.ceil(result.total / result.pageSize),
+    };
+  }
+
+  private async resolveFacets(
+    facets: MedicineSearchFacets,
+    applied: MedicineFilterValues,
+  ): Promise<MedicineFacetOptions> {
+    const [generics, manufacturers] = await Promise.all([
+      this.repos.generics.findByIds(facets.generics.map((f) => f.id)),
+      this.repos.manufacturers.findByIds(facets.manufacturers.map((f) => f.id)),
+    ]);
+    const genericsById = new Map(generics.map((g) => [g.id, g]));
+    const manufacturersById = new Map(manufacturers.map((m) => [m.id, m]));
+    // Entries whose entity cannot be resolved are dropped (keeps the facet order).
+    const named = (
+      facetItems: readonly { id: string; count: number }[],
+      byId: ReadonlyMap<string, { slug: string; name: string }>,
+      selected: string | undefined,
+    ): FacetOption[] =>
+      facetItems.flatMap(({ id, count }) => {
+        const entity = byId.get(id);
+        return entity
+          ? [{ value: entity.slug, label: entity.name, count, selected: entity.slug === selected }]
+          : [];
+      });
+    return {
+      generics: named(facets.generics, genericsById, applied.generic),
+      manufacturers: named(facets.manufacturers, manufacturersById, applied.manufacturer),
+      dosageForms: facets.dosageForms.map(({ value, count }) => ({
+        value,
+        label: dosageFormLabel(value satisfies DosageForm),
+        count,
+        selected: value === applied.form,
+      })),
     };
   }
 

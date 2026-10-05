@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { MedicineFilterValues } from "@/domain/read-models";
 
 export type SearchView = "all" | "medicine";
 
@@ -7,9 +8,19 @@ const TABS: readonly { view: SearchView; label: string }[] = [
   { view: "medicine", label: "Medicines only" },
 ];
 
-export function searchViewHref(query: string, view: SearchView, page = 1): string {
+export function searchViewHref(
+  query: string,
+  view: SearchView,
+  page = 1,
+  filters: MedicineFilterValues = {},
+): string {
   const params = new URLSearchParams({ q: query });
   if (view !== "all") params.set("type", view);
+  if (view === "medicine") {
+    if (filters.generic) params.set("generic", filters.generic);
+    if (filters.manufacturer) params.set("manufacturer", filters.manufacturer);
+    if (filters.form) params.set("form", filters.form);
+  }
   if (page > 1) params.set("page", String(page));
   return `/search?${params.toString()}`;
 }

@@ -16,9 +16,10 @@ import type {
   Location,
   Specialty,
 } from "../domain/healthcare";
-import type { MedicineIndexEntry } from "../domain/read-models";
+import type { MedicineIndexEntry, MedicineSearchFacets } from "../domain/read-models";
 import type {
   DataSource,
+  DosageForm,
   Generic,
   ID,
   Manufacturer,
@@ -33,6 +34,10 @@ export interface MedicineSearchParams {
   query: string;
   page: number;
   pageSize: number;
+  /** Optional filters, applied after matching (facets ignore them). */
+  genericId?: ID;
+  manufacturerId?: ID;
+  dosageForm?: DosageForm;
 }
 
 export interface MedicineRepository {
@@ -40,8 +45,11 @@ export interface MedicineRepository {
   findByIds(ids: readonly ID[]): Promise<Medicine[]>;
   /** All medicines with the given generic, in deterministic order. */
   findByGeneric(genericId: ID): Promise<Medicine[]>;
-  /** Matches brand name, generic name, strength and slug; deterministically ordered. */
-  search(params: MedicineSearchParams): Promise<Page<Medicine>>;
+  /**
+   * Matches brand name, generic name, strength and slug; deterministically ordered.
+   * `facets` count ALL matches of the query, before filters, sorted by count then name.
+   */
+  search(params: MedicineSearchParams): Promise<Page<Medicine> & { facets: MedicineSearchFacets }>;
   /** Curated list for the homepage, in display order. */
   listPopular(): Promise<Medicine[]>;
   listIndex(): Promise<MedicineIndexEntry[]>;
@@ -51,10 +59,12 @@ export interface MedicineRepository {
 }
 
 export interface GenericRepository {
+  findBySlug(slug: string): Promise<Generic | null>;
   findByIds(ids: readonly ID[]): Promise<Generic[]>;
 }
 
 export interface ManufacturerRepository {
+  findBySlug(slug: string): Promise<Manufacturer | null>;
   findByIds(ids: readonly ID[]): Promise<Manufacturer[]>;
 }
 

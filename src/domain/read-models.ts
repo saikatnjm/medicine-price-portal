@@ -13,7 +13,9 @@ import type {
 } from "./healthcare";
 import type {
   DataSource,
+  DosageForm,
   Generic,
+  ID,
   ISODateString,
   Manufacturer,
   Medicine,
@@ -96,7 +98,39 @@ export interface CatalogSummary {
 
 export type SearchStatus = "ok" | "empty_query" | "query_too_short";
 
+/** Number of matching medicines per facet value, before filters are applied. */
+export interface MedicineSearchFacets {
+  generics: { id: ID; count: number }[];
+  manufacturers: { id: ID; count: number }[];
+  dosageForms: { value: DosageForm; count: number }[];
+}
+
+/** One selectable filter option. `value` is what goes in the URL (slug or dosage form). */
+export interface FacetOption {
+  value: string;
+  label: string;
+  count: number;
+  selected: boolean;
+}
+
+export interface MedicineFacetOptions {
+  generics: FacetOption[];
+  manufacturers: FacetOption[];
+  dosageForms: FacetOption[];
+}
+
+/** Applied medicine filters as URL values (generic slug, manufacturer slug, dosage form). */
+export interface MedicineFilterValues {
+  generic?: string;
+  manufacturer?: string;
+  form?: string;
+}
+
 export interface SearchResult extends Page<MedicineListItem> {
+  /** Filter options for all matches of the query (before filters); empty with no matches. */
+  facets: MedicineFacetOptions;
+  /** Filters that were recognised and applied. */
+  appliedFilters: MedicineFilterValues;
   /** Cleaned query as entered. */
   query: string;
   /**

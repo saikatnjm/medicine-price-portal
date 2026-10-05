@@ -79,6 +79,18 @@ export function SearchResults({ result, suggestions, pageHref = searchHref }: Se
     );
   }
 
+  if (result.total === 0 && result.facets.generics.length > 0) {
+    // The query matches medicines, but the selected filters exclude all of them.
+    return (
+      <div role="status" className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3">
+        <p className="font-medium text-slate-900">
+          No medicines match these filters for “{result.matchedQuery}”.
+        </p>
+        <p className="mt-1 text-slate-700">Try a different combination or clear the filters.</p>
+      </div>
+    );
+  }
+
   if (result.total === 0) {
     return (
       <>

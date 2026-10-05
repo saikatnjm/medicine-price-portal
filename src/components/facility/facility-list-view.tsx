@@ -3,9 +3,11 @@ import { Suspense } from "react";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { JsonLd } from "@/components/common/json-ld";
 import { FacilityCard, ResultList } from "@/components/directory/result-cards";
+import { ResultsMap } from "@/components/directory/results-map";
 import { NearMeButton } from "@/components/directory/near-me-button";
 import { buildHref, Pagination } from "@/components/directory/pagination";
 import { Container } from "@/components/ui/container";
+import { facilityMarkers } from "@/lib/map-markers";
 import { routes } from "@/lib/routes";
 import {
   directoryListBreadcrumbs,
@@ -120,11 +122,13 @@ export function FacilityListView({ data }: { data: FacilityListData }) {
         ) : (
           <>
             <ResultCount total={results.total} page={results.page} pageSize={results.pageSize} noun="hospitals and clinics" singular="hospital or clinic" />
-            <ResultList label="Hospitals and clinics">
-              {results.items.map((item) => (
-                <FacilityCard key={item.facility.id} item={item} headingLevel="h2" />
-              ))}
-            </ResultList>
+            <ResultsMap markers={facilityMarkers(results.items)}>
+              <ResultList label="Hospitals and clinics">
+                {results.items.map((item) => (
+                  <FacilityCard key={item.facility.id} item={item} headingLevel="h2" />
+                ))}
+              </ResultList>
+            </ResultsMap>
             <Pagination page={results.page} totalPages={results.totalPages} hrefFor={hrefFor} />
           </>
         )}
