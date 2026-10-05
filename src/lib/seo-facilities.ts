@@ -55,7 +55,9 @@ const KIND_PLURAL: Record<FacilityKind, [string, string]> = {
   diagnostic_centre: ["diagnostic centre", "diagnostic centres"],
   dental_clinic: ["dental clinic", "dental clinics"],
   doctors_practice: ["doctor's practice", "doctors' practices"],
+  health_centre: ["health centre", "health centres"],
   blood_bank: ["blood bank", "blood banks"],
+  other_facility: ["other healthcare facility", "other healthcare facilities"],
 };
 
 function kindBreakdown(kindCounts: readonly FacilityKindCount[]): string {
@@ -164,10 +166,15 @@ function withArticle(phrase: string): string {
   return /^[aeiou]/i.test(phrase) ? `an ${phrase}` : `a ${phrase}`;
 }
 
+/** Most specific short place name for titles: area, else district. */
+function shortPlace(place: Place): string | undefined {
+  return place.area?.name ?? place.district?.name;
+}
+
+/** "ABC Eye Hospital, Gazipur" (name only when no place is known). */
 export function facilityTitle(detail: FacilityDetail): string {
-  const { facility, place } = detail;
-  if (detail.indexable) return `${facility.name} — Doctors, Departments & Contact`;
-  return place.district ? `${facility.name}, ${place.district.name}` : facility.name;
+  const where = shortPlace(detail.place);
+  return where ? `${detail.facility.name}, ${where}` : detail.facility.name;
 }
 
 export function facilityDescription(detail: FacilityDetail): string {
@@ -177,8 +184,13 @@ export function facilityDescription(detail: FacilityDetail): string {
   if (specialties.length > 0) {
     parts.push(`Departments and specialties listed: ${specialties.slice(0, 5).map((s) => s.name).join(", ")}.`);
   }
-  const contact = [facility.phone && "phone number", facility.address && "address", facility.openingHours && "opening hours"].filter(Boolean);
-  if (contact.length > 0) parts.push(`Includes ${contact.join(", ")} and directions where published.`);
+  const contact = [
+    facility.phone && "phone number",
+    facility.website && "website",
+    facility.address && "address",
+    facility.openingHours && "opening hours",
+  ].filter(Boolean);
+  if (contact.length > 0) parts.push(`Lists ${contact.join(", ")} and directions where published.`);
   parts.push("Community-mapped information that may be out of date; call ahead before visiting.");
   return parts.join(" ");
 }
@@ -187,20 +199,35 @@ export function facilityBreadcrumbs(detail: FacilityDetail): BreadcrumbItem[] {
   return entityBreadcrumbs("hospitals", detail.facility.name, detail.place);
 }
 
+const TITLE_MAX = 60;
+
+/** "Alpha Pharmacy, Dhanmondi — Pharmacy location & contact"; shortened for long names. */
 export function pharmacyTitle(detail: PharmacyDetail): string {
-  return `${detail.pharmacy.name} — Location & Contact`;
+  const where = shortPlace(detail.place);
+  const base = where ? `${detail.pharmacy.name}, ${where}` : detail.pharmacy.name;
+  for (const suffix of [" — Pharmacy location & contact", " — Pharmacy location", " — Pharmacy"]) {
+    if (base.length + suffix.length <= TITLE_MAX) return base + suffix;
+  }
+  return base;
 }
 
 export function pharmacyDescription(detail: PharmacyDetail): string {
   const { pharmacy, place, prices, hasSampleData } = detail;
   const where = place.label ? ` in ${place.label}` : "";
+  const published = [
+    pharmacy.address && "address",
+    pharmacy.phone && "phone number",
+    pharmacy.openingHours && "opening hours",
+    (pharmacy.address || pharmacy.coordinates) && "directions",
+  ].filter(Boolean);
+  const listed = published.length > 0 ? ` Lists ${published.join(", ")} where published.` : "";
   const priceNote =
     prices.length > 0
       ? hasSampleData
         ? " Sample price entries are demonstration data, not live prices."
         : ""
       : " Medicine prices and stock are not available yet.";
-  return `${pharmacy.name} is a pharmacy${where}. Address, phone number and directions where published.${priceNote} Community-mapped information that may be out of date; call ahead before visiting.`;
+  return `${pharmacy.name} is a pharmacy${where}.${listed}${priceNote} Community-mapped information that may be out of date; call ahead before visiting.`;
 }
 
 export function pharmacyBreadcrumbs(detail: PharmacyDetail): BreadcrumbItem[] {
@@ -225,7 +252,9 @@ const FACILITY_SCHEMA_TYPE: Record<FacilityKind, string> = {
   dental_clinic: "Dentist",
   diagnostic_centre: "DiagnosticLab",
   doctors_practice: "MedicalOrganization",
+  health_centre: "MedicalClinic",
   blood_bank: "MedicalOrganization",
+  other_facility: "MedicalOrganization",
 };
 
 function postalAddress(record: PostalLocation, place: Place): JsonLd | null {

@@ -8,6 +8,8 @@ interface ContactDetailsProps {
   openingHours?: string;
   beds?: number;
   headingId?: string;
+  /** Render nothing (instead of a "not published" line) when there are no details. */
+  omitWhenEmpty?: boolean;
 }
 
 /** Only http(s) URLs are rendered as links. */
@@ -21,14 +23,14 @@ export function safeHttpUrl(value: string | undefined): URL | null {
   }
 }
 
-function telHref(phone: string): string {
+export function telHref(phone: string): string {
   return `tel:${phone.replace(/[^\d+]/g, "")}`;
 }
 
 const linkClass = "text-brand-800 underline underline-offset-2";
 
 /** Contact details as a definition list; renders nothing when none are published. */
-export function ContactDetails({ phone, website, email, openingHours, beds, headingId = "contact" }: ContactDetailsProps) {
+export function ContactDetails({ phone, website, email, openingHours, beds, headingId = "contact", omitWhenEmpty = false }: ContactDetailsProps) {
   const url = safeHttpUrl(website);
   const rows: Array<[string, ReactNode]> = [];
   if (phone) {
@@ -48,6 +50,8 @@ export function ContactDetails({ phone, website, email, openingHours, beds, head
   }
   if (openingHours) rows.push(["Opening hours", <span key="h">{openingHours}</span>]);
   if (beds) rows.push(["Beds", <span key="b">{beds.toLocaleString("en-US")}</span>]);
+
+  if (omitWhenEmpty && rows.length === 0) return null;
 
   return (
     <section aria-labelledby={headingId}>

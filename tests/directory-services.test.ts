@@ -128,17 +128,60 @@ describe("FacilityService.getFacilityDetail", () => {
 
   it("excludes the facility itself from nearby lists and respects the radius", async () => {
     const detail = await services.facilities.getFacilityDetail("central-heart-hospital-dhaka");
-    expect(detail?.nearbyFacilities.map((f) => f.facility.slug)).toEqual([]);
-    expect(detail?.nearbyPharmacies.map((p) => p.pharmacy.slug)).toEqual(["alpha-pharmacy"]);
-    const distance = detail?.nearbyPharmacies[0]?.distanceKm;
+    expect(detail?.nearby.hospitals).toEqual([]);
+    expect(detail?.nearby.clinics).toEqual([]);
+    expect(detail?.nearby.diagnosticCentres).toEqual([]);
+    expect(detail?.nearby.pharmacies.map((p) => p.pharmacy.slug)).toEqual(["alpha-pharmacy"]);
+    const distance = detail?.nearby.pharmacies[0]?.distanceKm;
     expect(distance !== undefined && distance < 1).toBe(true);
   });
 
   it("falls back to the same district for facilities without coordinates", async () => {
     // Harbour Hospital has no coordinates; nothing else is in Chattogram.
     const detail = await services.facilities.getFacilityDetail("harbour-hospital-chattogram");
-    expect(detail?.nearbyFacilities).toEqual([]);
-    expect(detail?.nearbyPharmacies).toEqual([]);
+    expect(detail?.nearby).toEqual({ hospitals: [], clinics: [], diagnosticCentres: [], pharmacies: [] });
+  });
+
+  it("groups nearby records by kind, closest first, at most five per group", async () => {
+    const near = (n: number) => ({ lat: 23.75 + n * 0.001, lon: 90.38 });
+    const extra = (id: string, kind: Facility["kind"], n: number): Facility => ({
+      id,
+      slug: id,
+      name: id,
+      kind,
+      districtId: "loc_dis_dhaka",
+      areaId: "loc_area_dhanmondi",
+      specialtyIds: [],
+      coordinates: near(n),
+      updatedAt: "2026-10-01T00:00:00Z",
+      provenance: { sourceId: "osm", recordId: `node/${id}`, status: "unverified" },
+    });
+    const dataset: LocalDataset = {
+      ...fixtureDataset,
+      facilities: [
+        ...fixtureDataset.facilities,
+        extra("hosp-b", "hospital", 3),
+        extra("hosp-a", "hospital", 1),
+        extra("clinic-a", "clinic", 2),
+        extra("centre-a", "health_centre", 1),
+        extra("diag-a", "diagnostic_centre", 2),
+        ...[1, 2, 3, 4, 5, 6].map((n) => extra(`far-clinic-${n}`, "clinic", 10 + n)),
+        // Outside the 5 km radius.
+        { ...extra("far-away", "hospital", 0), coordinates: { lat: 24.5, lon: 91 } },
+      ],
+    };
+    const detail = await createServices(createLocalRepositories(dataset)).facilities.getFacilityDetail(
+      "central-heart-hospital-dhaka",
+    );
+    expect(detail?.nearby.hospitals.map((f) => f.facility.slug)).toEqual(["hosp-a", "hosp-b"]);
+    expect(detail?.nearby.hospitals.map((f) => f.distanceKm ?? 0)).toEqual(
+      [...(detail?.nearby.hospitals.map((f) => f.distanceKm ?? 0) ?? [])].sort((a, b) => a - b),
+    );
+    // Clinics and health centres share one group, ordered by distance.
+    expect(detail?.nearby.clinics.map((f) => f.facility.slug).slice(0, 2).sort()).toEqual(["centre-a", "clinic-a"].sort());
+    expect(detail?.nearby.clinics).toHaveLength(5);
+    expect(detail?.nearby.diagnosticCentres.map((f) => f.facility.slug)).toEqual(["diag-a"]);
+    expect(detail?.nearby.pharmacies.map((p) => p.pharmacy.slug)).toEqual(["alpha-pharmacy"]);
   });
 
   it("countByKind and listIndex only expose what they should", async () => {
@@ -165,8 +208,8 @@ describe("PharmacyService", () => {
     expect(detail?.indexable).toBe(true);
     expect(detail?.prices.map((p) => p.medicine.slug)).toEqual(["ace-500mg", "napa-500mg"]);
     expect(detail?.hasSampleData).toBe(true);
-    expect(detail?.nearbyPharmacies.map((p) => p.pharmacy.slug)).toEqual([]);
-    expect(detail?.nearbyFacilities.map((f) => f.facility.slug)).toEqual(["central-heart-hospital-dhaka"]);
+    expect(detail?.nearby.pharmacies.map((p) => p.pharmacy.slug)).toEqual([]);
+    expect(detail?.nearby.facilities.map((f) => f.facility.slug)).toEqual(["central-heart-hospital-dhaka"]);
   });
 
   it("lists pharmacies with filters and distances", async () => {
@@ -265,6 +308,35 @@ describe("LocationService", () => {
       "central-heart-hospital-dhaka",
       "gulshan-dental-clinic-dhaka",
     ]);
+  });
+
+  it("lists hospitals, clinics, diagnostic centres and pharmacies in separate groups", async () => {
+    const detail = await services.locations.getLocationDetail("dhaka");
+    expect(detail?.hospitals.map((f) => f.facility.slug)).toEqual(["central-heart-hospital-dhaka"]);
+    // A dental clinic is neither a clinic nor a health centre; it only appears in the counts.
+    expect(detail?.clinics).toEqual([]);
+    expect(detail?.diagnosticCentres).toEqual([]);
+    expect(detail?.pharmacies.map((p) => p.pharmacy.slug)).toEqual(["alpha-pharmacy", "beta-pharmacy"]);
+
+    const withMore: LocalDataset = {
+      ...fixtureDataset,
+      facilities: [
+        ...fixtureDataset.facilities,
+        ...(["clinic", "health_centre", "diagnostic_centre"] as const).map((kind, i) => ({
+          id: `x${i}`,
+          slug: `x-${kind}`,
+          name: `X ${kind}`,
+          kind,
+          districtId: "loc_dis_dhaka",
+          specialtyIds: [],
+          updatedAt: "2026-10-01T00:00:00Z",
+          provenance: { sourceId: "osm", recordId: `node/x${i}`, status: "unverified" as const },
+        })),
+      ],
+    };
+    const more = await createServices(createLocalRepositories(withMore)).locations.getLocationDetail("dhaka");
+    expect(more?.clinics.map((f) => f.facility.kind).sort()).toEqual(["clinic", "health_centre"]);
+    expect(more?.diagnosticCentres.map((f) => f.facility.slug)).toEqual(["x-diagnostic_centre"]);
   });
 
   it("includes division and district ancestors for an area, outermost first", async () => {
@@ -521,5 +593,20 @@ describe("SearchService.suggest", () => {
     expect(await services.search.suggest("")).toEqual([]);
     expect(await services.search.suggest("a")).toEqual([]);
     expect(await services.search.suggest("qqqzzz")).toEqual([]);
+  });
+});
+
+describe("facility and pharmacy page titles", () => {
+  it("uses name and the most specific place; shortens long pharmacy titles", async () => {
+    const { facilityTitle, pharmacyTitle } = await import("@/lib/seo-facilities");
+    const facility = await services.facilities.getFacilityDetail("central-heart-hospital-dhaka");
+    expect(facilityTitle(facility!)).toBe("Central Heart Hospital, Dhanmondi");
+    const thin = await services.facilities.getFacilityDetail("harbour-hospital-chattogram");
+    expect(facilityTitle(thin!)).toBe("Harbour Hospital, Chattogram");
+    const pharmacy = await services.pharmacies.getPharmacyDetail("alpha-pharmacy");
+    expect(pharmacyTitle(pharmacy!)).toBe("Alpha Pharmacy, Dhanmondi — Pharmacy location & contact");
+    const long = { ...pharmacy!, pharmacy: { ...pharmacy!.pharmacy, name: "A Very Long Pharmacy And Surgical Store Name" } };
+    expect(pharmacyTitle(long).length <= 60).toBe(true);
+    expect(pharmacyTitle(long)).toMatch(/^A Very Long Pharmacy And Surgical Store Name, Dhanmondi/);
   });
 });

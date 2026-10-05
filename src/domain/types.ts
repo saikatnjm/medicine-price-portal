@@ -6,7 +6,7 @@
  * contain no presentation fields. IDs are opaque strings so any backend
  * (UUID, integer, slug) can supply them.
  */
-import type { GooglePlaceRef, PostalLocation } from "./healthcare";
+import type { GooglePlaceRef, PostalLocation, RecordQuality } from "./healthcare";
 
 export type ID = string;
 
@@ -81,7 +81,7 @@ export interface PackSize {
  * - needs_review: flagged during import for manual review.
  * - verified: confirmed by us against an authoritative source (no records yet).
  */
-export const PROVENANCE_STATUSES = ["registered", "unverified", "needs_review", "verified"] as const;
+export const PROVENANCE_STATUSES = ["registered", "unverified", "needs_review", "verified", "user_reported"] as const;
 export type ProvenanceStatus = (typeof PROVENANCE_STATUSES)[number];
 
 /** Where a record came from. Never claim more than the source supports. */
@@ -94,6 +94,14 @@ export interface Provenance {
   /** Link to the record at the source, when one exists. */
   recordUrl?: string;
   status: ProvenanceStatus;
+  /** When the source last changed (e.g. the OpenStreetMap snapshot time). */
+  sourceUpdatedAt?: ISODateString;
+  /** When we last fetched/checked the record from the source. */
+  lastCheckedAt?: ISODateString;
+  /** How a verified record was checked, e.g. "official_website", "doctor_provided". */
+  verificationMethod?: string;
+  /** When a person verified the record (verified status only). */
+  verifiedAt?: ISODateString;
 }
 
 export interface DataSource {
@@ -137,7 +145,7 @@ export interface Medicine {
  * A pharmacy. Location fields come from PostalLocation and are present only
  * when the source publishes them.
  */
-export interface Pharmacy extends PostalLocation {
+export interface Pharmacy extends PostalLocation, RecordQuality {
   id: ID;
   slug: string;
   name: string;

@@ -3,8 +3,16 @@
 A medicine search and healthcare directory portal for Bangladesh. The catalogue contains **36,328 medicine products from the DGDA registry** plus a searchable healthcare directory: hospitals, clinics, diagnostic centres, dental clinics, doctors' practices, blood banks and pharmacies (sourced from OpenStreetMap, unverified). Doctor records are intentionally empty—only verified, consented data will be added.
 
 - Stack: Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · local seed data · Docker Compose · Vercel
-- Pages: `/` (search), `/search?q=`, `/medicine/[slug]`, `/hospitals`, `/hospitals/[location]/[specialty]`, `/hospital/[slug]`, `/pharmacies`, `/pharmacy/[slug]`, `/doctors`, `/doctor/[slug]`, `/specialties`, `/locations`, plus sitemaps and robots.txt
+- Pages: `/` (search), `/search?q=`, `/medicine/[slug]`, `/hospitals`, `/hospitals/[location]/[specialty]`, `/hospital/[slug]`, `/pharmacies`, `/pharmacy/[slug]`, `/doctors`, `/doctor/[slug]`, `/specialties`, `/locations`, `/about` (data sources), plus sitemaps and robots.txt
 - Docs: [`docs/`](docs) — start with [PROJECT](docs/PROJECT.md), [ARCHITECTURE](docs/ARCHITECTURE.md) and [DECISIONS](docs/DECISIONS.md)
+
+## Domain and branding
+
+No domain is hard-coded. Every absolute URL (canonical, OpenGraph, sitemap, JSON-LD) comes from `siteConfig.url`: `NEXT_PUBLIC_SITE_URL`, else `VERCEL_PROJECT_PRODUCTION_URL`, else `http://localhost:3000`. To move to a custom domain, set `NEXT_PUBLIC_SITE_URL` and redeploy. The GitHub repository is still named `medicine-price-portal`.
+
+## Optional integrations
+
+Google Places enrichment and an error-report link are optional; see [`data/google/README.md`](data/google/README.md) and `.env.example`.
 
 ## Requirements
 

@@ -11,7 +11,7 @@ import type {
   SourceRepository,
 } from "../../repositories";
 import type { LocalDataset } from "./dataset";
-import { createLocalDirectoryRepositories } from "./directory-repositories";
+import { createLocalDirectoryRepositories, withoutExcluded } from "./directory-repositories";
 import {
   applyFilters,
   buildSearchIndex,
@@ -43,7 +43,8 @@ function groupBy<T>(items: readonly T[], key: (item: T) => ID): Map<ID, T[]> {
 }
 
 /** Builds repositories backed by an in-memory dataset (seed data or a test fixture). */
-export function createLocalRepositories(dataset: LocalDataset): Repositories {
+export function createLocalRepositories(source: LocalDataset): Repositories {
+  const dataset = withoutExcluded(source);
   let medicineSourceIds: string[] | null = null;
   const medicinesById = byKey(dataset.medicines, "id");
   const medicinesBySlug = byKey(dataset.medicines, "slug");

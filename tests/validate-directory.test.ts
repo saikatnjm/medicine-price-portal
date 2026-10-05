@@ -62,7 +62,7 @@ describe("directory validation", () => {
       specialtyIds: ["spec_cardiology"],
       chambers: [],
       updatedAt,
-      provenance: { sourceId: "doctors", recordId: "d1", status: "verified" },
+      provenance: { sourceId: "doctors", recordId: "d1", status: "verified", verificationMethod: "official_profile", verifiedAt: "2026-10-01T00:00:00Z", recordUrl: "https://example.org/dr/d1" },
     });
     expect(validate(data).errors).toEqual([]);
   });
@@ -118,8 +118,25 @@ describe("directory validation", () => {
       provenance: { sourceId: "doctors", recordId: "d1", status: "unverified" },
     });
     const errors = validate(data).errors;
-    expect(errors).toHaveLength(1);
-    expect(errors[0]).toContain("[invalid_provenance] doctor doc_1 must not be unverified");
+    expect(errors.every((e) => e.startsWith("[invalid_provenance]"))).toBe(true);
+    expect(errors[0]).toContain('doctor doc_1 status must be "verified"');
+  });
+
+  it("requires verification method, verifiedAt and recordUrl on every doctor", () => {
+    const data = minimal();
+    data.doctors.push({
+      id: "doc_1",
+      slug: "dr-thin",
+      name: "Dr. Thin",
+      specialtyIds: [],
+      chambers: [],
+      updatedAt,
+      provenance: { sourceId: "doctors", recordId: "d1", status: "verified" },
+    });
+    const text = validate(data).errors.join("\n");
+    expect(text).toContain("needs verificationMethod");
+    expect(text).toContain("needs a valid verifiedAt");
+    expect(text).toContain("needs a recordUrl");
   });
 
   it("reports provenance that points at an unknown source", () => {
@@ -163,7 +180,7 @@ describe("directory validation", () => {
       specialtyIds: ["spec_also_missing"],
       chambers: [],
       updatedAt,
-      provenance: { sourceId: "doctors", recordId: "d1", status: "verified" },
+      provenance: { sourceId: "doctors", recordId: "d1", status: "verified", verificationMethod: "official_profile", verifiedAt: "2026-10-01T00:00:00Z", recordUrl: "https://example.org/dr/d1" },
     });
     const errors = validate(data).errors;
     expect(errors).toHaveLength(2);
@@ -230,7 +247,7 @@ describe("directory validation: areas and doctor chambers", () => {
       specialtyIds: ["spec_cardiology"],
       chambers: [{ facilityId: "fac_missing" }],
       updatedAt,
-      provenance: { sourceId: "doctors", recordId: "d1", status: "verified" },
+      provenance: { sourceId: "doctors", recordId: "d1", status: "verified", verificationMethod: "official_profile", verifiedAt: "2026-10-01T00:00:00Z", recordUrl: "https://example.org/dr/d1" },
     });
     expect(rules(data)).toEqual(["broken_reference"]);
   });

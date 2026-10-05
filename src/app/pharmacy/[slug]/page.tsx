@@ -3,12 +3,14 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { JsonLd } from "@/components/common/json-ld";
+import { GooglePlaceInfo } from "@/components/directory/google-place-info";
 import { LocationBlock } from "@/components/directory/location-block";
-import { SourceAttribution } from "@/components/directory/source-attribution";
+import { ReportIssue } from "@/components/directory/report-issue";
+import { SourceSection } from "@/components/directory/source-attribution";
 import { ContactDetails } from "@/components/facility/contact-details";
-import { CorrectionHint } from "@/components/facility/correction-hint";
 import { MoreInArea } from "@/components/facility/more-in-area";
-import { NearbyFacilities, NearbyPharmacies } from "@/components/facility/nearby-sections";
+import { PharmacyNearbySections } from "@/components/facility/nearby-sections";
+import { QuickActions } from "@/components/facility/quick-actions";
 import { PharmacyOverview } from "@/components/pharmacy/pharmacy-overview";
 import { PharmacyPricesSection } from "@/components/pharmacy/pharmacy-prices-section";
 import { Container } from "@/components/ui/container";
@@ -53,25 +55,38 @@ export default async function PharmacyPage({ params }: PharmacyPageProps) {
       <JsonLd data={[pharmacyJsonLd(detail), breadcrumbJsonLd(breadcrumbs, path)]} />
       <Breadcrumbs items={breadcrumbs} />
       <div className="mt-4 space-y-10">
-        <PharmacyOverview detail={detail} />
-        <div className="grid gap-10 lg:grid-cols-2">
-          <ContactDetails phone={pharmacy.phone} website={pharmacy.website} openingHours={pharmacy.openingHours} />
-          <LocationBlock
+        <div className="space-y-5">
+          <PharmacyOverview detail={detail} />
+          <QuickActions
             name={pharmacy.name}
+            phone={pharmacy.phone}
             address={pharmacy.address}
-            placeLabel={place.label}
-            postalCode={pharmacy.postalCode}
             coordinates={pharmacy.coordinates}
             google={pharmacy.google}
+            showMapLink
           />
         </div>
+        <LocationBlock
+          name={pharmacy.name}
+          address={pharmacy.address}
+          placeLabel={place.label}
+          postalCode={pharmacy.postalCode}
+          coordinates={pharmacy.coordinates}
+          google={pharmacy.google}
+        />
+        <GooglePlaceInfo google={pharmacy.google} name={pharmacy.name} />
+        <ContactDetails
+          phone={pharmacy.phone}
+          website={pharmacy.website}
+          openingHours={pharmacy.openingHours}
+          omitWhenEmpty
+        />
         <PharmacyPricesSection detail={detail} />
-        <NearbyPharmacies items={detail.nearbyPharmacies} />
-        <NearbyFacilities items={detail.nearbyFacilities} />
+        <PharmacyNearbySections nearby={detail.nearby} />
         <MoreInArea place={place} type="pharmacies" />
-        <div className="space-y-2 border-t border-slate-200 pt-6">
-          <SourceAttribution source={detail.source} provenance={pharmacy.provenance} />
-          <CorrectionHint provenance={pharmacy.provenance} />
+        <div className="space-y-6 border-t border-slate-200 pt-6">
+          <SourceSection source={detail.source} provenance={pharmacy.provenance} sourceName={pharmacy.sourceName} />
+          <ReportIssue name={pharmacy.name} path={path} provenance={pharmacy.provenance} />
         </div>
       </div>
     </Container>

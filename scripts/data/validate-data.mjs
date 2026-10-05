@@ -16,10 +16,12 @@ const SEED_DIR = join(dirname(fileURLToPath(import.meta.url)), "../../src/data/l
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const AVAILABILITY = new Set(["in_stock", "limited", "out_of_stock", "unknown"]);
 const PRICE_SOURCES = new Set(["sample", "manual", "integration"]);
-const PROVENANCE_STATUS = new Set(["registered", "unverified", "needs_review", "verified"]);
-const FACILITY_KINDS = new Set(["hospital", "clinic", "diagnostic_centre", "dental_clinic", "doctors_practice", "blood_bank"]);
+const PROVENANCE_STATUS = new Set(["registered", "unverified", "needs_review", "verified", "user_reported"]);
+const FACILITY_KINDS = new Set(["hospital", "clinic", "diagnostic_centre", "dental_clinic", "doctors_practice", "health_centre", "blood_bank", "other_facility"]);
+const REVIEW_STATUSES = new Set(["active", "needs_review", "excluded"]);
 const OWNERSHIP = new Set(["government", "private", "non_profit", "military"]);
 const LOCATION_LEVELS = new Set(["division", "district", "area"]);
+const DOCTOR_VERIFICATION_METHODS = new Set(["official_profile", "doctor_provided", "registry"]);
 const MAX_ERRORS_PER_RULE = 20;
 
 export function validateDataset(data) {
@@ -190,6 +192,13 @@ export function validateDataset(data) {
       fail("malformed_record", `${label} ${r.id} coordinates`);
     if (r.website && !/^https?:\/\//.test(r.website))
       fail("malformed_record", `${label} ${r.id} website`);
+    if (r.reviewStatus !== undefined && !REVIEW_STATUSES.has(r.reviewStatus))
+      fail("malformed_record", `${label} ${r.id} reviewStatus "${r.reviewStatus}"`);
+    if (r.qualityFlags !== undefined && !Array.isArray(r.qualityFlags))
+      fail("malformed_record", `${label} ${r.id} qualityFlags`);
+    for (const field of ["sourceUpdatedAt", "lastCheckedAt", "verifiedAt"])
+      if (r.provenance?.[field] && Number.isNaN(Date.parse(r.provenance[field])))
+        fail("malformed_record", `${label} ${r.id} provenance.${field}`);
     checkProvenance(label, r);
   };
   const profileKey = (r) => [keyOf(r.name), r.districtId ?? ""].join("|");
@@ -228,8 +237,16 @@ export function validateDataset(data) {
   for (const d of doctors) {
     checkBasics("doctor", d);
     // Doctors must come from a verified or consented source, never a scrape.
-    if (d.provenance?.status === "unverified")
-      fail("invalid_provenance", `doctor ${d.id} must not be unverified`);
+    const prov = d.provenance ?? {};
+    if (prov.status !== "verified") fail("invalid_provenance", `doctor ${d.id} status must be "verified"`);
+    if (!DOCTOR_VERIFICATION_METHODS.has(prov.verificationMethod))
+      fail("invalid_provenance", `doctor ${d.id} needs verificationMethod (official_profile | doctor_provided | registry)`);
+    if (typeof prov.verifiedAt !== "string" || Number.isNaN(Date.parse(prov.verifiedAt)))
+      fail("invalid_provenance", `doctor ${d.id} needs a valid verifiedAt`);
+    if (typeof prov.recordUrl !== "string" || !/^https?:\/\//i.test(prov.recordUrl))
+      fail("invalid_provenance", `doctor ${d.id} needs a recordUrl (source URL)`);
+    if (d.profileSummary !== undefined && (typeof d.profileSummary !== "string" || d.profileSummary.length > 600))
+      fail("invalid_field", `doctor ${d.id} profileSummary must be text of at most ~500 characters`);
     for (const id of d.specialtyIds ?? [])
       if (!specialtyIds.has(id)) fail("broken_reference", `doctor ${d.id} → specialty ${id}`);
     if (!Array.isArray(d.chambers)) fail("missing_field", `doctor ${d.id} chambers`);

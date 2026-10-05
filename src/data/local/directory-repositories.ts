@@ -4,6 +4,7 @@ import type { ID, Pharmacy } from "../../domain/types";
 import { distanceKm, isValidCoordinates } from "../../lib/geo";
 import type { DirectoryListParams, DirectoryRepositories } from "../../repositories";
 import type { LocalDataset } from "./dataset";
+import { normalizeSearchText } from "../../lib/text";
 import { buildTextIndex, paginate, searchTextIndex, type TextIndexEntry } from "./text-index";
 
 const collator = new Intl.Collator("en", { numeric: true, sensitivity: "base" });
@@ -50,8 +51,16 @@ function byDistance<T>(
     .map(({ item }) => item);
 }
 
+export function withoutExcluded(dataset: LocalDataset): LocalDataset {
+  const visible = <T extends { reviewStatus?: string }>(items: readonly T[]) =>
+    items.filter((i) => i.reviewStatus !== "excluded");
+  return { ...dataset, facilities: visible(dataset.facilities), pharmacies: visible(dataset.pharmacies) };
+}
+
 /** Builds directory repositories (facilities, pharmacies, locations, specialties, doctors). */
-export function createLocalDirectoryRepositories(dataset: LocalDataset): DirectoryRepositories {
+export function createLocalDirectoryRepositories(source: LocalDataset): DirectoryRepositories {
+  // Excluded records stay in the data files for audit but never reach the site.
+  const dataset = withoutExcluded(source);
   const locations = byKey(dataset.locations);
   const specialties = byKey(dataset.specialties);
   const facilities = byKey(dataset.facilities);
@@ -84,6 +93,7 @@ export function createLocalDirectoryRepositories(dataset: LocalDataset): Directo
   );
   const sortedPharmacies = [...dataset.pharmacies].sort(byName);
   const sortedDoctors = [...dataset.doctors].sort(byName);
+  let facilityNames: Map<string, Facility> | null = null;
   let facilityIndex: TextIndexEntry<Facility>[] | null = null;
   let pharmacyIndex: TextIndexEntry<Pharmacy>[] | null = null;
   let doctorIndex: TextIndexEntry<Doctor>[] | null = null;
@@ -96,7 +106,18 @@ export function createLocalDirectoryRepositories(dataset: LocalDataset): Directo
       async findByIds(ids) {
         return pick(facilities.byId, ids);
       },
-      async list({ query, kind, locationIds, specialtyId, emergencyOnly, near, radiusKm, page, pageSize }) {
+      async findByName(name) {
+        // Built once, in display order, so the first of several same-named facilities wins.
+        if (!facilityNames) {
+          facilityNames = new Map();
+          for (const f of sortedFacilities) {
+            const key = normalizeSearchText(f.name);
+            if (key && !facilityNames.has(key)) facilityNames.set(key, f);
+          }
+        }
+        return facilityNames.get(normalizeSearchText(name)) ?? null;
+      },
+      async list({ query, kind, kinds, locationIds, specialtyId, emergencyOnly, near, radiusKm, page, pageSize }) {
         facilityIndex ??= buildTextIndex(
           sortedFacilities,
           (f) => `${f.name} ${f.altName ?? ""}`,
@@ -105,6 +126,7 @@ export function createLocalDirectoryRepositories(dataset: LocalDataset): Directo
         const matches = searchTextIndex(facilityIndex, query).filter(
           (f) =>
             (!kind || f.kind === kind) &&
+            (!kinds || kinds.includes(f.kind)) &&
             inLocations(locationIds, placeIdsOf(f)) &&
             (!specialtyId || f.specialtyIds.includes(specialtyId)) &&
             (!emergencyOnly || f.emergency === true),

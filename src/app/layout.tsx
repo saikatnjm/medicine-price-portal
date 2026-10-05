@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
-import { pageRobots } from "@/lib/seo";
+import { pageRobots, twitterCard } from "@/lib/seo";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
 
@@ -19,6 +19,7 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     locale: siteConfig.locale,
   },
+  twitter: twitterCard(siteConfig.name, siteConfig.description),
   robots: pageRobots(true),
 };
 

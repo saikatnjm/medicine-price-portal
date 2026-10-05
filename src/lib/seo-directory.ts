@@ -58,6 +58,7 @@ export function doctorDescription(detail: DoctorDetail): string {
   const title = specialties[0]?.practitionerTitle.toLowerCase();
   const place = chambers[0]?.place.label;
   const parts = [`${doctor.name}${title ? `, ${title}` : ""}${place ? ` in ${place}` : ""}.`];
+  if (doctor.designation) parts.push(`${doctor.designation}.`);
   if (doctor.qualifications) parts.push(`Qualifications: ${doctor.qualifications}.`);
   if (chambers.length > 0) parts.push("Chamber addresses, consultation times and appointment contacts.");
   return parts.join(" ");
@@ -84,9 +85,13 @@ export function doctorJsonLd(detail: DoctorDetail): JsonLd {
     name: doctor.name,
     url: absoluteUrl(routes.doctor(doctor.slug)),
     ...(doctor.designation ? { jobTitle: doctor.designation } : {}),
+    ...(doctor.profileSummary ? { description: doctor.profileSummary } : {}),
     ...(specialties.length > 0 ? { medicalSpecialty: specialties.map((s) => s.name) } : {}),
-    ...(first?.chamber.appointmentPhone || first?.chamber.phone
-      ? { telephone: first.chamber.appointmentPhone ?? first.chamber.phone }
+    ...(first?.chamber.appointmentPhone || first?.chamber.phone || doctor.phone
+      ? { telephone: first?.chamber.appointmentPhone ?? first?.chamber.phone ?? doctor.phone }
+      : {}),
+    ...(doctor.organization || first?.facility
+      ? { worksFor: { "@type": "MedicalOrganization", name: first?.facility?.name ?? doctor.organization } }
       : {}),
     ...(address ? { address } : {}),
   };

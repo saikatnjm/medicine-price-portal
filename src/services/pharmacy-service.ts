@@ -1,4 +1,4 @@
-import { hasPublicDetails } from "../domain/healthcare";
+import { hasPublicDetails, reviewStatusOf } from "../domain/healthcare";
 import type {
   DirectoryIndexEntry,
   PharmacyDetail,
@@ -7,10 +7,9 @@ import type {
 } from "../domain/read-models";
 import type { Pharmacy } from "../domain/types";
 import type { Repositories } from "../repositories";
-import { toFacilityItems, toPharmacyItems } from "./directory-items";
+import { toPharmacyItems } from "./directory-items";
 import {
-  NEARBY_LIMIT,
-  NEARBY_RADIUS_KM,
+  loadPharmacyNearby,
   resolveDirectoryInput,
   type DirectoryListInput,
   type DirectoryListResult,
@@ -33,17 +32,10 @@ export class PharmacyService {
     if (!pharmacy) return null;
     const places = await PlaceResolver.create(this.repos);
 
-    const locationId = pharmacy.areaId ?? pharmacy.districtId;
-    const nearby = pharmacy.coordinates
-      ? { near: pharmacy.coordinates, radiusKm: NEARBY_RADIUS_KM, page: 1 }
-      : locationId
-        ? { locationIds: [locationId], page: 1 }
-        : null;
-    const [rawPrices, sources, nearbyPharmacies, nearbyFacilities] = await Promise.all([
+    const [rawPrices, sources, nearby] = await Promise.all([
       this.repos.prices.listByPharmacy(pharmacy.id),
       this.repos.sources.findByIds([pharmacy.provenance.sourceId]),
-      nearby ? this.repos.pharmacyDirectory.list({ ...nearby, pageSize: NEARBY_LIMIT + 1 }) : null,
-      nearby ? this.repos.facilities.list({ ...nearby, pageSize: NEARBY_LIMIT }) : null,
+      loadPharmacyNearby(this.repos, places, pharmacy),
     ]);
     const medicines = await this.repos.medicines.findByIds(rawPrices.map((p) => p.medicineId));
     const medicineById = new Map(medicines.map((m) => [m.id, m]));
@@ -53,7 +45,6 @@ export class PharmacyService {
         return medicine ? [{ price, medicine }] : [];
       })
       .sort(compareEntries);
-    const near = pharmacy.coordinates ?? null;
 
     return {
       pharmacy,
@@ -61,13 +52,8 @@ export class PharmacyService {
       hasSampleData: prices.some((p) => p.price.source === "sample"),
       place: places.resolve(pharmacy),
       source: sources[0] ?? null,
-      indexable: hasPublicDetails(pharmacy) || prices.length > 0,
-      nearbyPharmacies: toPharmacyItems(
-        (nearbyPharmacies?.items ?? []).filter((p) => p.id !== pharmacy.id).slice(0, NEARBY_LIMIT),
-        places,
-        near,
-      ),
-      nearbyFacilities: await toFacilityItems(nearbyFacilities?.items ?? [], this.repos, places, near),
+      indexable: reviewStatusOf(pharmacy) === "active" && (hasPublicDetails(pharmacy) || prices.length > 0),
+      nearby,
     };
   }
 
@@ -103,7 +89,7 @@ export class PharmacyService {
       for (const list of lists) for (const price of list) withPrices.add(price.pharmacyId);
     }
     return all
-      .filter((p) => hasPublicDetails(p) || withPrices.has(p.id))
+      .filter((p) => reviewStatusOf(p) === "active" && (hasPublicDetails(p) || withPrices.has(p.id)))
       .map(({ slug, updatedAt }) => ({ slug, updatedAt }));
   }
 }

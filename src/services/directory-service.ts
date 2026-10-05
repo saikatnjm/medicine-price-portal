@@ -1,4 +1,4 @@
-import { hasPublicDetails } from "../domain/healthcare";
+import { isIndexableRecord } from "../domain/healthcare";
 import type { CombinationIndexEntry, DirectorySummary } from "../domain/read-models";
 import type { Repositories } from "../repositories";
 import { loadDirectoryStats, MIN_COMBINATION_RESULTS } from "./directory-stats";
@@ -74,6 +74,6 @@ export class DirectoryService {
   /** Facilities with public details, for counts in copy ("1,240 hospitals with contact details"). */
   async countFacilitiesWithDetails(): Promise<number> {
     const all = await this.repos.facilities.listAll();
-    return all.filter((f) => hasPublicDetails(f)).length;
+    return all.filter((f) => isIndexableRecord(f)).length;
   }
 }

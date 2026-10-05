@@ -237,7 +237,7 @@ export const fixtureDataset: LocalDataset = {
         { facilityName: "Test Chamber", districtId: "loc_dis_dhaka", areaId: "loc_area_gulshan" },
       ],
       updatedAt,
-      provenance: { sourceId: "test-doctors", recordId: "d1", status: "verified" },
+      provenance: { sourceId: "test-doctors", recordId: "d1", status: "verified", verificationMethod: "official_profile", verifiedAt: "2026-10-01T00:00:00Z", recordUrl: "https://example.org/dr/d1" },
     },
   ],
 };

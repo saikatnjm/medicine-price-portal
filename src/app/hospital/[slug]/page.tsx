@@ -3,15 +3,17 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { JsonLd } from "@/components/common/json-ld";
-import { SourceAttribution } from "@/components/directory/source-attribution";
+import { GooglePlaceInfo } from "@/components/directory/google-place-info";
 import { LocationBlock } from "@/components/directory/location-block";
+import { ReportIssue } from "@/components/directory/report-issue";
+import { SourceSection } from "@/components/directory/source-attribution";
 import { ContactDetails } from "@/components/facility/contact-details";
-import { CorrectionHint } from "@/components/facility/correction-hint";
 import { FacilityDepartments } from "@/components/facility/facility-departments";
 import { FacilityDoctors } from "@/components/facility/facility-doctors";
 import { FacilityOverview } from "@/components/facility/facility-overview";
 import { MoreInArea } from "@/components/facility/more-in-area";
-import { NearbyFacilities, NearbyPharmacies } from "@/components/facility/nearby-sections";
+import { FacilityNearbySections } from "@/components/facility/nearby-sections";
+import { QuickActions } from "@/components/facility/quick-actions";
 import { Container } from "@/components/ui/container";
 import { services } from "@/data";
 import { routes } from "@/lib/routes";
@@ -59,32 +61,41 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
       <JsonLd data={[facilityJsonLd(detail), breadcrumbJsonLd(breadcrumbs, path)]} />
       <Breadcrumbs items={breadcrumbs} />
       <div className="mt-4 space-y-10">
-        <FacilityOverview detail={detail} />
-        <div className="grid gap-10 lg:grid-cols-2">
-          <ContactDetails
+        <div className="space-y-5">
+          <FacilityOverview detail={detail} />
+          <QuickActions
+            name={facility.name}
             phone={facility.phone}
             website={facility.website}
-            email={facility.email}
-            openingHours={facility.openingHours}
-            beds={facility.beds}
-          />
-          <LocationBlock
-            name={facility.name}
             address={facility.address}
-            placeLabel={place.label}
-            postalCode={facility.postalCode}
             coordinates={facility.coordinates}
             google={facility.google}
           />
         </div>
+        <LocationBlock
+          name={facility.name}
+          address={facility.address}
+          placeLabel={place.label}
+          postalCode={facility.postalCode}
+          coordinates={facility.coordinates}
+          google={facility.google}
+        />
+        <GooglePlaceInfo google={facility.google} name={facility.name} />
+        <ContactDetails
+          phone={facility.phone}
+          website={facility.website}
+          email={facility.email}
+          openingHours={facility.openingHours}
+          beds={facility.beds}
+          omitWhenEmpty
+        />
         <FacilityDepartments detail={detail} />
         <FacilityDoctors doctors={detail.doctors} facilityName={facility.name} />
-        <NearbyFacilities items={detail.nearbyFacilities} />
-        <NearbyPharmacies items={detail.nearbyPharmacies} />
+        <FacilityNearbySections nearby={detail.nearby} />
         <MoreInArea place={place} type="hospitals" />
-        <div className="space-y-2 border-t border-slate-200 pt-6">
-          <SourceAttribution source={detail.source} provenance={facility.provenance} />
-          <CorrectionHint provenance={facility.provenance} />
+        <div className="space-y-6 border-t border-slate-200 pt-6">
+          <SourceSection source={detail.source} provenance={facility.provenance} sourceName={facility.sourceName} />
+          <ReportIssue name={facility.name} path={path} provenance={facility.provenance} />
           <p className="text-sm text-slate-600">
             This page is general information, not medical advice. In an emergency, call a local emergency number or go to
             the nearest hospital.

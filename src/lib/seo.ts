@@ -31,6 +31,11 @@ export function openGraph(path: string, title: string, description: string): Met
   };
 }
 
+/** Twitter/X card (summary). Next.js replaces, not merges, the layout's twitter object. */
+export function twitterCard(title: string, description: string): Metadata["twitter"] {
+  return { card: "summary", title, description };
+}
+
 export interface PageMetadataInput {
   /** Page title without the site name (the layout template appends it). */
   title: string;
@@ -48,33 +53,16 @@ export function pageMetadata({ title, description, path, indexable = true }: Pag
     description,
     alternates: { canonical: path },
     openGraph: openGraph(path, title, description),
+    twitter: twitterCard(title, description),
     robots: pageRobots(indexable),
   };
 }
 
-const TITLE_MAX_LENGTH = 70;
-
-/** Longest prefix of a generic list ("A + B + C", "A, B") that fits, cut at an item boundary. */
-function fitGenerics(generic: string, maxLength: number): string | null {
-  if (generic.length <= maxLength) return generic;
-  const parts = generic.split(/\s*(?:\+|,|;)\s*/).filter(Boolean);
-  let fitted = "";
-  for (const part of parts) {
-    const next = fitted ? `${fitted} + ${part}` : part;
-    if (next.length + 7 > maxLength) break; // room for " + more"
-    fitted = next;
-  }
-  return fitted && fitted !== generic ? `${fitted} + more` : null;
-}
-
+/** "Napa 500 mg — Medicine Information", with " & Price" only when price records exist. */
 export function medicineTitle(detail: MedicineDetail): string {
-  const { medicine, generic, priceStats } = detail;
-  const name = `${formatMedicineName(medicine)} ${medicine.dosageFormLabel}`.trim();
-  const suffix = ` — Medicine Information & ${priceStats ? "Price" : "Alternatives"}`;
-  // Include the generic name only while the whole title stays short enough.
-  const room = TITLE_MAX_LENGTH - name.length - suffix.length - 3; // " (" + ")"
-  const fitted = room > 0 ? fitGenerics(generic.name, room) : null;
-  return `${name}${fitted ? ` (${fitted})` : ""}${suffix}`;
+  const { medicine, priceStats } = detail;
+  // The dosage form keeps titles unique across forms of the same brand and strength.
+  return `${formatMedicineName(medicine)} ${medicine.dosageFormLabel} — Medicine Information${priceStats ? " & Price" : ""}`;
 }
 
 export function medicineDescription(detail: MedicineDetail): string {
@@ -107,6 +95,33 @@ export function breadcrumbJsonLd(items: readonly BreadcrumbItem[], currentPath: 
       name: item.name,
       item: absoluteUrl(item.href ?? currentPath),
     })),
+  };
+}
+
+/** Homepage WebSite with a sitelinks search box target (/search?q=...). */
+export function websiteJsonLd(): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteConfig.name,
+    url: absoluteUrl(routes.home()),
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${siteConfig.url}/search?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  };
+}
+
+/** Generic schema.org WebPage (used for the About page). */
+export function webPageJsonLd(input: { name: string; description: string; path: string }): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: input.name,
+    description: input.description,
+    url: absoluteUrl(input.path),
+    isPartOf: { "@type": "WebSite", name: siteConfig.name, url: absoluteUrl(routes.home()) },
   };
 }
 

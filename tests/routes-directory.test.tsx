@@ -43,6 +43,8 @@ vi.mock("next/navigation", () => ({
 }));
 
 vi.mock("next/link", () => import("./components/next-link-mock"));
+// Async Server Component (Google enrichment); not under test here and not renderable by the jsdom client renderer.
+vi.mock("@/components/directory/google-place-info", () => ({ GooglePlaceInfo: () => null }));
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
@@ -119,6 +121,28 @@ describe("/hospital/[slug]", () => {
     );
     expect(directions.getAttribute("rel")).toContain("noopener");
 
+    // Quick actions: only what the record supports.
+    expect(screen.getByRole("link", { name: /^Call Central Heart Hospital/ }).getAttribute("href")).toBe("tel:+88020000001");
+    const website = screen.getAllByRole("link", { name: /^Website of Central Heart Hospital/ })[0]!;
+    expect(website.getAttribute("href")).toBe("https://example.org/hospital");
+    expect(website.getAttribute("rel")).toBe("noopener noreferrer nofollow");
+    expect(screen.getByRole("link", { name: /^Directions to Central Heart Hospital/ })).toBeTruthy();
+    // Kind label, trust badge and source section.
+    expect(screen.getByText("Private hospital")).toBeTruthy();
+    expect(screen.getByText("Community-mapped")).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 2, name: "Source & last checked" })).toBeTruthy();
+    expect(screen.getByText("Community-mapped; not verified by us")).toBeTruthy();
+    // Grouped nearby records: the fixture has a pharmacy within 5 km and nothing else.
+    expect(screen.getByRole("heading", { level: 2, name: "Nearby pharmacies" })).toBeTruthy();
+    expect(screen.queryByRole("heading", { name: "Nearby hospitals" })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Nearby clinics" })).toBeNull();
+    // Report options: OSM edit link (derived from way/201); no report link without NEXT_PUBLIC_REPORT_URL.
+    expect(screen.getByRole("heading", { level: 2, name: "Is something incorrect?" })).toBeTruthy();
+    expect(
+      screen.getByRole("link", { name: /^Suggest an edit on OpenStreetMap/ }).getAttribute("href"),
+    ).toBe("https://www.openstreetmap.org/edit?way=201");
+    expect(screen.queryByRole("link", { name: /^Report this information/ })).toBeNull();
+
     expect(screen.getAllByText("Emergency services listed").length).toBeGreaterThan(0);
     expect(screen.getAllByText("© OpenStreetMap contributors").length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Community-mapped information that we have not verified/).length).toBeGreaterThan(0);
@@ -136,6 +160,7 @@ describe("/hospital/[slug]", () => {
   it("is indexable when it has public details and noindex when it is a bare name-only record", async () => {
     const rich = await facilityMetadata(params("central-heart-hospital-dhaka"));
     expect(rich.robots).toMatchObject({ index: true });
+    expect(rich.title).toBe("Central Heart Hospital, Dhanmondi");
     expect(rich.alternates?.canonical).toBe("/hospital/central-heart-hospital-dhaka");
 
     const thin = await facilityMetadata(params("harbour-hospital-chattogram"));
@@ -146,7 +171,11 @@ describe("/hospital/[slug]", () => {
   it("still renders a thin record, without inventing contact details", async () => {
     render(await FacilityPage(params("harbour-hospital-chattogram")));
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Harbour Hospital");
-    expect(screen.getByText(/No phone number, website or opening hours are published/)).toBeTruthy();
+    // Nothing is published, so no contact section, call/website actions or empty placeholders.
+    expect(screen.queryByRole("heading", { name: "Contact" })).toBeNull();
+    expect(screen.queryByRole("link", { name: /^Call / })).toBeNull();
+    expect(screen.queryByRole("link", { name: /^Website/ })).toBeNull();
+    expect(screen.queryByRole("heading", { name: /^Nearby/ })).toBeNull();
     expect(screen.queryByText("Emergency services listed")).toBeNull();
   });
 
@@ -170,6 +199,13 @@ describe("/pharmacy/[slug]", () => {
     expect(screen.getByRole("note").textContent).toMatch(/not live pharmacy information/);
     expect(screen.getByRole("link", { name: "Napa 500 mg" }).getAttribute("href")).toBe("/medicine/napa-500mg");
     expect(screen.getAllByText("© OpenStreetMap contributors").length).toBeGreaterThan(0);
+    // Quick actions and sections of the pharmacy page.
+    expect(screen.getByRole("link", { name: /^Call Alpha Pharmacy/ }).getAttribute("href")).toBe("tel:+8801700000001");
+    expect(screen.getByRole("link", { name: /^Google Maps for Alpha Pharmacy/ })).toBeTruthy();
+    expect(screen.getAllByText("Pharmacy").length).toBeGreaterThan(0);
+    expect(screen.getByText("Community-mapped")).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 2, name: "Nearby hospitals & clinics" })).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 2, name: "Source & last checked" })).toBeTruthy();
 
     const jsonLd = jsonLdOf(container);
     expect(jsonLd).toContain('"@type":"Pharmacy"');
@@ -178,13 +214,15 @@ describe("/pharmacy/[slug]", () => {
 
   it("says prices are not available when a pharmacy has none", async () => {
     render(await PharmacyPage(params("beta-pharmacy")));
-    expect(screen.getByText(/Price information is not available yet for this pharmacy/)).toBeTruthy();
+    expect(screen.getByText("Medicine prices and stock are not available for this pharmacy.")).toBeTruthy();
+    expect(screen.queryByRole("link", { name: /^Call / })).toBeNull();
+    expect(screen.getByRole("link", { name: /^Directions to Beta Pharmacy/ })).toBeTruthy();
     expect(screen.queryByRole("note")).toBeNull();
   });
 
   it("has a unique title and canonical URL, and 404s for unknown slugs", async () => {
     const metadata = await pharmacyMetadata(params("alpha-pharmacy"));
-    expect(metadata.title).toBe("Alpha Pharmacy — Location & Contact");
+    expect(metadata.title).toBe("Alpha Pharmacy, Dhanmondi — Pharmacy location & contact");
     expect(metadata.alternates?.canonical).toBe("/pharmacy/alpha-pharmacy");
     await expect(PharmacyPage(params("no-such-pharmacy"))).rejects.toThrow("NEXT_NOT_FOUND");
   });
@@ -259,12 +297,17 @@ describe("/specialties/[slug]", () => {
 });
 
 describe("/locations/[slug]", () => {
-  it("shows hospitals, pharmacies, doctors and sub-locations for a district", async () => {
+  it("shows the facility summary, hospitals, pharmacies, doctors and sub-locations for a district", async () => {
     render(await LocationPage(params("dhaka")));
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Healthcare in Dhaka");
-    for (const name of ["Hospitals & clinics", "Pharmacies", "Doctors", "Areas in Dhaka"]) {
+    for (const name of ["Healthcare facilities", "Hospitals", "Pharmacies", "Doctors", "Areas in Dhaka"]) {
       expect(screen.getByRole("heading", { level: 2, name })).toBeTruthy();
     }
+    // The fixture has no clinics or diagnostic centres, so those sections are omitted.
+    expect(screen.queryByRole("heading", { name: "Clinics & health centres" })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Diagnostic centres" })).toBeNull();
+    expect(screen.getByRole("link", { name: "See all 1 hospitals" }).getAttribute("href")).toBe("/hospitals/dhaka?kind=hospital");
+    expect(screen.getByRole("link", { name: "See all 2 pharmacies" }).getAttribute("href")).toBe("/pharmacies/dhaka");
     expect(screen.getByRole("link", { name: "Central Heart Hospital" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "Alpha Pharmacy" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "Dhanmondi" }).getAttribute("href")).toBe("/locations/dhanmondi");

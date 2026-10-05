@@ -116,6 +116,8 @@ export interface DirectoryListParams {
 
 export interface FacilityListParams extends DirectoryListParams {
   kind?: FacilityKind;
+  /** Any of these kinds (combined with `kind` when both are given). */
+  kinds?: readonly FacilityKind[];
   specialtyId?: ID;
   /** Only facilities whose source states emergency services. */
   emergencyOnly?: boolean;
@@ -129,6 +131,8 @@ export interface DoctorListParams extends DirectoryListParams {
 export interface FacilityRepository {
   findBySlug(slug: string): Promise<Facility | null>;
   findByIds(ids: readonly ID[]): Promise<Facility[]>;
+  /** Exact match on the normalised facility name (e.g. "Square Hospital"); null when none or unknown. */
+  findByName(name: string): Promise<Facility | null>;
   /** Filtered, deterministically ordered page (text matches ranked first). */
   list(params: FacilityListParams): Promise<Page<Facility>>;
   /** All facilities, for aggregates and the sitemap. */

@@ -38,6 +38,7 @@ import {
   specialityValuesOf,
   websiteOf,
 } from "./lib/osm.mjs";
+import { INFO_FLAGS, qualityFlagsOf, refineKind, reviewStatusOf, stripCategorySuffix } from "./lib/quality.mjs";
 import { SPECIALTIES } from "./taxonomy/specialties.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../..");
@@ -53,6 +54,7 @@ const SOURCE_ID = "osm";
 /** Same name + kind + district within this distance = the same place mapped twice. */
 const DUPLICATE_DISTANCE_M = 300;
 
+const table = (obj, limit = 40) => Object.entries(obj).slice(0, limit).map(([k, v]) => `| ${k} | ${v} |`).join("\n");
 const byText = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 const countBy = (items, fn) => {
   const counts = {};
@@ -189,15 +191,21 @@ export function buildDirectory(raw, rawAreas) {
   const unmappedSpecialities = {};
   const rejected = [];
   const candidates = [];
+  const reclassified = [];
 
   for (const feature of raw.features) {
     const recordId = `${feature.type}/${feature.id}`;
     const reject = (reason) => rejected.push({ recordId, reason, name: feature.tags?.name ?? "" });
     const tags = feature.tags ?? {};
-    const kind = facilityKindOf(tags);
-    if (!kind) { reject("unsupported_type"); continue; }
+    const taggedKind = facilityKindOf(tags);
+    if (!taggedKind) { reject("unsupported_type"); continue; }
     if (tags.disused === "yes" || tags["disused:amenity"] || tags.abandoned === "yes") { reject("disused"); continue; }
-    const { name, altName } = namesOf(tags);
+    const names = namesOf(tags);
+    // Trim OSM category/address text pasted into the name; the original is kept as sourceName.
+    const strippedName = stripCategorySuffix(names.name);
+    const name = strippedName ?? names.name;
+    const sourceName = strippedName ? names.name : undefined;
+    const altName = names.altName;
     if (!name) { reject("missing_name"); continue; }
     if (isGenericName(name)) { reject("generic_name_only"); continue; }
     if (hasNoLetters(name)) { reject("invalid_name"); continue; }
@@ -220,11 +228,15 @@ export function buildDirectory(raw, rawAreas) {
       if (id) specialtyIds.push(id);
       else unmappedSpecialities[value] = (unmappedSpecialities[value] ?? 0) + 1;
     }
+    // The tagged OSM category is refined only when the record's own name states another kind.
+    const { kind, rule } = refineKind(name, taggedKind);
+    if (rule !== "as_tagged") reclassified.push({ recordId, name, from: taggedKind, to: kind, rule });
     candidates.push({
       kind,
       tagCount: Object.keys(tags).length,
       record: compact({
         name,
+        sourceName,
         altName,
         districtId: district ? districtId : undefined,
         areaId: district ? areaId : undefined,
@@ -264,6 +276,21 @@ export function buildDirectory(raw, rawAreas) {
     else kept.push({ key, c: candidate });
   }
 
+  // Same name at (almost) the same point under different kinds: probably one place mapped twice.
+  const possibleDuplicates = new Set();
+  const byName = new Map();
+  for (const { c } of kept) {
+    const list = byName.get(keyOf(c.record.name)) ?? [];
+    for (const other of list) {
+      if (other.kind !== c.kind && distanceMetres(other.record.coordinates, c.record.coordinates) <= 50) {
+        possibleDuplicates.add(c.recordId);
+        possibleDuplicates.add(other.recordId);
+      }
+    }
+    list.push(c);
+    byName.set(keyOf(c.record.name), list);
+  }
+
   // Slugs: "{name}-{district}", collisions get the OSM id. Names without Latin letters use the kind.
   const usedSlugs = new Set();
   let slugCollisions = 0;
@@ -278,17 +305,27 @@ export function buildDirectory(raw, rawAreas) {
       slug = `${slug}-${c.recordId.replace("/", "-").replace(/^node/, "n").replace(/^way/, "w").replace(/^relation/, "r")}`;
     }
     usedSlugs.add(slug);
-    const provenance = {
+    const provenance = compact({
       sourceId: SOURCE_ID,
       recordId: c.recordId,
       recordUrl: `https://www.openstreetmap.org/${c.recordId}`,
       status: "unverified",
+      sourceUpdatedAt: raw.meta.osmTimestamp ?? undefined,
+      lastCheckedAt: retrievedAt,
+    });
+    const flags = qualityFlagsOf(c.record);
+    if (possibleDuplicates.has(c.recordId)) flags.push("possible_duplicate");
+    const reviewStatus = reviewStatusOf(flags);
+    // "active" is the default and is not stored, keeping records small.
+    const quality = {
+      ...(reviewStatus === "active" ? {} : { reviewStatus }),
+      ...(flags.length ? { qualityFlags: flags } : {}),
     };
     const idSuffix = c.recordId.replace("/", "_");
     if (c.kind === "pharmacy") {
-      out.pharmacies.push(compact({ id: `pha_${idSuffix}`, slug, ...c.record, updatedAt: retrievedAt, provenance }));
+      out.pharmacies.push(compact({ id: `pha_${idSuffix}`, slug, ...c.record, ...quality, updatedAt: retrievedAt, provenance }));
     } else {
-      out.facilities.push(compact({ id: `fac_${idSuffix}`, slug, kind: c.kind, ...c.record, ...c.facilityOnly, updatedAt: retrievedAt, provenance }));
+      out.facilities.push(compact({ id: `fac_${idSuffix}`, slug, kind: c.kind, ...c.record, ...c.facilityOnly, ...quality, updatedAt: retrievedAt, provenance }));
     }
   }
   out.facilities.sort((a, b) => byText(a.slug, b.slug));
@@ -347,6 +384,10 @@ export function buildDirectory(raw, rawAreas) {
     areas: locations.filter((l) => l.level === "area").length,
     withArea: all.filter((r) => r.areaId).length,
     facilitiesByKind: countBy(out.facilities, (f) => f.kind),
+    reclassified: reclassified.length,
+    reclassifiedByRule: countBy(reclassified, (r) => `${r.from} → ${r.to} (${r.rule})`),
+    reviewStatus: countBy(all, (r) => r.reviewStatus ?? "active"),
+    qualityFlags: countBy(all.flatMap((r) => r.qualityFlags ?? []), (f) => f),
     withoutDistrict: all.filter((r) => !r.districtId).length,
     fieldCoverage: Object.fromEntries(
       ["altName", "locality", "address", "postalCode", "phone", "website", "email", "openingHours", "coordinates"].map((f) => [f, all.filter((r) => r[f]).length]),
@@ -358,15 +399,72 @@ export function buildDirectory(raw, rawAreas) {
     unmappedSpecialities: Object.fromEntries(Object.entries(unmappedSpecialities).sort((a, b) => b[1] - a[1])),
   };
 
-  return { ...out, locations, specialties, sources, report, rejected, duplicates };
+  return { ...out, locations, specialties, sources, report, rejected, duplicates, reclassified };
 }
 
 function writeJsonLines(file, items) {
   writeFileSync(file, items.length ? `[\n${items.map((i) => `  ${JSON.stringify(i)}`).join(",\n")}\n]\n` : "[]\n", "utf8");
 }
 
+/** Lists every reclassified or flagged record, so reviewers can fix the source (OSM) rather than our copy. */
+function writeQualityReport(result) {
+  const flagged = [...result.facilities, ...result.pharmacies]
+    .filter((r) => r.qualityFlags?.some((f) => !INFO_FLAGS.has(f)) || r.sourceName)
+    .map((r) => ({ id: r.id, name: r.name, sourceName: r.sourceName, kind: r.kind ?? "pharmacy", reviewStatus: r.reviewStatus ?? "active", flags: r.qualityFlags ?? [], source: r.provenance.recordUrl }))
+    .sort((a, b) => byText(a.id, b.id));
+  writeFileSync(
+    join(REPORT_DIR, "directory-quality-report.json"),
+    `${JSON.stringify({ generatedFrom: result.report.retrievedAt, reclassified: result.reclassified, flagged }, null, 2)}\n`,
+  );
+  const r = result.report;
+  const examples = (flag) =>
+    flagged
+      .filter((f) => f.flags.includes(flag))
+      .slice(0, 12)
+      .map((f) => `| ${(f.sourceName ?? f.name).replace(/\|/g, "/")} | ${f.kind} | ${f.reviewStatus} | ${f.source} |`)
+      .join("\n");
+  const reclassExamples = (rule) =>
+    result.reclassified
+      .filter((x) => x.rule === rule)
+      .slice(0, 10)
+      .map((x) => `| ${x.name.replace(/\|/g, "/")} | ${x.from} → ${x.to} |`)
+      .join("\n");
+  const rules = [...new Set(result.reclassified.map((x) => x.rule))].sort();
+  const md = `# Directory data-quality report
+
+Generated by \`scripts/data/build-healthcare.mjs\` from the OpenStreetMap snapshot of ${r.retrievedAt}.
+Rules: \`scripts/data/lib/quality.mjs\`. Coordinates and contacts are never changed; names only lose OSM
+category/address text pasted after a comma (original kept as \`sourceName\`). Fixes belong in OpenStreetMap
+(each record links to its source).
+
+- **active**: shown and indexable when it has public details.
+- **needs_review**: shown with a notice, noindex, left out of the sitemap.
+- **excluded**: kept in the data for audit, hidden from the site.
+
+| Status | Records |
+|---|---|
+${table(r.reviewStatus)}
+
+## Flags
+
+| Flag | Records |
+|---|---|
+${table(r.qualityFlags)}
+
+${Object.keys(r.qualityFlags)
+  .map((flag) => `### ${flag} (examples)\n\n| Name | Kind | Status | Source |\n|---|---|---|---|\n${examples(flag)}\n`)
+  .join("\n")}
+## Kinds refined from the name (${r.reclassified})
+
+| Change | Records |
+|---|---|
+${table(r.reclassifiedByRule)}
+
+${rules.map((rule) => `### ${rule} (examples)\n\n| Name | Change |\n|---|---|\n${reclassExamples(rule)}\n`).join("\n")}`;
+  writeFileSync(join(REPORT_DIR, "directory-quality-report.md"), md);
+}
+
 function renderReport(r) {
-  const table = (obj, limit = 40) => Object.entries(obj).slice(0, limit).map(([k, v]) => `| ${k} | ${v} |`).join("\n");
   return `# OpenStreetMap import report
 
 Generated by \`scripts/data/build-healthcare.mjs\` from the snapshot retrieved ${r.retrievedAt} (OSM data as of ${r.osmTimestamp ?? "unknown"}).
@@ -383,6 +481,11 @@ Data © OpenStreetMap contributors, ODbL 1.0. All records have status \`unverifi
 | Without district | ${r.withoutDistrict} |
 | Divisions / districts / areas | ${r.divisions} / ${r.districts} / ${r.areas} |
 | Records placed in an area | ${r.withArea} |
+
+## Data quality
+
+Kinds refined from the record's own name: ${r.reclassified}. Review status: ${Object.entries(r.reviewStatus).map(([k, v]) => `${k} ${v}`).join(", ")}.
+Details: \`data/reports/directory-quality-report.md\`.
 
 ## Rejected by reason
 
@@ -417,6 +520,32 @@ ${table(r.unmappedSpecialities, 30)}
 `;
 }
 
+/**
+ * Optional merge of data/google/place-ids.json ({ "<osm recordId>": { placeId, lastChecked } },
+ * written by match-google-places.mjs). Only the place id is kept. Absent file = no change.
+ */
+export function mergeGooglePlaces(records, placeIds) {
+  let merged = 0;
+  const out = records.map((record) => {
+    const entry = placeIds?.[record.provenance?.recordId];
+    if (!entry || typeof entry.placeId !== "string" || !entry.placeId || typeof entry.lastChecked !== "string") return record;
+    merged += 1;
+    return { ...record, google: { placeId: entry.placeId, lastChecked: entry.lastChecked } };
+  });
+  return { records: out, merged };
+}
+
+function applyGooglePlaces(result) {
+  const file = join(ROOT, "data/google/place-ids.json");
+  if (!existsSync(file)) return;
+  const placeIds = JSON.parse(readFileSync(file, "utf8"));
+  const facilities = mergeGooglePlaces(result.facilities, placeIds);
+  const pharmacies = mergeGooglePlaces(result.pharmacies, placeIds);
+  result.facilities = facilities.records;
+  result.pharmacies = pharmacies.records;
+  console.log(`Google place IDs merged: ${facilities.merged} facilities, ${pharmacies.merged} pharmacies.`);
+}
+
 function main() {
   if (!existsSync(RAW_FILE)) {
     console.error(`Missing ${RAW_FILE}. Run "npm run data:fetch-osm" first.`);
@@ -428,18 +557,25 @@ function main() {
   if (!areasRaw) console.warn(`No areas file; building without areas (run "npm run data:fetch-areas").`);
   else console.log(`Areas from ${areasFile}`);
   const result = buildDirectory(raw, areasRaw);
+  applyGooglePlaces(result);
   mkdirSync(REPORT_DIR, { recursive: true });
   writeJsonLines(join(SEED_DIR, "facilities.json"), result.facilities);
   writeJsonLines(join(SEED_DIR, "pharmacies.json"), result.pharmacies);
   writeJsonLines(join(SEED_DIR, "locations.json"), result.locations);
   writeJsonLines(join(SEED_DIR, "specialties.json"), result.specialties);
-  writeJsonLines(join(SEED_DIR, "directory-sources.json"), result.sources);
+  // Keep doctor sources written by data:import-doctors (ids "doctors-…").
+  const sourcesFile = join(SEED_DIR, "directory-sources.json");
+  const doctorSources = existsSync(sourcesFile)
+    ? JSON.parse(readFileSync(sourcesFile, "utf8")).filter((s) => String(s.id).startsWith("doctors-"))
+    : [];
+  writeJsonLines(sourcesFile, [...result.sources, ...doctorSources]);
   if (!existsSync(join(SEED_DIR, "doctors.json"))) writeFileSync(join(SEED_DIR, "doctors.json"), "[]\n");
   writeFileSync(
     join(REPORT_DIR, "osm-import-report.json"),
     `${JSON.stringify({ ...result.report, rejectedRecords: result.rejected, duplicateRecords: result.duplicates }, null, 2)}\n`,
   );
   writeFileSync(join(REPORT_DIR, "osm-import-report.md"), renderReport(result.report));
+  writeQualityReport(result);
   const r = result.report;
   console.log(
     `Facilities ${r.facilities}, pharmacies ${r.pharmacies} from ${r.rawFeatures} features ` +

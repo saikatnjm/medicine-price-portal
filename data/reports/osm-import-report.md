@@ -6,14 +6,19 @@ Data © OpenStreetMap contributors, ODbL 1.0. All records have status `unverifie
 | Metric | Count |
 |---|---|
 | Raw OSM features | 7866 |
-| Facilities (non-pharmacy) | 3447 |
-| Pharmacies | 3710 |
-| Rejected | 512 |
-| Duplicates removed | 197 |
-| Slug collisions resolved | 362 |
+| Facilities (non-pharmacy) | 3380 |
+| Pharmacies | 3754 |
+| Rejected | 513 |
+| Duplicates removed | 219 |
+| Slug collisions resolved | 360 |
 | Without district | 0 |
 | Divisions / districts / areas | 8 / 64 / 475 |
-| Records placed in an area | 7135 |
+| Records placed in an area | 7112 |
+
+## Data quality
+
+Kinds refined from the record's own name: 553. Review status: active 6930, needs_review 183, excluded 21.
+Details: `data/reports/directory-quality-report.md`.
 
 ## Rejected by reason
 
@@ -21,18 +26,19 @@ Data © OpenStreetMap contributors, ODbL 1.0. All records have status `unverifie
 |---|---|
 | missing_name | 465 |
 | veterinary | 35 |
-| generic_name_only | 10 |
+| generic_name_only | 11 |
 | invalid_name | 2 |
 
 ## Facilities by kind
 
 | Kind | Count |
 |---|---|
-| hospital | 2025 |
-| clinic | 853 |
-| dental_clinic | 295 |
-| doctors_practice | 219 |
-| diagnostic_centre | 43 |
+| hospital | 1847 |
+| clinic | 518 |
+| dental_clinic | 390 |
+| diagnostic_centre | 216 |
+| health_centre | 203 |
+| doctors_practice | 194 |
 | blood_bank | 12 |
 
 ## Field coverage (facilities + pharmacies)
@@ -40,30 +46,30 @@ Data © OpenStreetMap contributors, ODbL 1.0. All records have status `unverifie
 | Field | Records with it |
 |---|---|
 | altName | 376 |
-| locality | 1262 |
-| address | 1724 |
-| postalCode | 1089 |
+| locality | 1253 |
+| address | 1715 |
+| postalCode | 1082 |
 | phone | 217 |
 | website | 59 |
 | email | 50 |
 | openingHours | 442 |
-| coordinates | 7157 |
+| coordinates | 7134 |
 | ownership | 66 |
-| emergency | 158 |
+| emergency | 157 |
 | beds | 2 |
-| specialties | 150 |
+| specialties | 149 |
 
 ## By district (top 30)
 
 | District | Records |
 |---|---|
-| Dhaka | 2852 |
+| Dhaka | 2842 |
 | Chattogram | 679 |
 | Rangpur | 234 |
 | Tangail | 213 |
-| Bogura | 188 |
+| Bogura | 184 |
 | Gazipur | 170 |
-| Mymensingh | 168 |
+| Mymensingh | 167 |
 | Satkhira | 150 |
 | Khulna | 142 |
 | Jashore | 126 |
@@ -76,7 +82,7 @@ Data © OpenStreetMap contributors, ODbL 1.0. All records have status `unverifie
 | Sherpur | 87 |
 | Kishoreganj | 82 |
 | Nilphamari | 82 |
-| Cumilla | 77 |
+| Cumilla | 76 |
 | Dinajpur | 76 |
 | Munshiganj | 68 |
 | Natore | 67 |
@@ -84,9 +90,9 @@ Data © OpenStreetMap contributors, ODbL 1.0. All records have status `unverifie
 | Manikganj | 55 |
 | Narail | 54 |
 | Netrokona | 54 |
-| Jamalpur | 53 |
+| Jamalpur | 52 |
 | Pabna | 49 |
-| Panchagarh | 43 |
+| Panchagarh | 42 |
 
 ## Unmapped OSM specialities (top 30)
 

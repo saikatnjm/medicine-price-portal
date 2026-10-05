@@ -7,6 +7,8 @@ interface SearchFormProps {
   size?: "md" | "lg";
   /** Unique id when more than one form is on a page. */
   id?: string;
+  /** Visible/accessible label; defaults to the generic description of what can be searched. */
+  label?: string;
 }
 
 /**
@@ -14,16 +16,16 @@ interface SearchFormProps {
  * client-side JavaScript; the query lives in the URL so results are shareable
  * and server-rendered.
  */
-export function SearchForm({ defaultValue = "", size = "md", id = "site-search" }: SearchFormProps) {
+export function SearchForm({ defaultValue = "", size = "md", id = "site-search", label = "Search medicines, hospitals, clinics, pharmacies and specialties" }: SearchFormProps) {
   const inputId = `${id}-input`;
   const large = size === "lg";
   return (
     <form role="search" action={routes.search()} method="get" className="w-full">
       <label
         htmlFor={inputId}
-        className={large ? "mb-2 block text-sm font-medium text-slate-700" : "sr-only"}
+        className={large ? "mb-2 block text-base font-medium text-slate-800" : "sr-only"}
       >
-        Search medicines, hospitals, clinics, pharmacies and specialties
+        {label}
       </label>
       <div className="flex gap-2">
         <SearchAutocomplete

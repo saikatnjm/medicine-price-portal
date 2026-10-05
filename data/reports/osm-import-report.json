@@ -2,55 +2,84 @@
   "retrievedAt": "2026-10-04T12:52:19.032Z",
   "osmTimestamp": "2026-10-04T12:50:21Z",
   "rawFeatures": 7866,
-  "facilities": 3447,
-  "pharmacies": 3710,
-  "rejected": 512,
+  "facilities": 3380,
+  "pharmacies": 3754,
+  "rejected": 513,
   "rejectedByReason": {
     "missing_name": 465,
     "veterinary": 35,
-    "generic_name_only": 10,
+    "generic_name_only": 11,
     "invalid_name": 2
   },
-  "duplicatesRemoved": 197,
-  "slugCollisionsResolved": 362,
+  "duplicatesRemoved": 219,
+  "slugCollisionsResolved": 360,
   "divisions": 8,
   "districts": 64,
   "areas": 475,
-  "withArea": 7135,
+  "withArea": 7112,
   "facilitiesByKind": {
-    "hospital": 2025,
-    "clinic": 853,
-    "dental_clinic": 295,
-    "doctors_practice": 219,
-    "diagnostic_centre": 43,
+    "hospital": 1847,
+    "clinic": 518,
+    "dental_clinic": 390,
+    "diagnostic_centre": 216,
+    "health_centre": 203,
+    "doctors_practice": 194,
     "blood_bank": 12
+  },
+  "reclassified": 553,
+  "reclassifiedByRule": {
+    "clinic → health_centre (name_health_centre)": 160,
+    "clinic → diagnostic_centre (name_diagnostic)": 101,
+    "hospital → diagnostic_centre (name_diagnostic)": 75,
+    "clinic → dental_clinic (name_dental)": 64,
+    "hospital → health_centre (name_health_centre)": 50,
+    "doctors_practice → pharmacy (name_pharmacy)": 27,
+    "hospital → dental_clinic (name_dental)": 23,
+    "hospital → pharmacy (name_pharmacy)": 18,
+    "clinic → pharmacy (name_pharmacy)": 14,
+    "doctors_practice → dental_clinic (name_dental)": 9,
+    "hospital → doctors_practice (name_chamber)": 7,
+    "clinic → doctors_practice (name_chamber)": 4,
+    "diagnostic_centre → dental_clinic (name_dental)": 1
+  },
+  "reviewStatus": {
+    "active": 6930,
+    "needs_review": 183,
+    "excluded": 21
+  },
+  "qualityFlags": {
+    "name_cleaned": 920,
+    "long_name": 91,
+    "suspicious_category": 76,
+    "possible_duplicate": 24,
+    "not_a_facility": 21
   },
   "withoutDistrict": 0,
   "fieldCoverage": {
     "altName": 376,
-    "locality": 1262,
-    "address": 1724,
-    "postalCode": 1089,
+    "locality": 1253,
+    "address": 1715,
+    "postalCode": 1082,
     "phone": 217,
     "website": 59,
     "email": 50,
     "openingHours": 442,
-    "coordinates": 7157
+    "coordinates": 7134
   },
   "facilityFieldCoverage": {
     "ownership": 66,
-    "emergency": 158,
+    "emergency": 157,
     "beds": 2,
-    "specialties": 150
+    "specialties": 149
   },
   "byDistrict": {
-    "Dhaka": 2852,
+    "Dhaka": 2842,
     "Chattogram": 679,
     "Rangpur": 234,
     "Tangail": 213,
-    "Bogura": 188,
+    "Bogura": 184,
     "Gazipur": 170,
-    "Mymensingh": 168,
+    "Mymensingh": 167,
     "Satkhira": 150,
     "Khulna": 142,
     "Jashore": 126,
@@ -63,7 +92,7 @@
     "Sherpur": 87,
     "Kishoreganj": 82,
     "Nilphamari": 82,
-    "Cumilla": 77,
+    "Cumilla": 76,
     "Dinajpur": 76,
     "Munshiganj": 68,
     "Natore": 67,
@@ -71,23 +100,23 @@
     "Manikganj": 55,
     "Narail": 54,
     "Netrokona": 54,
-    "Jamalpur": 53,
+    "Jamalpur": 52,
     "Pabna": 49,
-    "Panchagarh": 43,
-    "Moulvibazar": 41,
-    "Gaibandha": 39,
+    "Panchagarh": 42,
     "Jhenaidah": 39,
-    "Sirajganj": 38,
+    "Moulvibazar": 39,
+    "Gaibandha": 38,
+    "Sirajganj": 37,
     "Bhola": 36,
     "Kurigram": 36,
     "Patuakhali": 33,
     "Habiganj": 29,
     "Sunamganj": 27,
     "Chapai Nawabganj": 23,
-    "Shariatpur": 23,
     "Magura": 22,
     "Meherpur": 22,
     "Noakhali": 22,
+    "Shariatpur": 22,
     "Feni": 21,
     "Narayanganj": 21,
     "Narsingdi": 20,
@@ -2007,6 +2036,11 @@
       "name": "Muktagachha Animal Hospital"
     },
     {
+      "recordId": "node/12452852618",
+      "reason": "generic_name_only",
+      "name": "Medical Store, Pharmacy"
+    },
+    {
       "recordId": "node/12478337771",
       "reason": "veterinary",
       "name": "Islam Medicine Center, Veterinary, Veterinary pharmacy"
@@ -2723,20 +2757,8 @@
       "keptId": "node/9596434711"
     },
     {
-      "recordId": "node/4845546824",
-      "keptId": "node/4845545530"
-    },
-    {
-      "recordId": "node/6126592807",
-      "keptId": "node/6039685706"
-    },
-    {
       "recordId": "node/5909299469",
       "keptId": "node/5983449612"
-    },
-    {
-      "recordId": "node/9596532346",
-      "keptId": "way/447857761"
     },
     {
       "recordId": "node/11777847648",
@@ -2759,10 +2781,6 @@
       "keptId": "way/1464577310"
     },
     {
-      "recordId": "way/610529765",
-      "keptId": "node/5781733629"
-    },
-    {
       "recordId": "way/377084882",
       "keptId": "node/3804558630"
     },
@@ -2783,28 +2801,12 @@
       "keptId": "way/591527847"
     },
     {
-      "recordId": "node/6039694264",
-      "keptId": "node/5983449610"
-    },
-    {
-      "recordId": "node/5909299467",
-      "keptId": "node/5983449610"
-    },
-    {
       "recordId": "node/11771201151",
       "keptId": "node/11770577950"
     },
     {
       "recordId": "node/11777847691",
       "keptId": "node/11771028230"
-    },
-    {
-      "recordId": "node/11143301063",
-      "keptId": "way/1201907043"
-    },
-    {
-      "recordId": "way/589604743",
-      "keptId": "node/5642267075"
     },
     {
       "recordId": "node/13849517401",
@@ -2815,8 +2817,24 @@
       "keptId": "node/13969885201"
     },
     {
+      "recordId": "node/4845546824",
+      "keptId": "node/4845545530"
+    },
+    {
+      "recordId": "node/1801796034",
+      "keptId": "node/1801801222"
+    },
+    {
       "recordId": "node/9520905069",
       "keptId": "node/6968431039"
+    },
+    {
+      "recordId": "node/9596532346",
+      "keptId": "way/447857761"
+    },
+    {
+      "recordId": "node/9575842322",
+      "keptId": "way/589226576"
     },
     {
       "recordId": "way/506174604",
@@ -2825,6 +2843,34 @@
     {
       "recordId": "node/11950091175",
       "keptId": "node/11949576863"
+    },
+    {
+      "recordId": "node/6126592807",
+      "keptId": "node/6039685706"
+    },
+    {
+      "recordId": "node/10241366020",
+      "keptId": "way/1132138008"
+    },
+    {
+      "recordId": "way/610529765",
+      "keptId": "node/5781733629"
+    },
+    {
+      "recordId": "node/6039694264",
+      "keptId": "node/5983449610"
+    },
+    {
+      "recordId": "node/5909299467",
+      "keptId": "node/5983449610"
+    },
+    {
+      "recordId": "node/11143301063",
+      "keptId": "way/1201907043"
+    },
+    {
+      "recordId": "way/589604743",
+      "keptId": "node/5642267075"
     },
     {
       "recordId": "way/533504783",
@@ -2863,20 +2909,32 @@
       "keptId": "node/1787174815"
     },
     {
+      "recordId": "node/13195457969",
+      "keptId": "node/2332872326"
+    },
+    {
       "recordId": "node/4977329873",
       "keptId": "way/508427366"
+    },
+    {
+      "recordId": "node/2381388292",
+      "keptId": "node/13232613789"
+    },
+    {
+      "recordId": "node/13168901571",
+      "keptId": "node/13165013170"
     },
     {
       "recordId": "node/10315954847",
       "keptId": "way/1132394635"
     },
     {
-      "recordId": "node/1329007641",
-      "keptId": "node/2209597822"
+      "recordId": "way/243705028",
+      "keptId": "node/12969380561"
     },
     {
-      "recordId": "node/9575842322",
-      "keptId": "way/589226576"
+      "recordId": "node/1329007641",
+      "keptId": "node/2209597822"
     },
     {
       "recordId": "node/2333164533",
@@ -2891,10 +2949,6 @@
       "keptId": "way/684180575"
     },
     {
-      "recordId": "node/1801796034",
-      "keptId": "node/1801801222"
-    },
-    {
       "recordId": "node/2332856875",
       "keptId": "way/723080799"
     },
@@ -2903,8 +2957,16 @@
       "keptId": "way/1221478014"
     },
     {
+      "recordId": "way/525078640",
+      "keptId": "node/12846665997"
+    },
+    {
       "recordId": "node/12056962174",
       "keptId": "way/974287986"
+    },
+    {
+      "recordId": "node/13017178395",
+      "keptId": "way/535518363"
     },
     {
       "recordId": "node/2365517022",
@@ -3023,6 +3085,10 @@
       "keptId": "way/540123465"
     },
     {
+      "recordId": "node/12864387931",
+      "keptId": "way/529921371"
+    },
+    {
       "recordId": "node/3734803537",
       "keptId": "way/369448879"
     },
@@ -3079,6 +3145,10 @@
       "keptId": "node/6902632998"
     },
     {
+      "recordId": "node/6908693958",
+      "keptId": "node/6908693957"
+    },
+    {
       "recordId": "node/4976689785",
       "keptId": "node/6908693957"
     },
@@ -3115,6 +3185,10 @@
       "keptId": "node/4432181546"
     },
     {
+      "recordId": "node/6908693954",
+      "keptId": "node/6908693953"
+    },
+    {
       "recordId": "node/9603063261",
       "keptId": "node/9603063257"
     },
@@ -3129,6 +3203,10 @@
     {
       "recordId": "node/6908693971",
       "keptId": "node/6908693951"
+    },
+    {
+      "recordId": "node/6908693985",
+      "keptId": "node/6908693984"
     },
     {
       "recordId": "node/4331663678",
@@ -3157,6 +3235,10 @@
     {
       "recordId": "node/12218547154",
       "keptId": "node/12197156167"
+    },
+    {
+      "recordId": "node/12679453008",
+      "keptId": "node/8501405154"
     },
     {
       "recordId": "node/3794108602",
@@ -3213,6 +3295,10 @@
     {
       "recordId": "node/9809665559",
       "keptId": "node/9809659277"
+    },
+    {
+      "recordId": "node/6908693979",
+      "keptId": "node/6908693978"
     },
     {
       "recordId": "node/4976689777",
@@ -3275,6 +3361,10 @@
       "keptId": "node/9768603908"
     },
     {
+      "recordId": "node/5144808509",
+      "keptId": "node/12953895266"
+    },
+    {
       "recordId": "node/8788554838",
       "keptId": "way/376358169"
     },
@@ -3303,6 +3393,14 @@
       "keptId": "node/8883113988"
     },
     {
+      "recordId": "node/6908693970",
+      "keptId": "node/6908693969"
+    },
+    {
+      "recordId": "node/4976689760",
+      "keptId": "node/6900268896"
+    },
+    {
       "recordId": "node/8234550769",
       "keptId": "node/8234534646"
     },
@@ -3327,6 +3425,10 @@
       "keptId": "node/7419126619"
     },
     {
+      "recordId": "node/5156699392",
+      "keptId": "node/12992215960"
+    },
+    {
       "recordId": "node/5622157370",
       "keptId": "node/5622156286"
     },
@@ -3347,12 +3449,24 @@
       "keptId": "node/11878545368"
     },
     {
+      "recordId": "node/11738450696",
+      "keptId": "node/11738450697"
+    },
+    {
       "recordId": "node/3449987022",
       "keptId": "node/5248383234"
     },
     {
       "recordId": "node/4579982490",
       "keptId": "node/3810908251"
+    },
+    {
+      "recordId": "node/6968440941",
+      "keptId": "node/6968440940"
+    },
+    {
+      "recordId": "node/11609568065",
+      "keptId": "node/7469491716"
     },
     {
       "recordId": "node/9578084314",
@@ -3403,6 +3517,10 @@
       "keptId": "node/9601138204"
     },
     {
+      "recordId": "node/6908693966",
+      "keptId": "node/6908693965"
+    },
+    {
       "recordId": "node/12218492231",
       "keptId": "node/12196548212"
     },
@@ -3417,6 +3535,10 @@
     {
       "recordId": "node/6900268899",
       "keptId": "node/6900248773"
+    },
+    {
+      "recordId": "node/6968440928",
+      "keptId": "node/6968440927"
     },
     {
       "recordId": "node/12218492202",

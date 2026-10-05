@@ -9,7 +9,7 @@ import { toDoctorItems, toFacilityItems, toPharmacyItems } from "./directory-ite
 import { loadDirectoryStats, totalOf, type DirectoryStats } from "./directory-stats";
 import { PlaceResolver } from "./places";
 
-const DETAIL_LIST_LIMIT = 8;
+const DETAIL_LIST_LIMIT = 6;
 const collator = new Intl.Collator("en", { sensitivity: "base" });
 
 function byActivityThenName(a: LocationListItem, b: LocationListItem): number {
@@ -49,8 +49,10 @@ export class LocationService {
     const locationIds = places.matchIdsOf(location);
     const list = { locationIds, page: 1, pageSize: DETAIL_LIST_LIMIT };
 
-    const [hospitals, facilities, pharmacies, doctors, specialties] = await Promise.all([
+    const [hospitals, clinics, diagnosticCentres, facilities, pharmacies, doctors, specialties] = await Promise.all([
       this.repos.facilities.list({ ...list, kind: "hospital" }),
+      this.repos.facilities.list({ ...list, kinds: ["clinic", "health_centre"] }),
+      this.repos.facilities.list({ ...list, kind: "diagnostic_centre" }),
       this.repos.facilities.list(list),
       this.repos.pharmacyDirectory.list(list),
       this.repos.doctors.list(list),
@@ -75,6 +77,9 @@ export class LocationService {
         .sort(byActivityThenName),
       kindCounts,
       facilities: await toFacilityItems(shownFacilities, this.repos, places),
+      hospitals: await toFacilityItems(hospitals.items, this.repos, places),
+      clinics: await toFacilityItems(clinics.items, this.repos, places),
+      diagnosticCentres: await toFacilityItems(diagnosticCentres.items, this.repos, places),
       pharmacies: toPharmacyItems(pharmacies.items, places),
       doctors: await toDoctorItems(doctors.items, this.repos, places),
       specialties: specialties

@@ -1,6 +1,7 @@
+import { ReviewNotice, TrustBadge } from "@/components/directory/trust-badge";
 import type { PharmacyDetail } from "@/domain/read-models";
 
-/** h1, Bangla name, place and description. */
+/** h1, Bangla name, kind, place, address, trust badge and description. */
 export function PharmacyOverview({ detail }: { detail: PharmacyDetail }) {
   const { pharmacy, place } = detail;
   return (
@@ -11,8 +12,16 @@ export function PharmacyOverview({ detail }: { detail: PharmacyDetail }) {
           {pharmacy.altName}
         </p>
       )}
-      {place.label && <p className="text-lg text-slate-800">{place.label}</p>}
+      <p className="text-lg text-slate-800">
+        Pharmacy
+        {place.label && <span className="text-slate-600"> · {place.label}</span>}
+      </p>
+      {pharmacy.address && <p className="text-slate-700">{pharmacy.address}</p>}
+      <p>
+        <TrustBadge provenance={pharmacy.provenance} />
+      </p>
       {pharmacy.description && <p className="max-w-3xl text-slate-700">{pharmacy.description}</p>}
+      <ReviewNotice record={pharmacy} />
     </header>
   );
 }

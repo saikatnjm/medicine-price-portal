@@ -26,6 +26,18 @@ function resolveIndexable(): boolean {
   return process.env.SITE_INDEXABLE === "true";
 }
 
+/** Optional public link for reporting a listing error; only http(s) URLs are accepted. */
+function resolveReportUrl(): string | null {
+  const raw = process.env.NEXT_PUBLIC_REPORT_URL?.trim();
+  if (!raw) return null;
+  try {
+    const url = new URL(raw);
+    return url.protocol === "https:" || url.protocol === "http:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
 export const siteConfig = {
   name: "Bangladesh Healthcare Search",
   shortName: "BD Healthcare Search",
@@ -34,4 +46,5 @@ export const siteConfig = {
   locale: "en_BD",
   url: resolveSiteUrl(),
   indexable: resolveIndexable(),
+  reportUrl: resolveReportUrl(),
 } as const;

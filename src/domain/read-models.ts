@@ -79,8 +79,7 @@ export interface PharmacyDetail {
   source: DataSource | null;
   /** False for thin records (name and district only): render with noindex. */
   indexable: boolean;
-  nearbyPharmacies: PharmacyListItem[];
-  nearbyFacilities: FacilityListItem[];
+  nearby: PharmacyNearby;
 }
 
 /** Minimal data for static params and the sitemap. */
@@ -171,9 +170,24 @@ export interface FacilityDetail extends FacilityListItem {
   indexable: boolean;
   /** Doctors with a chamber at this facility (first page). */
   doctors: DoctorListItem[];
-  /** Closest other facilities (by coordinates, else same area/district). */
-  nearbyFacilities: FacilityListItem[];
-  nearbyPharmacies: PharmacyListItem[];
+  /** Closest other records by group (by coordinates within a radius, else same area/district). */
+  nearby: FacilityNearby;
+}
+
+/** Nearby records of a facility page, closest first; every list may be empty. */
+export interface FacilityNearby {
+  hospitals: FacilityListItem[];
+  /** Clinics and health centres. */
+  clinics: FacilityListItem[];
+  diagnosticCentres: FacilityListItem[];
+  pharmacies: PharmacyListItem[];
+}
+
+/** Nearby records of a pharmacy page, closest first. */
+export interface PharmacyNearby {
+  /** Hospitals, clinics and health centres. */
+  facilities: FacilityListItem[];
+  pharmacies: PharmacyListItem[];
 }
 
 export interface PharmacyListItem extends Distance {
@@ -257,6 +271,11 @@ export interface LocationDetail extends LocationCounts {
   kindCounts: FacilityKindCount[];
   /** First few of each, hospitals first. */
   facilities: FacilityListItem[];
+  /** First few hospitals only. */
+  hospitals: FacilityListItem[];
+  /** First few clinics and health centres. */
+  clinics: FacilityListItem[];
+  diagnosticCentres: FacilityListItem[];
   pharmacies: PharmacyListItem[];
   doctors: DoctorListItem[];
   /** Specialties offered by facilities here (from facility data). */
@@ -320,6 +339,8 @@ export interface SearchIntent {
   entity: "doctor" | "hospital" | "pharmacy" | null;
   specialty: Specialty | null;
   location: Location | null;
+  /** Set for "doctors at <facility name>" queries. */
+  facility?: Facility | null;
 }
 
 /** Grouped results across the whole directory. */

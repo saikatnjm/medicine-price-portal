@@ -2,7 +2,30 @@
  * Healthcare directory domain: locations, specialties, facilities (hospitals,
  * clinics, diagnostic centres…) and doctors. Storage-independent, like ./types.
  */
-import type { ID, ISODateString, Provenance } from "./types";
+import type { ID, ISODateString, Provenance, ProvenanceStatus } from "./types";
+
+// ------------------------------------------------------------- data quality
+
+/**
+ * Review state of a directory record (see scripts/data/lib/quality.mjs).
+ * active: shown and indexable; needs_review: shown with a notice, noindex;
+ * excluded: kept for audit, hidden from the site.
+ */
+export const REVIEW_STATUSES = ["active", "needs_review", "excluded"] as const;
+export type ReviewStatus = (typeof REVIEW_STATUSES)[number];
+
+/** Quality fields shared by facilities and pharmacies. Absent reviewStatus means "active". */
+export interface RecordQuality {
+  reviewStatus?: ReviewStatus;
+  /** Machine-readable reasons, e.g. "possible_duplicate", "name_cleaned". */
+  qualityFlags?: string[];
+  /** Original source name when pasted category/address text was trimmed from it. */
+  sourceName?: string;
+}
+
+export function reviewStatusOf(record: RecordQuality): ReviewStatus {
+  return record.reviewStatus ?? "active";
+}
 
 // ------------------------------------------------------------------ locations
 
@@ -48,7 +71,9 @@ export const FACILITY_KINDS = [
   "diagnostic_centre",
   "dental_clinic",
   "doctors_practice",
+  "health_centre",
   "blood_bank",
+  "other_facility",
 ] as const;
 export type FacilityKind = (typeof FACILITY_KINDS)[number];
 
@@ -91,7 +116,7 @@ export interface PostalLocation {
  * A healthcare facility other than a pharmacy. Every optional field is present
  * only when the source publishes it (never inferred).
  */
-export interface Facility extends PostalLocation {
+export interface Facility extends PostalLocation, RecordQuality {
   id: ID;
   slug: string;
   name: string;
@@ -130,9 +155,14 @@ export interface DoctorChamber extends PostalLocation {
   consultationHours?: string;
 }
 
+/** How a doctor record was verified (required on every doctor; see docs/DOCTOR-DATA.md). */
+export const DOCTOR_VERIFICATION_METHODS = ["official_profile", "doctor_provided", "registry"] as const;
+export type DoctorVerificationMethod = (typeof DOCTOR_VERIFICATION_METHODS)[number];
+
 /**
- * A doctor profile. Only verified or consented data may be stored; no such
- * source exists yet, so the dataset is empty (see docs/DATA-PIPELINE.md).
+ * A doctor profile. Only verified or consented data may be stored. Provenance
+ * must have status "verified", a verificationMethod, verifiedAt and recordUrl.
+ * The dataset is empty until records are imported with `npm run data:import-doctors`.
  */
 export interface Doctor {
   id: ID;
@@ -141,6 +171,12 @@ export interface Doctor {
   specialtyIds: ID[];
   qualifications?: string;
   designation?: string;
+  /** Short text supplied by the source (max ~500 characters). */
+  profileSummary?: string;
+  /** Public practice phone only, never a personal number. */
+  phone?: string;
+  /** Primary hospital or organisation name when it is not a directory facility. */
+  organization?: string;
   /** Ordered; the first is the primary chamber. */
   chambers: DoctorChamber[];
   updatedAt: ISODateString;
@@ -153,7 +189,9 @@ export const FACILITY_KIND_LABEL: Record<FacilityKind, string> = {
   diagnostic_centre: "Diagnostic centre",
   dental_clinic: "Dental clinic",
   doctors_practice: "Doctor's practice",
+  health_centre: "Health centre",
   blood_bank: "Blood bank",
+  other_facility: "Other healthcare facility",
 };
 
 /** Extra search words per kind (e.g. "dentist" finds dental clinics). */
@@ -163,7 +201,9 @@ export const FACILITY_KIND_SEARCH_TERMS: Record<FacilityKind, string> = {
   diagnostic_centre: "diagnostic centre center laboratory lab",
   dental_clinic: "dental clinic dentist",
   doctors_practice: "doctor doctors practice chamber",
+  health_centre: "health centre center community clinic union family welfare",
   blood_bank: "blood bank donation",
+  other_facility: "healthcare facility",
 };
 
 export const OWNERSHIP_LABEL: Record<Ownership, string> = {
@@ -193,4 +233,22 @@ export function hasPublicDetails(record: {
       record.openingHours ||
       (record.specialtyIds && record.specialtyIds.length > 0),
   );
+}
+
+/** Short, plain-language label for what a record's data represents. Never claims more than its status. */
+export const TRUST_LABEL: Record<ProvenanceStatus, string> = {
+  registered: "Official registry",
+  unverified: "Community-mapped",
+  needs_review: "Needs review",
+  verified: "Source verified",
+  user_reported: "User reported",
+};
+
+export function trustLabelOf(provenance: Pick<Provenance, "status">): string {
+  return TRUST_LABEL[provenance.status];
+}
+
+/** A record is indexable only when it is active and has information beyond a name. */
+export function isIndexableRecord(record: RecordQuality & Parameters<typeof hasPublicDetails>[0]): boolean {
+  return reviewStatusOf(record) === "active" && hasPublicDetails(record);
 }

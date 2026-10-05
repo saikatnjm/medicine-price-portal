@@ -21,7 +21,7 @@ import type { DirectoryListParams, Repositories } from "../repositories";
 import { toDoctorItems, toFacilityItems, toPharmacyItems } from "./directory-items";
 import { loadDirectoryStats } from "./directory-stats";
 import { PlaceResolver } from "./places";
-import { isStructured, parseSearchIntent } from "./search-intent";
+import { facilityCandidate, isStructured, parseSearchIntent } from "./search-intent";
 import { toMedicineListItems } from "./summaries";
 
 /** Results per group on the "All" search view. */
@@ -178,7 +178,12 @@ export class SearchService {
     if (query.length === 0) return empty("empty_query");
     if (query.length < SEARCH_MIN_QUERY_LENGTH) return empty("query_too_short");
 
-    const intent = parseSearchIntent(query, places, specialties);
+    // "doctors at <facility>": resolve the exact facility name once, then parse synchronously.
+    const candidate = facilityCandidate(query);
+    const candidateFacility = candidate ? await this.repos.facilities.findByName(candidate) : null;
+    const intent = parseSearchIntent(query, places, specialties, (name) =>
+      name === candidate ? candidateFacility : null,
+    );
     const structured = isStructured(intent);
     const list: DirectoryListParams = {
       query: intent.text || undefined,
@@ -192,8 +197,12 @@ export class SearchService {
 
     const [medicines, doctors, facilities, pharmacies, stats] = await Promise.all([
       structured ? null : this.searchMedicines(query),
-      wants("doctor") ? this.repos.doctors.list({ ...list, specialtyId: intent.specialty?.id }) : null,
-      wants("hospital") ? this.repos.facilities.list({ ...list, specialtyId: intent.specialty?.id }) : null,
+      wants("doctor")
+        ? this.repos.doctors.list({ ...list, specialtyId: intent.specialty?.id, facilityId: intent.facility?.id })
+        : null,
+      wants("hospital") && !intent.facility
+        ? this.repos.facilities.list({ ...list, specialtyId: intent.specialty?.id })
+        : null,
       wants("pharmacy") && !intent.specialty ? this.repos.pharmacyDirectory.list(list) : null,
       loadDirectoryStats(this.repos, places),
     ]);
@@ -232,7 +241,9 @@ export class SearchService {
         : emptyGroup(),
       facilities: facilities
         ? { items: await toFacilityItems(facilities.items, this.repos, places), total: facilities.total }
-        : emptyGroup(),
+        : intent.facility
+          ? { items: await toFacilityItems([intent.facility], this.repos, places), total: 1 }
+          : emptyGroup(),
       pharmacies: pharmacies
         ? { items: toPharmacyItems(pharmacies.items, places), total: pharmacies.total }
         : emptyGroup(),

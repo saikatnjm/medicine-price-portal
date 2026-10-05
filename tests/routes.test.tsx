@@ -17,20 +17,29 @@ const searchParams = (q?: string) => ({
 describe("routes (real seed data)", () => {
   it("homepage renders the combobox search, examples and category links", async () => {
     render(await HomePage());
-    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(
-      "What are you looking for?",
-    );
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Bangladesh Healthcare Search");
     expect(
-      screen.getByRole("combobox", {
-        name: "Search medicines, hospitals, clinics, pharmacies and specialties",
-      }),
+      screen.getByText("Search medicines, doctors, hospitals, clinics and pharmacies across Bangladesh."),
     ).toBeTruthy();
+    expect(screen.getByRole("combobox", { name: "What are you looking for?" })).toBeTruthy();
     expect(screen.getByRole("link", { name: /Napa 500 mg/ })).toBeTruthy();
     // Example searches and category entry points replace the old registry link.
     expect(screen.getByRole("link", { name: "Cardiologist" }).getAttribute("href")).toBe(
       "/search?q=Cardiologist",
     );
-    expect(screen.getAllByRole("link", { name: /^Hospitals & clinics/ }).length).toBeGreaterThan(0);
+    expect(screen.getByRole("link", { name: "Pharmacies near Dhanmondi" }).getAttribute("href")).toBe(
+      "/search?q=Pharmacies+near+Dhanmondi",
+    );
+    expect(screen.getAllByRole("link", { name: /^Hospitals & Clinics/ }).length).toBeGreaterThan(0);
+    expect(screen.getByRole("link", { name: /^Locations/ }).getAttribute("href")).toBe("/locations");
+    // Doctors have no source yet: "Coming soon", never a count.
+    expect(screen.getByRole("link", { name: /^Doctors.*Coming soon/ })).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 2, name: "Where our data comes from" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "More about the data" }).getAttribute("href")).toBe("/about");
+    // WebSite structured data with a search action.
+    const ld = document.querySelector('script[type="application/ld+json"]')?.textContent ?? "";
+    expect(ld).toContain('"@type":"WebSite"');
+    expect(ld).toContain("search_term_string");
     expect(screen.queryByRole("link", { name: "DGDA Registered Drug Products" })).toBeNull();
   });
 
@@ -58,10 +67,8 @@ describe("routes (real seed data)", () => {
 
   it("medicine metadata has a unique title and canonical URL", async () => {
     const metadata = await medicineMetadata(params("napa-500mg"));
-    // No price data in the registry seed, so the suffix says "Alternatives", not "Price".
-    expect(metadata.title).toBe(
-      "Napa 500 mg Tablet (Paracetamol) — Medicine Information & Alternatives",
-    );
+    // No price data in the registry seed, so the title has no "& Price" suffix.
+    expect(metadata.title).toBe("Napa 500 mg Tablet — Medicine Information");
     expect(metadata.alternates?.canonical).toBe("/medicine/napa-500mg");
   });
 

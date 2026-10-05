@@ -1,4 +1,10 @@
-import { FACILITY_KINDS, hasPublicDetails, type Facility, type FacilityKind } from "../domain/healthcare";
+import {
+  FACILITY_KINDS,
+  isIndexableRecord,
+  type Facility,
+  type FacilityKind,
+  type PostalLocation,
+} from "../domain/healthcare";
 import type {
   DirectoryFilters,
   DirectoryIndexEntry,
@@ -6,7 +12,11 @@ import type {
   FacilityDetail,
   FacilityKindCount,
   FacilityListItem,
+  FacilityNearby,
+  PharmacyListItem,
+  PharmacyNearby,
 } from "../domain/read-models";
+import type { Pharmacy } from "../domain/types";
 import { parseNearParam } from "../lib/geo";
 import { cleanSearchQuery } from "../lib/search-config";
 import type { DirectoryListParams, Repositories } from "../repositories";
@@ -14,7 +24,7 @@ import { toDoctorItems, toFacilityItems, toPharmacyItems } from "./directory-ite
 import { DIRECTORY_PAGE_SIZE, PlaceResolver, toPage, totalPages } from "./places";
 
 /** Detail page "nearby" sections. */
-export const NEARBY_LIMIT = 6;
+export const NEARBY_LIMIT = 5;
 export const NEARBY_RADIUS_KM = 5;
 const DETAIL_DOCTOR_LIMIT = 12;
 
@@ -64,6 +74,70 @@ export async function resolveDirectoryInput(
   };
 }
 
+/** Nearby = within NEARBY_RADIUS_KM when the record has coordinates, else same area/district. */
+export function nearbyParams(record: PostalLocation): Omit<DirectoryListParams, "pageSize"> | null {
+  if (record.coordinates) return { near: record.coordinates, radiusKm: NEARBY_RADIUS_KM, page: 1 };
+  const locationId = record.areaId ?? record.districtId;
+  return locationId ? { locationIds: [locationId], page: 1 } : null;
+}
+
+async function nearbyFacilityGroup(
+  repos: Repositories,
+  places: PlaceResolver,
+  where: Omit<DirectoryListParams, "pageSize"> | null,
+  kinds: readonly FacilityKind[],
+  origin: PostalLocation,
+  excludeId?: string,
+): Promise<FacilityListItem[]> {
+  if (!where) return [];
+  const result = await repos.facilities.list({ ...where, kinds, pageSize: NEARBY_LIMIT + 1 });
+  const items = result.items.filter((f) => f.id !== excludeId).slice(0, NEARBY_LIMIT);
+  return toFacilityItems(items, repos, places, origin.coordinates ?? null);
+}
+
+async function nearbyPharmacyGroup(
+  repos: Repositories,
+  places: PlaceResolver,
+  where: Omit<DirectoryListParams, "pageSize"> | null,
+  origin: PostalLocation,
+  excludeId?: string,
+): Promise<PharmacyListItem[]> {
+  if (!where) return [];
+  const result = await repos.pharmacyDirectory.list({ ...where, pageSize: NEARBY_LIMIT + 1 });
+  const items = result.items.filter((p) => p.id !== excludeId).slice(0, NEARBY_LIMIT);
+  return toPharmacyItems(items, places, origin.coordinates ?? null);
+}
+
+/** Nearby hospitals, clinics (and health centres), diagnostic centres and pharmacies of a facility. */
+export async function loadFacilityNearby(
+  repos: Repositories,
+  places: PlaceResolver,
+  facility: Facility,
+): Promise<FacilityNearby> {
+  const where = nearbyParams(facility);
+  const [hospitals, clinics, diagnosticCentres, pharmacies] = await Promise.all([
+    nearbyFacilityGroup(repos, places, where, ["hospital"], facility, facility.id),
+    nearbyFacilityGroup(repos, places, where, ["clinic", "health_centre"], facility, facility.id),
+    nearbyFacilityGroup(repos, places, where, ["diagnostic_centre"], facility, facility.id),
+    nearbyPharmacyGroup(repos, places, where, facility),
+  ]);
+  return { hospitals, clinics, diagnosticCentres, pharmacies };
+}
+
+/** Nearby hospitals & clinics and pharmacies of a pharmacy. */
+export async function loadPharmacyNearby(
+  repos: Repositories,
+  places: PlaceResolver,
+  pharmacy: Pharmacy,
+): Promise<PharmacyNearby> {
+  const where = nearbyParams(pharmacy);
+  const [facilities, pharmacies] = await Promise.all([
+    nearbyFacilityGroup(repos, places, where, ["hospital", "clinic", "health_centre"], pharmacy),
+    nearbyPharmacyGroup(repos, places, where, pharmacy, pharmacy.id),
+  ]);
+  return { facilities, pharmacies };
+}
+
 /** Hospitals, clinics, diagnostic centres and other non-pharmacy facilities. */
 export class FacilityService {
   constructor(private readonly repos: Repositories) {}
@@ -96,36 +170,20 @@ export class FacilityService {
     const facility = await this.repos.facilities.findBySlug(slug);
     if (!facility) return null;
     const places = await PlaceResolver.create(this.repos);
-    const nearby = this.nearbyParams(facility);
-    const [[item], sources, doctors, nearbyFacilities, nearbyPharmacies] = await Promise.all([
+    const [[item], sources, doctors, nearby] = await Promise.all([
       toFacilityItems([facility], this.repos, places),
       this.repos.sources.findByIds([facility.provenance.sourceId]),
       this.repos.doctors.list({ facilityId: facility.id, page: 1, pageSize: DETAIL_DOCTOR_LIMIT }),
-      nearby ? this.repos.facilities.list({ ...nearby, pageSize: NEARBY_LIMIT + 1 }) : null,
-      nearby ? this.repos.pharmacyDirectory.list({ ...nearby, pageSize: NEARBY_LIMIT }) : null,
+      loadFacilityNearby(this.repos, places, facility),
     ]);
     if (!item) return null;
-    const near = facility.coordinates ?? null;
     return {
       ...item,
       source: sources[0] ?? null,
-      indexable: hasPublicDetails(facility),
+      indexable: isIndexableRecord(facility),
       doctors: await toDoctorItems(doctors.items, this.repos, places),
-      nearbyFacilities: await toFacilityItems(
-        (nearbyFacilities?.items ?? []).filter((f) => f.id !== facility.id).slice(0, NEARBY_LIMIT),
-        this.repos,
-        places,
-        near,
-      ),
-      nearbyPharmacies: toPharmacyItems(nearbyPharmacies?.items ?? [], places, near),
+      nearby,
     };
-  }
-
-  /** Nearby = within NEARBY_RADIUS_KM when the facility has coordinates, else same area/district. */
-  private nearbyParams(facility: Facility): Omit<DirectoryListParams, "pageSize"> | null {
-    if (facility.coordinates) return { near: facility.coordinates, radiusKm: NEARBY_RADIUS_KM, page: 1 };
-    const locationId = facility.areaId ?? facility.districtId;
-    return locationId ? { locationIds: [locationId], page: 1 } : null;
   }
 
   async countByKind(filter?: (f: Facility) => boolean): Promise<FacilityKindCount[]> {
@@ -141,6 +199,6 @@ export class FacilityService {
   /** Indexable facility pages only (thin records are noindex and left out of the sitemap). */
   async listIndex(): Promise<DirectoryIndexEntry[]> {
     const all = await this.repos.facilities.listAll();
-    return all.filter((f) => hasPublicDetails(f)).map(({ slug, updatedAt }) => ({ slug, updatedAt }));
+    return all.filter((f) => isIndexableRecord(f)).map(({ slug, updatedAt }) => ({ slug, updatedAt }));
   }
 }

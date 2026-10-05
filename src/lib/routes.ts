@@ -11,6 +11,7 @@ function listPath(base: string, locationSlug?: string, specialtySlug?: string): 
 export const routes = {
   home: () => "/",
   search: () => "/search",
+  about: () => "/about",
   medicine: (slug: string) => `/medicine/${enc(slug)}`,
   pharmacy: (slug: string) => `/pharmacy/${enc(slug)}`,
   hospital: (slug: string) => `/hospital/${enc(slug)}`,

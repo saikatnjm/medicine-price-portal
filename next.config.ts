@@ -6,6 +6,13 @@ const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
   reactStrictMode: true,
+  // Singular forms are accepted and redirected to the canonical plural paths.
+  async redirects() {
+    return [
+      { source: "/specialty/:slug", destination: "/specialties/:slug", permanent: true },
+      { source: "/location/:slug", destination: "/locations/:slug", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

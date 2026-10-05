@@ -16,7 +16,7 @@ async function coreEntries(): Promise<Entries> {
     services.locations.listIndexable(),
     services.directory.listCombinations(),
   ]);
-  const sections = [routes.hospitals(), routes.pharmacies(), routes.doctors(), routes.specialties(), routes.locations()];
+  const sections = [routes.hospitals(), routes.pharmacies(), routes.doctors(), routes.specialties(), routes.locations(), routes.about()];
   return [
     { url: absoluteUrl(routes.home()), changeFrequency: "weekly", priority: 1 },
     ...sections.map((path) => ({ url: absoluteUrl(path), changeFrequency: "weekly" as const, priority: 0.8 })),

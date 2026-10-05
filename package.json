@@ -1,5 +1,5 @@
 {
-  "name": "medicine-price-portal",
+  "name": "bangladesh-healthcare-search",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -22,7 +22,9 @@
     "data:fetch-osm": "node scripts/data/fetch-osm-health.mjs",
     "data:fetch-areas": "node scripts/data/fetch-areas.mjs",
     "data:fetch-osm-areas": "node scripts/data/fetch-osm-areas.mjs",
-    "data:build-healthcare": "node scripts/data/build-healthcare.mjs"
+    "data:build-healthcare": "node scripts/data/build-healthcare.mjs",
+    "data:import-doctors": "node scripts/data/import-doctors.mjs",
+    "data:match-google-places": "node scripts/data/match-google-places.mjs"
   },
   "dependencies": {
     "next": "^16.0.0",

@@ -3,7 +3,7 @@
  * word ("doctors", "hospital", "pharmacy"), a specialty ("cardiologist") and a
  * location ("in Dhanmondi", trailing "Gulshan"). No NLP; unknown words stay text.
  */
-import type { Specialty } from "../domain/healthcare";
+import type { Facility, Specialty } from "../domain/healthcare";
 import type { SearchIntent } from "../domain/read-models";
 import { normalizeSearchText } from "../lib/text";
 import type { PlaceResolver } from "./places";
@@ -65,13 +65,28 @@ function findSpecialty(words: string[], specialties: readonly Specialty[]) {
   return best;
 }
 
+/**
+ * Resolves a normalised facility name ("square hospital") to a facility. Kept
+ * synchronous so parsing stays pure; callers pre-resolve it (see SearchService).
+ */
+export type FacilityNameLookup = (normalisedName: string) => Facility | null;
+
+/** The normalised words after the last "at" in a query, or null. */
+export function facilityCandidate(rawQuery: string): string | null {
+  const words = normalizeSearchText(rawQuery).split(" ").filter(Boolean);
+  const at = words.lastIndexOf("at");
+  return at >= 0 && at < words.length - 1 ? words.slice(at + 1).join(" ") : null;
+}
+
 export function parseSearchIntent(
   rawQuery: string,
   places: PlaceResolver,
   specialties: readonly Specialty[],
+  facilityByName?: FacilityNameLookup,
 ): SearchIntent {
   let words = normalizeSearchText(rawQuery).split(" ").filter(Boolean);
   let location: SearchIntent["location"] = null;
+  let facility: Facility | null = null;
 
   // 1. "… in/near/at <place>": everything after the last preposition is a place if it resolves.
   const prepIndex = Math.max(words.lastIndexOf("in"), words.lastIndexOf("near"), words.lastIndexOf("at"));
@@ -80,10 +95,17 @@ export function parseSearchIntent(
     if (candidate) {
       location = candidate;
       words = words.slice(0, prepIndex);
+    } else if (words[prepIndex] === "at" && facilityByName) {
+      // "doctors at Square Hospital": an exact facility name, not a place.
+      const found = facilityByName(words.slice(prepIndex + 1).join(" "));
+      if (found) {
+        facility = found;
+        words = words.slice(0, prepIndex);
+      }
     }
   }
   // 2. Otherwise a trailing one- or two-word place ("hospital dhanmondi"), when other words remain.
-  if (!location) {
+  if (!location && !facility) {
     for (const n of [2, 1]) {
       if (words.length <= n) continue;
       const candidate = places.findByName(words.slice(-n).join(" "));
@@ -118,14 +140,14 @@ export function parseSearchIntent(
     else if (!STOP_WORDS.has(word) || rest.length > 0) rest.push(word);
   }
   // A query that is only a place name ("Dhanmondi") is a location, not text.
-  if (!location && !specialty && !entity && rest.length > 0) {
+  if (!location && !facility && !specialty && !entity && rest.length > 0) {
     const whole = places.findByName(rest.join(" "));
     if (whole) return { text: "", entity: null, specialty: null, location: whole };
   }
-  return { text: rest.join(" "), entity, specialty, location };
+  return { text: rest.join(" "), entity, specialty, location, ...(facility ? { facility } : {}) };
 }
 
 /** True when the query was understood as more than free text. */
 export function isStructured(intent: SearchIntent): boolean {
-  return Boolean(intent.entity || intent.specialty || intent.location);
+  return Boolean(intent.entity || intent.specialty || intent.location || intent.facility);
 }

@@ -8,7 +8,8 @@ import { SectionHeading } from "@/components/common/section-heading";
 import { ChamberSection } from "@/components/doctor/chamber-section";
 import { buildHref } from "@/components/directory/pagination";
 import { DoctorCard, ResultList } from "@/components/directory/result-cards";
-import { SourceAttribution } from "@/components/directory/source-attribution";
+import { DoctorActions } from "@/components/doctor/doctor-actions";
+import { DoctorSource } from "@/components/doctor/doctor-source";
 import { InformationNotice } from "@/components/specialty/information-notice";
 import { Container } from "@/components/ui/container";
 import { services } from "@/data";
@@ -92,23 +93,28 @@ export default async function DoctorPage({ params }: DoctorPageProps) {
                 <span key={s.id}>
                   {i > 0 && ", "}
                   <Link href={routes.specialty(s.slug)} className="font-medium text-brand-800 underline">
-                    {s.name}
+                    {s.practitionerTitle}
                   </Link>
                 </span>
               ))}
             </p>
           )}
+          {doctor.organization && <p className="text-slate-700">{doctor.organization}</p>}
           {doctor.qualifications && (
             <p className="text-slate-700">
               <span className="font-medium">Qualifications:</span> {doctor.qualifications}
             </p>
           )}
+          {doctor.profileSummary && <p className="max-w-prose pt-1 text-slate-800">{doctor.profileSummary}</p>}
+          <div className="pt-2">
+            <DoctorActions name={doctor.name} chambers={chambers} doctorPhone={doctor.phone} />
+          </div>
         </header>
 
         {chambers.length > 0 ? (
           <section aria-label="Chambers" className="space-y-8">
             {chambers.map((view, index) => (
-              <ChamberSection key={`${view.name}-${index}`} view={view} index={index} />
+              <ChamberSection key={`${view.name}-${index}`} view={view} index={index} total={chambers.length} />
             ))}
           </section>
         ) : (
@@ -143,8 +149,8 @@ export default async function DoctorPage({ params }: DoctorPageProps) {
           </nav>
         )}
 
-        <div className="space-y-3 border-t border-slate-200 pt-6">
-          <SourceAttribution source={source} provenance={doctor.provenance} />
+        <div className="space-y-4 border-t border-slate-200 pt-6">
+          <DoctorSource doctor={doctor} source={source} />
           <InformationNotice />
         </div>
       </div>

@@ -28,6 +28,11 @@ export function SiteFooter() {
                 Specialties
               </Link>
             </li>
+            <li>
+              <Link href={routes.about()} className="inline-flex min-h-8 items-center underline-offset-2 hover:underline">
+                About the data
+              </Link>
+            </li>
           </ul>
         </nav>
         <div className="space-y-2 text-sm text-slate-700">

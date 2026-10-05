@@ -1,7 +1,8 @@
+import { ReviewNotice, TrustBadge } from "@/components/directory/trust-badge";
 import { FACILITY_KIND_LABEL, OWNERSHIP_LABEL } from "@/domain/healthcare";
 import type { FacilityDetail } from "@/domain/read-models";
 
-/** h1, Bangla name, kind/ownership and place. */
+/** h1, Bangla name, kind/ownership, place, trust badge and any review notice. */
 export function FacilityOverview({ detail }: { detail: FacilityDetail }) {
   const { facility, place } = detail;
   const kind = [facility.ownership ? OWNERSHIP_LABEL[facility.ownership] : null, FACILITY_KIND_LABEL[facility.kind].toLowerCase()]
@@ -19,12 +20,16 @@ export function FacilityOverview({ detail }: { detail: FacilityDetail }) {
         {kind.charAt(0).toUpperCase() + kind.slice(1)}
         {place.label && <span className="text-slate-600"> · {place.label}</span>}
       </p>
+      <p>
+        <TrustBadge provenance={facility.provenance} />
+      </p>
       {facility.emergency === true && (
         <p className="text-sm font-medium text-slate-900">
           Emergency services listed{" "}
           <span className="font-normal text-slate-600">(as stated by the data source; confirm by phone)</span>
         </p>
       )}
+      <ReviewNotice record={facility} />
     </header>
   );
 }

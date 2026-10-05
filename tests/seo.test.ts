@@ -6,7 +6,11 @@ import {
   medicineDescription,
   medicineJsonLd,
   medicineTitle,
+  pageMetadata,
   pageRobots,
+  twitterCard,
+  webPageJsonLd,
+  websiteJsonLd,
   serializeJsonLd,
 } from "@/lib/seo";
 import { siteConfig } from "@/lib/site-config";
@@ -20,12 +24,9 @@ describe("SEO helpers", () => {
     const napa = await service.getMedicineDetail("napa-500mg");
     const seclo = await service.getMedicineDetail("seclo-20mg");
     if (!napa || !seclo) throw new Error("fixture missing");
-    expect(medicineTitle(napa)).toBe(
-      "Napa 500 mg Tablet (Paracetamol) — Medicine Information & Price",
-    );
-    expect(medicineTitle(seclo)).toBe(
-      "Seclo 20 mg Capsule (Omeprazole) — Medicine Information & Alternatives",
-    );
+    expect(medicineTitle(napa)).toBe("Napa 500 mg Tablet — Medicine Information & Price");
+    expect(medicineTitle(seclo)).toBe("Seclo 20 mg Capsule — Medicine Information");
+    expect(medicineTitle(napa).length).toBeLessThan(61);
     expect(medicineDescription(seclo)).toContain("registered with DGDA Bangladesh");
     expect(medicineDescription(napa)).toContain("sample prices from 2 pharmacies");
     expect(medicineDescription(seclo)).not.toContain("sample prices");
@@ -61,5 +62,34 @@ describe("SEO helpers", () => {
   it("never indexes non-indexable pages and follows the site-wide switch", () => {
     expect(pageRobots(false)).toEqual({ index: false, follow: siteConfig.indexable });
     expect(pageRobots(true)).toEqual({ index: siteConfig.indexable, follow: siteConfig.indexable });
+  });
+
+  it("describes the site as a WebSite with a search action built from siteConfig.url", () => {
+    const data = websiteJsonLd() as Record<string, any>;
+    expect(data["@type"]).toBe("WebSite");
+    expect(data["name"]).toBe(siteConfig.name);
+    expect(data["url"]).toBe(absoluteUrl("/"));
+    expect(data["potentialAction"]).toEqual({
+      "@type": "SearchAction",
+      target: `${siteConfig.url}/search?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    });
+  });
+
+  it("builds a WebPage with an absolute URL and no ratings", () => {
+    const data = webPageJsonLd({ name: "About", description: "d", path: "/about" });
+    expect(data["@type"]).toBe("WebPage");
+    expect(data["url"]).toBe(absoluteUrl("/about"));
+    expect(JSON.stringify(data)).not.toMatch(/aggregateRating|review/i);
+  });
+
+  it("adds a summary twitter card to page metadata", () => {
+    expect(twitterCard("T", "D")).toEqual({ card: "summary", title: "T", description: "D" });
+    const metadata = pageMetadata({ title: "T", description: "D", path: "/about" });
+    expect(metadata.twitter).toEqual({ card: "summary", title: "T", description: "D" });
+  });
+
+  it("derives absolute URLs from the configured site URL", () => {
+    expect(absoluteUrl("/medicine/napa-500mg")).toBe(`${siteConfig.url}/medicine/napa-500mg`);
   });
 });
