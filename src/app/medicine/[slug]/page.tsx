@@ -22,7 +22,7 @@ import {
   medicineDescription,
   medicineJsonLd,
   medicineTitle,
-  openGraph,
+  pageMetadata,
   type BreadcrumbItem,
 } from "@/lib/seo";
 
