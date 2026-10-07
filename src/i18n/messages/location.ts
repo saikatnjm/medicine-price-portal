@@ -34,7 +34,7 @@ export const location = defineMessages({
     "location.list.empty": "No locations are available right now.",
 
     "location.page.heading": "Healthcare in {place}",
-    "location.page.title": "Healthcare in {place} | Hospitals, Pharmacies & More",
+    "location.page.title": "Hospitals, Pharmacies & Doctors in {place}",
     "location.summary.empty": "No healthcare records are listed for {place} yet.",
     "location.summary.lists": "Our directory lists {list} in {place}.",
     "location.summary.and": " and ",

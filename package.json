@@ -25,7 +25,8 @@
     "data:build-healthcare": "node scripts/data/build-healthcare.mjs",
     "data:import-doctors": "node scripts/data/import-doctors.mjs",
     "data:match-google-places": "node scripts/data/match-google-places.mjs",
-    "data:report": "node scripts/data/report-quality.mjs"
+    "data:report": "node scripts/data/report-quality.mjs",
+    "seo:audit": "node scripts/seo-audit.mjs"
   },
   "dependencies": {
     "next": "^16.0.0",
