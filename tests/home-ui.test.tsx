@@ -10,7 +10,7 @@ afterEach(cleanup);
 
 const counts = (facilityCount: number, pharmacyCount = 0) => ({ facilityCount, hospitalCount: 0, pharmacyCount, doctorCount: 0 });
 const district = (name: string, facilityCount: number, pharmacyCount = 0): LocationListItem =>
-  ({ location: { id: name, slug: name.toLowerCase(), name, level: "district" }, ...counts(facilityCount, pharmacyCount) }) as LocationListItem;
+  ({ location: { id: name, slug: name.toLowerCase(), name, level: "district" }, ...counts(facilityCount, pharmacyCount) }) as unknown as LocationListItem;
 
 describe("popularLocations", () => {
   it("ranks districts by listed records, skips empty ones and respects the limit", () => {
