@@ -16,9 +16,11 @@ interface LayoutProps {
   params: Promise<{ lang: string }>;
 }
 
-/** Only the supported languages exist; any other first path segment is a 404. */
-export const dynamicParams = false;
-
+/**
+ * Prerender both languages. Do NOT set `dynamicParams = false` here: it would also 404 every
+ * detail page (hospital, pharmacy, ...) that is not prerendered. Invalid languages are
+ * rejected with notFound() in the layout instead.
+ */
 export function generateStaticParams(): { lang: Locale }[] {
   return LOCALES.map((lang) => ({ lang }));
 }
