@@ -138,3 +138,11 @@ dependency). Automatic page views are disabled; a client tracker sends one
 `page_view` per navigation after removing the `near` parameter (the visitor's
 rounded position from "near me"), so location never reaches analytics. The
 /about page discloses analytics when it is enabled.
+
+## D37 — Consumer UX and SEO 2.0 (Phase 4)
+
+UI: icon-led cards (`result-cards.tsx`, inline SVG icons in `ui/icons.tsx`, no icon dependency), a rounded pill search on the homepage, category cards with real counts ("Coming soon" for doctors), popular searches, an optional "Use my location" (position requested only after the click, rounded to ~1 km, placed only in `?near=` links, never stored), data-driven popular locations (top districts by listed records, never hand-picked), type/emergency quick-filter chips as plain links (each state has its own URL, no JavaScript), and a hero card with icon actions on hospital and pharmacy pages. Desktop shows list and map side by side from the start (Leaflet is still only requested client-side after hydration, D34); mobile keeps the map behind "Show map".
+
+SEO: titles follow one pattern per entity (hospital "Name, Area — Location, Contact & Details", pharmacy "— Location & Contact", specialty "X in Bangladesh", location "Healthcare in X | Hospitals, Pharmacies & More"; the layout template appends the site name). One generated default social image (`app/opengraph-image.tsx`) is used for OpenGraph and the Twitter `summary_large_image` card on every page; entity-specific text comes from each page's title and description. `robots.txt` additionally blocks crawling of `q`, `near` and `page` parameter URLs. A Search Console token can be set with `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`. Small factual FAQs (native `<details>`, answers built from the page's own data, deliberately no FAQPage markup) appear on hospital, pharmacy and location pages. URLs are unchanged (`/specialties/…`, `/locations/…`), which keeps existing links working.
+
+Data quality: names that contain camp, programme/program, campaign or bridge (and no hospital/clinic word) are flagged `suspicious_category` and become `needs_review` (visible, noindex, out of the sitemap) the next time `data:build-healthcare` runs.

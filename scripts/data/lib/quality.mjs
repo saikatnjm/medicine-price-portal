@@ -38,7 +38,7 @@ const NOT_A_FACILITY =
   /\b(association|head office|corporate office|liaison office|office of|supply chain|trading|traders|ltd\.? office)\b|\boffice\b(?!.*\b(hospital|clinic)\b)/i;
 /** Probably not a facility, but not certain enough to hide. */
 const SUSPICIOUS =
-  /\b(college|university|institute|school|foundation|trust|council|parishad|bank|ngo|society|agro|feed)\b/i;
+  /\b(college|university|institute|school|foundation|trust|council|parishad|bank|ngo|society|agro|feed|camp|programme|program|campaign|bridge)\b/i;
 /** OSM category text pasted into the name, e.g. "Rahim Medical Hall, Hospital". */
 const CATEGORY_IN_NAME =
   /,\s*(hospital|private hospital|pharmacy|parapharmacy|doctor|dentist|clinic|medical cent(er|re)|laboratory)\b/i;

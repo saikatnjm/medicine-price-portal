@@ -1,4 +1,5 @@
 import type { Coordinates, GooglePlaceRef } from "@/domain/healthcare";
+import { GlobeIcon, MapIcon, NavigateIcon, PhoneIcon } from "@/components/ui/icons";
 import { mapLinksFor } from "@/lib/maps";
 import { safeHttpUrl, telHref } from "./contact-details";
 
@@ -14,9 +15,9 @@ interface QuickActionsProps {
 }
 
 const primary =
-  "inline-flex min-h-11 items-center rounded-md bg-brand-700 px-5 text-base font-semibold text-white hover:bg-brand-800";
+  "inline-flex min-h-12 items-center gap-2 rounded-xl bg-brand-700 px-5 text-base font-semibold text-white shadow-sm hover:bg-brand-800";
 const secondary =
-  "inline-flex min-h-11 items-center rounded-md border border-slate-300 px-5 text-base font-medium text-slate-800 hover:bg-slate-50";
+  "inline-flex min-h-12 items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 text-base font-medium text-slate-800 hover:bg-slate-50";
 
 const NEW_TAB = <span className="sr-only"> (opens in a new tab)</span>;
 
@@ -29,23 +30,27 @@ export function QuickActions({ name, phone, website, address, coordinates, googl
     <div role="group" aria-label={`Quick actions for ${name}`} className="flex flex-wrap gap-3">
       {phone && (
         <a href={telHref(phone)} className={primary}>
+          <PhoneIcon />
           Call<span className="sr-only"> {name}</span>
         </a>
       )}
       {url && (
         <a href={url.toString()} target="_blank" rel="noopener noreferrer nofollow" className={secondary}>
+          <GlobeIcon />
           Website<span className="sr-only"> of {name}</span>
           {NEW_TAB}
         </a>
       )}
       {links && (
         <a href={links.directionsUrl} target="_blank" rel="noopener noreferrer" className={secondary}>
+          <NavigateIcon />
           Directions<span className="sr-only"> to {name}</span>
           {NEW_TAB}
         </a>
       )}
       {links && showMapLink && (
         <a href={links.viewUrl} target="_blank" rel="noopener noreferrer" className={secondary}>
+          <MapIcon />
           Google Maps<span className="sr-only"> for {name}</span>
           {NEW_TAB}
         </a>

@@ -22,14 +22,17 @@ describe("routes (real seed data)", () => {
       screen.getByText("Search medicines, doctors, hospitals, clinics and pharmacies across Bangladesh."),
     ).toBeTruthy();
     expect(screen.getByRole("combobox", { name: "What are you looking for?" })).toBeTruthy();
-    expect(screen.getByRole("link", { name: /Napa 500 mg/ })).toBeTruthy();
-    // Example searches and category entry points replace the old registry link.
-    expect(screen.getByRole("link", { name: "Cardiologist" }).getAttribute("href")).toBe(
-      "/search?q=Cardiologist",
+    // Popular search chips and popular medicine cards both link to Napa 500 mg.
+    expect(screen.getAllByRole("link", { name: /Napa 500 mg/ }).length).toBeGreaterThan(0);
+    expect(screen.getByRole("heading", { level: 2, name: "Popular searches" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Cardiologist in Dhaka" }).getAttribute("href")).toBe(
+      "/search?q=Cardiologist+in+Dhaka",
     );
-    expect(screen.getByRole("link", { name: "Pharmacies near Dhanmondi" }).getAttribute("href")).toBe(
-      "/search?q=Pharmacies+near+Dhanmondi",
+    expect(screen.getByRole("link", { name: "Pharmacies in Dhanmondi" }).getAttribute("href")).toBe(
+      "/search?q=Pharmacies+in+Dhanmondi",
     );
+    // Location is optional and only requested after a click.
+    expect(screen.getByRole("button", { name: "Use my location" })).toBeTruthy();
     expect(screen.getAllByRole("link", { name: /^Hospitals & Clinics/ }).length).toBeGreaterThan(0);
     expect(screen.getByRole("link", { name: /^Locations/ }).getAttribute("href")).toBe("/locations");
     // Doctors have no source yet: "Coming soon", never a count.

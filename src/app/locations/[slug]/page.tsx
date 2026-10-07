@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
+import { Faq } from "@/components/common/faq";
 import { JsonLd } from "@/components/common/json-ld";
 import { SectionHeading } from "@/components/common/section-heading";
 import { DoctorsEmptyNotice } from "@/components/doctor/doctors-empty-notice";
@@ -221,6 +222,39 @@ export default async function LocationPage({ params }: LocationPageProps) {
           )}
           <InformationNotice />
         </div>
+        <Faq
+          items={[
+            ...(hasRecords
+              ? [
+                  {
+                    question: `How can I find hospitals in ${location.name}?`,
+                    answer: (
+                      <>
+                        Browse the lists on this page, or open the{" "}
+                        <Link href={routes.hospitals(slug)} className="font-medium text-brand-800 underline">
+                          hospitals and clinics in {location.name}
+                        </Link>{" "}
+                        to filter by type or specialty. After you allow location access you can also sort by distance.
+                      </>
+                    ),
+                  },
+                  {
+                    question: "Where does this information come from?",
+                    answer: (
+                      <>
+                        Hospital, clinic and pharmacy records are community-mapped OpenStreetMap data and have not been
+                        independently verified. Call ahead before you visit.{" "}
+                        <Link href={routes.about()} className="font-medium text-brand-800 underline">
+                          More about the data
+                        </Link>
+                        .
+                      </>
+                    ),
+                  },
+                ]
+              : []),
+          ]}
+        />
       </div>
     </Container>
   );

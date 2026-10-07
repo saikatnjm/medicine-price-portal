@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import type { MapMarker } from "@/lib/map-markers";
 
 const LEAFLET_VERSION = "1.9.4";
@@ -95,6 +95,12 @@ function popupFor(marker: MapMarker): HTMLElement {
     label.style.margin = "4px 0 0";
     root.appendChild(label);
   }
+  const view = document.createElement("a");
+  view.href = marker.href;
+  view.textContent = "View details";
+  view.style.display = "inline-block";
+  view.style.marginTop = "6px";
+  root.appendChild(view);
   return root;
 }
 
@@ -123,6 +129,18 @@ function drawMap(L: LeafletGlobal, element: HTMLElement, markers: readonly MapMa
 
 type Status = "loading" | "ready" | "error";
 
+const DESKTOP_QUERY = "(min-width: 1024px)";
+
+function subscribeDesktop(onChange: () => void): () => void {
+  if (typeof window.matchMedia !== "function") return () => {};
+  const query = window.matchMedia(DESKTOP_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+function desktopSnapshot(): boolean {
+  return typeof window.matchMedia === "function" && window.matchMedia(DESKTOP_QUERY).matches;
+}
+
 interface ResultsMapProps {
   /** Markers for the current page of results only. */
   markers: MapMarker[];
@@ -135,7 +153,11 @@ interface ResultsMapProps {
  * the visitor presses "Show map". Mobile: the map opens above the list. Desktop: list and map side by side.
  */
 export function ResultsMap({ markers, children }: ResultsMapProps) {
-  const [open, setOpen] = useState(false);
+  // Desktop: list and map side by side from the start (Leaflet is still only fetched on the client, after
+  // hydration). Mobile: the map stays closed until "Show map". A choice by the visitor always wins.
+  const isDesktop = useSyncExternalStore(subscribeDesktop, desktopSnapshot, () => false);
+  const [chosen, setChosen] = useState<boolean | null>(null);
+  const open = chosen ?? isDesktop;
   const [status, setStatus] = useState<Status>("loading");
   const containerRef = useRef<HTMLDivElement>(null);
   const regionId = useId();
@@ -173,9 +195,9 @@ export function ResultsMap({ markers, children }: ResultsMapProps) {
         onClick={() => {
           // Reset the status here (not in the effect) so opening starts from "loading".
           if (!open) setStatus("loading");
-          setOpen(!open);
+          setChosen(!open);
         }}
-        className="mb-4 inline-flex min-h-11 items-center rounded-md border border-slate-300 px-4 text-sm font-medium text-slate-800 hover:bg-slate-50"
+        className="mb-4 inline-flex min-h-11 items-center gap-2 rounded-full border border-slate-300 bg-white px-5 text-sm font-medium text-slate-800 shadow-sm hover:bg-slate-50"
       >
         {open ? "Hide map" : "Show map"}
       </button>
@@ -197,7 +219,7 @@ export function ResultsMap({ markers, children }: ResultsMapProps) {
                       Loading map…
                     </p>
                   )}
-                  <div ref={containerRef} className="h-80 w-full rounded-md border border-slate-300 lg:h-[32rem]" />
+                  <div ref={containerRef} className="h-80 w-full rounded-xl border border-slate-300 lg:h-[32rem]" />
                 </>
               )}
             </div>

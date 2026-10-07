@@ -161,7 +161,7 @@ describe("/hospital/[slug]", () => {
   it("is indexable when it has public details and noindex when it is a bare name-only record", async () => {
     const rich = await facilityMetadata(params("central-heart-hospital-dhaka"));
     expect(rich.robots).toMatchObject({ index: true });
-    expect(rich.title).toBe("Central Heart Hospital, Dhanmondi");
+    expect(rich.title).toBe("Central Heart Hospital, Dhanmondi — Location, Contact & Details");
     expect(rich.alternates?.canonical).toBe("/hospital/central-heart-hospital-dhaka");
 
     const thin = await facilityMetadata(params("harbour-hospital-chattogram"));
@@ -228,7 +228,7 @@ describe("/pharmacy/[slug]", () => {
 
   it("has a unique title and canonical URL, and 404s for unknown slugs", async () => {
     const metadata = await pharmacyMetadata(params("alpha-pharmacy"));
-    expect(metadata.title).toBe("Alpha Pharmacy, Dhanmondi — Pharmacy location & contact");
+    expect(metadata.title).toBe("Alpha Pharmacy, Dhanmondi — Location & Contact");
     expect(metadata.alternates?.canonical).toBe("/pharmacy/alpha-pharmacy");
     await expect(PharmacyPage(params("no-such-pharmacy"))).rejects.toThrow("NEXT_NOT_FOUND");
   });

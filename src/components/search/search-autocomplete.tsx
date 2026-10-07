@@ -152,7 +152,7 @@ export function SearchAutocomplete({
         role="listbox"
         aria-label="Search suggestions"
         hidden={!showList}
-        className="absolute inset-x-0 top-full z-30 mt-1 max-h-96 overflow-y-auto rounded-md border border-slate-300 bg-white py-1 shadow-md"
+        className="absolute inset-x-0 top-full z-30 mt-1 max-h-96 overflow-y-auto rounded-xl border border-slate-200 bg-white py-1 shadow-lg"
       >
         {showList &&
           visibleGroups.map((group, groupIndex) => {

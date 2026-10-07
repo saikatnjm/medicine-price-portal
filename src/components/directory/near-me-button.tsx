@@ -47,7 +47,7 @@ export function NearMeButton() {
         <button
           type="button"
           onClick={() => update(null)}
-          className="inline-flex min-h-11 items-center rounded-md border border-slate-300 px-4 text-sm font-medium text-slate-800 hover:bg-slate-50"
+          className="inline-flex min-h-11 items-center rounded-full border border-slate-300 bg-white px-5 text-sm font-medium text-slate-800 shadow-sm hover:bg-slate-50"
         >
           Clear “near me”
         </button>
@@ -56,14 +56,14 @@ export function NearMeButton() {
           type="button"
           onClick={locate}
           disabled={status === "locating"}
-          className="inline-flex min-h-11 items-center rounded-md border border-slate-300 px-4 text-sm font-medium text-slate-800 hover:bg-slate-50 disabled:opacity-60"
+          className="inline-flex min-h-11 items-center rounded-full border border-slate-300 bg-white px-5 text-sm font-medium text-slate-800 shadow-sm hover:bg-slate-50 disabled:opacity-60"
         >
           {status === "locating" ? "Finding your location…" : "Sort by distance from me"}
         </button>
       )}
       <p role="status" className="text-sm text-slate-600">
-        {status === "denied" && "Location permission was not given. Choose a location instead."}
-        {status === "unavailable" && "Your location is not available. Choose a location instead."}
+        {status === "denied" && "Location permission was not given. Search by area instead."}
+        {status === "unavailable" && "Your location is not available. Search by area instead."}
       </p>
     </div>
   );

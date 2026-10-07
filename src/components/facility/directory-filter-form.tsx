@@ -6,7 +6,7 @@ import type { DivisionWithDistricts, FacilityKindCount, SpecialtyListItem } from
 import { SEARCH_MAX_QUERY_LENGTH } from "@/lib/search-config";
 
 const controlClass =
-  "min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-base text-slate-900 focus-visible:border-brand-600";
+  "min-h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-base text-slate-900 focus-visible:border-brand-600";
 const labelClass = "mb-1 block text-sm font-medium text-slate-700";
 
 function Field({ id, label, children }: { id: string; label: string; children: ReactNode }) {
@@ -76,7 +76,7 @@ export function DirectoryFilterForm(props: DirectoryFilterFormProps) {
   }
 
   return (
-    <form role="search" action={action} method="get" className="space-y-4 border-y border-slate-200 py-4">
+    <form role="search" action={action} method="get" className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Field id={id("q")} label={props.queryLabel}>
           <input
@@ -126,7 +126,7 @@ export function DirectoryFilterForm(props: DirectoryFilterFormProps) {
         )}
         <button
           type="submit"
-          className="min-h-11 rounded-md bg-brand-700 px-5 text-sm font-semibold text-white hover:bg-brand-800"
+          className="min-h-11 rounded-lg bg-brand-700 px-5 text-sm font-semibold text-white hover:bg-brand-800"
         >
           Apply filters
         </button>

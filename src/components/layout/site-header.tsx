@@ -7,7 +7,7 @@ import { NAV_ITEMS } from "./nav-items";
 
 export function SiteHeader() {
   return (
-    <header className="relative border-b border-slate-200 bg-white">
+    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
       <Container className="flex min-h-14 items-center justify-between gap-4 py-1">
         <Link
           href={routes.home()}

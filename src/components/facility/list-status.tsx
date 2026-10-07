@@ -17,7 +17,7 @@ export function ResultCount({
   const from = (page - 1) * pageSize + 1;
   const to = Math.min(total, page * pageSize);
   return (
-    <p className="text-sm text-slate-700" role="status">
+    <p className="text-base font-medium text-slate-900" role="status">
       {total <= pageSize
         ? `${total.toLocaleString("en-US")} ${total === 1 ? singular : noun}`
         : `Showing ${from.toLocaleString("en-US")}–${to.toLocaleString("en-US")} of ${total.toLocaleString("en-US")} ${noun}`}
@@ -36,7 +36,7 @@ interface EmptyResultsProps {
 
 /** Two distinct empty states: no data at all, and no matches. */
 export function EmptyResults({ datasetEmpty, hasFilters, noun, scopeName, clearHref }: EmptyResultsProps) {
-  const box = "rounded-md border border-slate-200 bg-slate-50 px-4 py-4 text-slate-800";
+  const box = "rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-slate-800";
   if (datasetEmpty) {
     return (
       <div className={box}>

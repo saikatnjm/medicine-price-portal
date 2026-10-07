@@ -3,7 +3,7 @@ import { Suspense, type ReactNode } from "react";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
-import { pageRobots, twitterCard } from "@/lib/seo";
+import { pageRobots, SOCIAL_IMAGE, twitterCard } from "@/lib/seo";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
 
@@ -19,7 +19,12 @@ export const metadata: Metadata = {
     type: "website",
     siteName: siteConfig.name,
     locale: siteConfig.locale,
+    images: [SOCIAL_IMAGE],
   },
+  // Search Console "HTML tag" verification; renders nothing unless the variable is set.
+  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+    : undefined,
   twitter: twitterCard(siteConfig.name, siteConfig.description),
   robots: pageRobots(true),
 };

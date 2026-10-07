@@ -13,7 +13,10 @@ import { PharmacyNearbySections } from "@/components/facility/nearby-sections";
 import { QuickActions } from "@/components/facility/quick-actions";
 import { PharmacyOverview } from "@/components/pharmacy/pharmacy-overview";
 import { PharmacyPricesSection } from "@/components/pharmacy/pharmacy-prices-section";
+import { Faq } from "@/components/common/faq";
 import { Container } from "@/components/ui/container";
+import { HeroCard } from "@/components/ui/hero-card";
+import { trustLabelOf } from "@/domain/healthcare";
 import { services } from "@/data";
 import { routes } from "@/lib/routes";
 import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
@@ -55,7 +58,7 @@ export default async function PharmacyPage({ params }: PharmacyPageProps) {
       <JsonLd data={[pharmacyJsonLd(detail), breadcrumbJsonLd(breadcrumbs, path)]} />
       <Breadcrumbs items={breadcrumbs} />
       <div className="mt-4 space-y-10">
-        <div className="space-y-5">
+        <HeroCard>
           <PharmacyOverview detail={detail} />
           <QuickActions
             name={pharmacy.name}
@@ -65,7 +68,7 @@ export default async function PharmacyPage({ params }: PharmacyPageProps) {
             google={pharmacy.google}
             showMapLink
           />
-        </div>
+        </HeroCard>
         <LocationBlock
           name={pharmacy.name}
           address={pharmacy.address}
@@ -83,6 +86,32 @@ export default async function PharmacyPage({ params }: PharmacyPageProps) {
         />
         <PharmacyPricesSection detail={detail} />
         <PharmacyNearbySections nearby={detail.nearby} />
+        <Faq
+          items={[
+            ...(pharmacy.coordinates || pharmacy.address
+              ? [
+                  {
+                    question: `How can I get directions to ${pharmacy.name}?`,
+                    answer: "Use the Directions button at the top of this page. It opens Google Maps in a new tab with the listed location as the destination.",
+                  },
+                ]
+              : []),
+            {
+              question: "Does this page show medicine prices or stock?",
+              answer:
+                detail.prices.length === 0
+                  ? "No. Medicine prices and stock are not available for this pharmacy. Call the pharmacy to ask."
+                  : "Only sample price entries are shown. They are demonstration data, not live prices or stock. Call the pharmacy to confirm.",
+            },
+            {
+              question: `Is the information about ${pharmacy.name} verified?`,
+              answer:
+                pharmacy.provenance.status === "unverified"
+                  ? "No. This listing comes from community-mapped OpenStreetMap data that we have not independently verified. Opening hours and contact details may be out of date, so call ahead before you visit."
+                  : `This listing is marked "${trustLabelOf(pharmacy.provenance)}". See Source & verification below for where it comes from.`,
+            },
+          ]}
+        />
         <MoreInArea place={place} type="pharmacies" />
         <div className="space-y-6 border-t border-slate-200 pt-6">
           <SourceSection source={detail.source} provenance={pharmacy.provenance} sourceName={pharmacy.sourceName} />

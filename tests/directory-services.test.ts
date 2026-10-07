@@ -600,11 +600,11 @@ describe("facility and pharmacy page titles", () => {
   it("uses name and the most specific place; shortens long pharmacy titles", async () => {
     const { facilityTitle, pharmacyTitle } = await import("@/lib/seo-facilities");
     const facility = await services.facilities.getFacilityDetail("central-heart-hospital-dhaka");
-    expect(facilityTitle(facility!)).toBe("Central Heart Hospital, Dhanmondi");
+    expect(facilityTitle(facility!)).toBe("Central Heart Hospital, Dhanmondi — Location, Contact & Details");
     const thin = await services.facilities.getFacilityDetail("harbour-hospital-chattogram");
-    expect(facilityTitle(thin!)).toBe("Harbour Hospital, Chattogram");
+    expect(facilityTitle(thin!)).toBe("Harbour Hospital, Chattogram — Location, Contact & Details");
     const pharmacy = await services.pharmacies.getPharmacyDetail("alpha-pharmacy");
-    expect(pharmacyTitle(pharmacy!)).toBe("Alpha Pharmacy, Dhanmondi — Pharmacy location & contact");
+    expect(pharmacyTitle(pharmacy!)).toBe("Alpha Pharmacy, Dhanmondi — Location & Contact");
     const long = { ...pharmacy!, pharmacy: { ...pharmacy!.pharmacy, name: "A Very Long Pharmacy And Surgical Store Name" } };
     expect(pharmacyTitle(long).length <= 60).toBe(true);
     expect(pharmacyTitle(long)).toMatch(/^A Very Long Pharmacy And Surgical Store Name, Dhanmondi/);

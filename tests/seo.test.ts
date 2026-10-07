@@ -84,9 +84,9 @@ describe("SEO helpers", () => {
   });
 
   it("adds a summary twitter card to page metadata", () => {
-    expect(twitterCard("T", "D")).toEqual({ card: "summary", title: "T", description: "D" });
+    expect(twitterCard("T", "D")).toMatchObject({ card: "summary_large_image", title: "T", description: "D" });
     const metadata = pageMetadata({ title: "T", description: "D", path: "/about" });
-    expect(metadata.twitter).toEqual({ card: "summary", title: "T", description: "D" });
+    expect(metadata.twitter).toMatchObject({ card: "summary_large_image", title: "T", description: "D" });
   });
 
   it("derives absolute URLs from the configured site URL", () => {

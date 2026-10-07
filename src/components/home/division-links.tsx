@@ -1,30 +1,42 @@
 import Link from "next/link";
-import type { DivisionWithDistricts } from "@/domain/read-models";
-import { pluralize } from "@/lib/format";
+import type { DivisionWithDistricts, LocationListItem } from "@/domain/read-models";
 import { routes } from "@/lib/routes";
 
+const MAX_LOCATIONS = 10;
+
+/** The districts with the most listed healthcare records (data-driven, never a hand-picked list). */
+export function popularLocations(divisions: readonly DivisionWithDistricts[], limit = MAX_LOCATIONS): LocationListItem[] {
+  return divisions
+    .flatMap((d) => d.districts)
+    .filter((d) => d.facilityCount + d.pharmacyCount > 0)
+    .sort((a, b) => b.facilityCount + b.pharmacyCount - (a.facilityCount + a.pharmacyCount) || a.location.name.localeCompare(b.location.name))
+    .slice(0, limit);
+}
+
 export function DivisionLinks({ divisions }: { divisions: readonly DivisionWithDistricts[] }) {
-  if (divisions.length === 0) return null;
+  const items = popularLocations(divisions);
+  if (items.length === 0) return null;
   return (
-    <section aria-labelledby="browse-divisions">
-      <h2 id="browse-divisions" className="text-xl font-semibold text-slate-900">
-        Browse by division
+    <section aria-labelledby="popular-locations">
+      <h2 id="popular-locations" className="text-xl font-semibold text-slate-900">
+        Popular locations
       </h2>
-      <ul className="mt-4 grid grid-cols-2 gap-x-6 sm:grid-cols-3 lg:grid-cols-4">
-        {divisions.map(({ division, facilityCount }) => (
-          <li key={division.id} className="border-b border-slate-200">
-            <Link href={routes.location(division.slug)} className="group block min-h-14 py-3">
-              <span className="block font-medium text-brand-800 group-hover:underline">
-                {division.name}
-              </span>
-              {facilityCount > 0 && (
-                <span className="block text-sm text-slate-600">
-                  {pluralize(facilityCount, "facility", "facilities")}
-                </span>
-              )}
+      <ul className="mt-4 flex flex-wrap gap-2">
+        {items.map(({ location }) => (
+          <li key={location.id}>
+            <Link
+              href={routes.location(location.slug)}
+              className="inline-flex min-h-11 items-center rounded-full border border-slate-300 bg-white px-4 text-sm font-medium text-slate-800 shadow-sm hover:border-brand-600 hover:text-brand-800"
+            >
+              {location.name}
             </Link>
           </li>
         ))}
+        <li>
+          <Link href={routes.locations()} className="inline-flex min-h-11 items-center px-3 text-sm font-medium text-brand-800 underline underline-offset-2">
+            All locations
+          </Link>
+        </li>
       </ul>
     </section>
   );

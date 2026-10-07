@@ -104,7 +104,7 @@ export const SPECIALTIES_DESCRIPTION =
   "Browse medical specialties such as cardiology, paediatrics and orthopaedics, and find the hospitals and clinics in Bangladesh that list them.";
 
 export function specialtyTitle(specialty: Specialty): string {
-  return `${specialty.name} — ${pluralTitle(specialty.practitionerTitle)}, Hospitals & Clinics in Bangladesh`;
+  return `${specialty.name} in Bangladesh`;
 }
 
 export function specialtyDescription(detail: SpecialtyDetail): string {
@@ -139,7 +139,7 @@ export function locationHeading(detail: LocationDetail): string {
 }
 
 export function locationTitle(detail: LocationDetail): string {
-  return `Hospitals, Pharmacies & Doctors in ${placeName(detail.location, detail.ancestors)}`;
+  return `Healthcare in ${placeName(detail.location, detail.ancestors)} | Hospitals, Pharmacies & More`;
 }
 
 /** Counts sentence built only from real numbers. */

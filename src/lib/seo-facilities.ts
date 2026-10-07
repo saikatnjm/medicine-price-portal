@@ -40,7 +40,7 @@ export interface FacilityListScope {
 /** Page title: "Hospitals in Dhaka", "Cardiology hospitals & clinics in Dhanmondi, Dhaka". */
 export function facilityListTitle({ scopeName, specialtyName }: FacilityListScope): string {
   if (!scopeName) return specialtyName ? `${specialtyName} Hospitals & Clinics in Bangladesh` : "Hospitals & Clinics in Bangladesh";
-  return specialtyName ? `${specialtyName} hospitals & clinics in ${scopeName}` : `Hospitals in ${scopeName}`;
+  return specialtyName ? `${specialtyName} in ${scopeName}` : `Hospitals in ${scopeName}`;
 }
 
 /** The page h1. */
@@ -171,10 +171,11 @@ function shortPlace(place: Place): string | undefined {
   return place.area?.name ?? place.district?.name;
 }
 
-/** "ABC Eye Hospital, Gazipur" (name only when no place is known). */
+/** "ABC Eye Hospital, Gazipur — Location, Contact & Details" (the place is omitted when unknown). */
 export function facilityTitle(detail: FacilityDetail): string {
   const where = shortPlace(detail.place);
-  return where ? `${detail.facility.name}, ${where}` : detail.facility.name;
+  const base = where ? `${detail.facility.name}, ${where}` : detail.facility.name;
+  return `${base} — Location, Contact & Details`;
 }
 
 export function facilityDescription(detail: FacilityDetail): string {
@@ -201,11 +202,11 @@ export function facilityBreadcrumbs(detail: FacilityDetail): BreadcrumbItem[] {
 
 const TITLE_MAX = 60;
 
-/** "Alpha Pharmacy, Dhanmondi — Pharmacy location & contact"; shortened for long names. */
+/** "Alpha Pharmacy, Dhanmondi — Location & Contact"; shortened for long names. */
 export function pharmacyTitle(detail: PharmacyDetail): string {
   const where = shortPlace(detail.place);
   const base = where ? `${detail.pharmacy.name}, ${where}` : detail.pharmacy.name;
-  for (const suffix of [" — Pharmacy location & contact", " — Pharmacy location", " — Pharmacy"]) {
+  for (const suffix of [" — Location & Contact", " — Pharmacy"]) {
     if (base.length + suffix.length <= TITLE_MAX) return base + suffix;
   }
   return base;

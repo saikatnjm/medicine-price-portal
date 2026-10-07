@@ -14,7 +14,10 @@ import { FacilityOverview } from "@/components/facility/facility-overview";
 import { MoreInArea } from "@/components/facility/more-in-area";
 import { FacilityNearbySections } from "@/components/facility/nearby-sections";
 import { QuickActions } from "@/components/facility/quick-actions";
+import { Faq } from "@/components/common/faq";
 import { Container } from "@/components/ui/container";
+import { HeroCard } from "@/components/ui/hero-card";
+import { trustLabelOf } from "@/domain/healthcare";
 import { services } from "@/data";
 import { routes } from "@/lib/routes";
 import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
@@ -61,7 +64,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
       <JsonLd data={[facilityJsonLd(detail), breadcrumbJsonLd(breadcrumbs, path)]} />
       <Breadcrumbs items={breadcrumbs} />
       <div className="mt-4 space-y-10">
-        <div className="space-y-5">
+        <HeroCard>
           <FacilityOverview detail={detail} />
           <QuickActions
             name={facility.name}
@@ -71,7 +74,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
             coordinates={facility.coordinates}
             google={facility.google}
           />
-        </div>
+        </HeroCard>
         <LocationBlock
           name={facility.name}
           address={facility.address}
@@ -93,6 +96,25 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
         <FacilityDoctors doctors={detail.doctors} facilityName={facility.name} />
         <FacilityNearbySections nearby={detail.nearby} />
         <MoreInArea place={place} type="hospitals" />
+        <Faq
+          items={[
+            ...(facility.coordinates || facility.address
+              ? [
+                  {
+                    question: `How can I get directions to ${facility.name}?`,
+                    answer: "Use the Directions button at the top of this page. It opens Google Maps in a new tab with the listed location as the destination.",
+                  },
+                ]
+              : []),
+            {
+              question: `Is the information about ${facility.name} verified?`,
+              answer:
+                facility.provenance.status === "unverified"
+                  ? "No. This listing comes from community-mapped OpenStreetMap data that we have not independently verified. Phone numbers, opening hours and services may be out of date, so call ahead before you visit."
+                  : `This listing is marked "${trustLabelOf(facility.provenance)}". See Source & verification below for where it comes from. Please still confirm details with the facility before you visit.`,
+            },
+          ]}
+        />
         <div className="space-y-6 border-t border-slate-200 pt-6">
           <SourceSection source={detail.source} provenance={facility.provenance} sourceName={facility.sourceName} />
           <ReportIssue name={facility.name} path={path} provenance={facility.provenance} />

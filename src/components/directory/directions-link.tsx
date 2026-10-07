@@ -1,4 +1,5 @@
 import type { Coordinates, GooglePlaceRef } from "@/domain/healthcare";
+import { NavigateIcon } from "@/components/ui/icons";
 import { mapLinksFor } from "@/lib/maps";
 
 /** Compact "Directions" link for result cards; renders nothing without a location. */
@@ -20,8 +21,9 @@ export function DirectionsLink({
       href={links.directionsUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex min-h-10 items-center rounded-md border border-slate-300 px-3 text-sm font-medium text-slate-800 hover:bg-slate-50"
+      className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 text-sm font-medium text-slate-800 hover:bg-slate-50"
     >
+      <NavigateIcon className="size-4" />
       Directions<span className="sr-only"> to {name} (opens Google Maps)</span>
     </a>
   );

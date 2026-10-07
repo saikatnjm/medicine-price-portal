@@ -1,3 +1,4 @@
+import { SearchIcon } from "@/components/ui/icons";
 import { routes } from "@/lib/routes";
 import { SearchAutocomplete } from "./search-autocomplete";
 
@@ -23,21 +24,22 @@ export function SearchForm({ defaultValue = "", size = "md", id = "site-search",
     <form role="search" action={routes.search()} method="get" className="w-full">
       <label
         htmlFor={inputId}
-        className={large ? "mb-2 block text-base font-medium text-slate-800" : "sr-only"}
+        className="sr-only"
       >
         {label}
       </label>
-      <div className="flex gap-2">
+      <div className={`flex gap-2 ${large ? "rounded-full border border-slate-300 bg-white p-1.5 shadow-md focus-within:border-brand-600" : ""}`}>
         <SearchAutocomplete
           inputId={inputId}
           defaultValue={defaultValue}
-          placeholder="e.g. Napa, cardiologist, hospitals in Dhaka"
-          className={`w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 text-slate-900 placeholder:text-slate-500 focus-visible:border-brand-600 ${large ? "h-12 text-lg" : "h-11 text-base"}`}
+          placeholder={large ? "Search medicines, doctors, hospitals, pharmacies..." : "e.g. Napa, cardiologist, hospitals in Dhaka"}
+          className={`w-full min-w-0 bg-white text-slate-900 placeholder:text-slate-500 ${large ? "h-12 rounded-full border-0 px-4 text-base outline-none focus-visible:outline-none sm:text-lg" : "h-11 rounded-lg border border-slate-300 px-3 text-base focus-visible:border-brand-600"}`}
         />
         <button
           type="submit"
-          className={`shrink-0 rounded-md bg-brand-700 px-4 font-medium text-white hover:bg-brand-800 ${large ? "h-12 text-base sm:px-6" : "h-11 text-sm"}`}
+          className={`inline-flex shrink-0 items-center justify-center gap-2 bg-brand-700 font-semibold text-white hover:bg-brand-800 ${large ? "h-12 rounded-full px-5 text-base sm:px-7" : "h-11 rounded-lg px-4 text-sm"}`}
         >
+          <SearchIcon className="size-5" />
           Search
         </button>
       </div>

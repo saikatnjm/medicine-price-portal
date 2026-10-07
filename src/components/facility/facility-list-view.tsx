@@ -20,6 +20,7 @@ import {
 import { breadcrumbJsonLd } from "@/lib/seo";
 import { BrowseByLocation, RelatedLocationLinks, SubAreaLinks } from "./browse-links";
 import { DirectoryFilterForm } from "./directory-filter-form";
+import { FilterChips } from "./filter-chips";
 import type { FacilityListData } from "./facility-list-data";
 import { EmptyResults, ResultCount } from "./list-status";
 import { OsmCredit } from "./osm-credit";
@@ -91,6 +92,18 @@ export function FacilityListView({ data }: { data: FacilityListData }) {
       </header>
 
       <div className="space-y-4">
+        <FilterChips
+          path={path}
+          keep={{
+            q: params.q,
+            location: location ? undefined : params.location,
+            specialty: specialty ? undefined : params.specialty,
+            near: params.near,
+          }}
+          kinds={data.kindCounts}
+          selectedKind={filters.kind}
+          emergency={{ show: data.showEmergency, checked: filters.emergencyOnly }}
+        />
         <DirectoryFilterForm
           action={path}
           idPrefix="hospitals"
