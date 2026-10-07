@@ -1,4 +1,5 @@
 import Link from "@/i18n/link";
+import { CHIP_CLASS } from "@/components/ui/chip";
 import { getT } from "@/i18n/server";
 import { searchHref } from "@/lib/search-params";
 
@@ -16,13 +17,10 @@ export function ExampleSearches({ label }: { label?: string }) {
   return (
     <div className="text-sm text-slate-700">
       <p className="font-medium">{label ?? t("search.example.label")}</p>
-      <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+      <ul className="mt-2 flex flex-wrap gap-2">
         {EXAMPLE_SEARCHES.map((example) => (
           <li key={example}>
-            <Link
-              href={searchHref(example)}
-              className="inline-flex min-h-8 items-center text-brand-800 underline underline-offset-2"
-            >
+            <Link href={searchHref(example)} className={CHIP_CLASS}>
               {example}
             </Link>
           </li>

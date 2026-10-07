@@ -56,7 +56,7 @@ export function MedicineFilters({ result }: { result: SearchResult }) {
       action={localizePath("/search", getLocale())}
       method="get"
       aria-label={t("search.filter.aria")}
-      className="mb-6 rounded-md border border-slate-200 bg-slate-50 p-4"
+      className="mb-6 rounded-2xl bg-slate-50 p-4"
     >
       <input type="hidden" name="q" value={query} />
       <input type="hidden" name="type" value="medicine" />
@@ -68,7 +68,7 @@ export function MedicineFilters({ result }: { result: SearchResult }) {
       <div className="mt-3 flex flex-wrap items-center gap-4">
         <button
           type="submit"
-          className="inline-flex min-h-11 items-center rounded-md bg-brand-700 px-4 text-sm font-medium text-white hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+          className="inline-flex min-h-11 items-center rounded-full bg-pine px-5 text-sm font-medium text-white transition-colors hover:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
         >
           {t("search.filter.apply")}
         </button>

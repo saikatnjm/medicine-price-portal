@@ -5,12 +5,12 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { JsonLd } from "@/components/common/json-ld";
 import { GooglePlaceInfo } from "@/components/directory/google-place-info";
 import { LocationBlock } from "@/components/directory/location-block";
-import { ReportIssue } from "@/components/directory/report-issue";
-import { SourceSection } from "@/components/directory/source-attribution";
 import { ContactDetails } from "@/components/facility/contact-details";
 import { MoreInArea } from "@/components/facility/more-in-area";
 import { PharmacyNearbySections } from "@/components/facility/nearby-sections";
 import { QuickActions } from "@/components/facility/quick-actions";
+import { QuickFacts } from "@/components/facility/quick-facts";
+import { SourceDetails } from "@/components/facility/source-details";
 import { PharmacyOverview } from "@/components/pharmacy/pharmacy-overview";
 import { PharmacyPricesSection } from "@/components/pharmacy/pharmacy-prices-section";
 import { Faq } from "@/components/common/faq";
@@ -79,7 +79,7 @@ export default async function PharmacyPage({ params }: PharmacyPageProps) {
     <Container className="py-8 sm:py-10">
       <JsonLd data={[pharmacyPageJsonLd(detail, lang), breadcrumbJsonLd(breadcrumbs, path, lang)]} />
       <Breadcrumbs items={breadcrumbs} />
-      <div className="mt-4 space-y-10">
+      <div className="mt-4 space-y-8">
         <HeroCard>
           <PharmacyOverview detail={detail} />
           <QuickActions
@@ -100,6 +100,8 @@ export default async function PharmacyPage({ params }: PharmacyPageProps) {
             path={path}
           />
         </HeroCard>
+        <QuickFacts openingHours={pharmacy.openingHours} />
+        <PharmacyPricesSection detail={detail} />
         <LocationBlock
           name={pharmacy.name}
           address={pharmacy.address}
@@ -114,10 +116,8 @@ export default async function PharmacyPage({ params }: PharmacyPageProps) {
           slug={pharmacy.slug}
           phone={pharmacy.phone}
           website={pharmacy.website}
-          openingHours={pharmacy.openingHours}
           omitWhenEmpty
         />
-        <PharmacyPricesSection detail={detail} />
         <PharmacyNearbySections nearby={detail.nearby} />
         <Faq
           items={[
@@ -150,10 +150,15 @@ export default async function PharmacyPage({ params }: PharmacyPageProps) {
             { label: t("pharmacy.page.next_search"), href: routes.search() },
           ]}
         />
-        <div className="space-y-6 border-t border-slate-200 pt-6">
-          <SourceSection source={detail.source} provenance={pharmacy.provenance} sourceName={pharmacy.sourceName} />
-          <ReportIssue entity="pharmacy" slug={pharmacy.slug} name={pharmacy.name} path={path} provenance={pharmacy.provenance} />
-        </div>
+        <SourceDetails
+          entity="pharmacy"
+          slug={pharmacy.slug}
+          name={pharmacy.name}
+          path={path}
+          source={detail.source}
+          provenance={pharmacy.provenance}
+          sourceName={pharmacy.sourceName}
+        />
       </div>
     </Container>
   );

@@ -11,14 +11,14 @@ export function FacilityDepartments({ detail }: { detail: FacilityDetail }) {
   if (specialties.length === 0) return null;
   const district = place.district;
   return (
-    <section aria-labelledby="departments">
+    <section aria-labelledby="departments" className="scroll-mt-20">
       <SectionHeading id="departments" description={t("facility.departments.description")}>
         {t("facility.departments.heading")}
       </SectionHeading>
       <ul className="flex flex-wrap gap-2">
         {specialties.map((s) => (
-          <li key={s.id} className="flex flex-wrap items-center gap-x-3 rounded-md border border-slate-200 px-3 py-2 text-sm">
-            <Link href={routes.specialty(s.slug)} className="font-medium text-brand-800 underline underline-offset-2">
+          <li key={s.id} className="flex flex-wrap items-center gap-x-3 rounded-full bg-cat-specialty-bg px-4 py-1.5 text-sm">
+            <Link href={routes.specialty(s.slug)} className="inline-flex min-h-8 items-center font-medium text-cat-specialty-fg hover:underline">
               {s.name}
             </Link>
             {district && (

@@ -46,7 +46,7 @@ export function ChamberSection({ view, index, total = 1 }: { view: ChamberView; 
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 rounded-2xl bg-slate-50 p-4 sm:p-5">
       <LocationBlock
         name={name}
         address={chamber.address}
@@ -62,7 +62,7 @@ export function ChamberSection({ view, index, total = 1 }: { view: ChamberView; 
         }
       />
       {details.length > 0 && (
-        <dl className="grid gap-x-6 gap-y-2 text-slate-800 sm:grid-cols-[max-content_1fr]">
+        <dl className="grid gap-x-6 gap-y-2 border-t border-slate-200 pt-4 text-slate-800 sm:grid-cols-[max-content_1fr]">
           {details.map(([label, value]) => (
             <div key={label} className="contents">
               <dt className="text-sm font-medium text-slate-600">{label}</dt>

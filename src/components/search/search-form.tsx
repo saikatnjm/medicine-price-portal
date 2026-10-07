@@ -34,16 +34,16 @@ export function SearchForm({ defaultValue = "", size = "md", id = "site-search",
       >
         {label ?? t("search.form.label")}
       </label>
-      <div className={`flex gap-2 ${large ? "rounded-full border border-slate-300 bg-white p-1.5 shadow-md focus-within:border-brand-600" : ""}`}>
+      <div className={`flex gap-2 ${large ? "rounded-full border border-slate-200 bg-white p-1.5 shadow-sm transition-colors focus-within:border-brand-600 focus-within:ring-2 focus-within:ring-brand-600/20" : ""}`}>
         <SearchAutocomplete
           inputId={inputId}
           defaultValue={defaultValue}
           placeholder={large ? t("search.form.placeholderLg") : t("search.form.placeholder")}
-          className={`w-full min-w-0 bg-white text-slate-900 placeholder:text-slate-500 ${large ? "h-12 rounded-full border-0 px-4 text-base outline-none focus-visible:outline-none sm:text-lg" : "h-11 rounded-lg border border-slate-300 px-3 text-base focus-visible:border-brand-600"}`}
+          className={`w-full min-w-0 bg-white text-slate-900 placeholder:text-slate-500 ${large ? "h-12 rounded-full border-0 px-4 text-base outline-none focus-visible:outline-none sm:text-lg" : "h-11 rounded-xl border border-slate-300 px-3 text-base focus-visible:border-brand-600"}`}
         />
         <button
           type="submit"
-          className={`inline-flex shrink-0 items-center justify-center gap-2 bg-brand-700 font-semibold text-white hover:bg-brand-800 ${large ? "h-12 rounded-full px-5 text-base sm:px-7" : "h-11 rounded-lg px-4 text-sm"}`}
+          className={`inline-flex shrink-0 items-center justify-center gap-2 bg-pine font-semibold text-white transition-colors hover:bg-brand-700 ${large ? "h-12 rounded-full px-5 text-base sm:px-7" : "h-11 rounded-xl px-4 text-sm"}`}
         >
           <SearchIcon className="size-5" />
           {t("search.form.submit")}

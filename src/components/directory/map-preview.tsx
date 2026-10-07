@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { MapIcon } from "@/components/ui/icons";
 import { useT } from "@/i18n/client";
 
 interface MapPreviewProps {
@@ -26,8 +27,9 @@ export function MapPreview({ src, provider, fullMapUrl, name }: MapPreviewProps)
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex min-h-11 items-center rounded-md border border-slate-300 px-4 text-sm font-medium text-slate-800 hover:bg-slate-50"
+        className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 text-sm font-medium text-slate-800 ring-1 ring-slate-300 transition-colors hover:bg-slate-50"
       >
+        <MapIcon className="size-4" />
         {t("directory.map.show")}
       </button>
     );
@@ -39,7 +41,7 @@ export function MapPreview({ src, provider, fullMapUrl, name }: MapPreviewProps)
         title={t("directory.map.title", { name })}
         loading="lazy"
         referrerPolicy="no-referrer-when-downgrade"
-        className="h-56 w-full rounded-md border border-slate-200 sm:h-72"
+        className="h-56 w-full rounded-2xl sm:h-72"
       />
       <figcaption className="text-xs text-slate-600">
         {t("directory.map.caption")}{" "}

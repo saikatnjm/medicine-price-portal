@@ -1,4 +1,5 @@
 import type { Coordinates, GooglePlaceRef } from "@/domain/healthcare";
+import { MapIcon, NavigateIcon, PinIcon } from "@/components/ui/icons";
 import { getT } from "@/i18n/server";
 import { formatPlace } from "@/lib/format";
 import { mapEmbedFor, mapLinksFor } from "@/lib/maps";
@@ -42,11 +43,14 @@ export function LocationBlock({
       <h2 id={headingId} className="text-xl font-semibold text-slate-900">
         {heading ?? t("directory.location")}
       </h2>
-      <address className="not-italic text-slate-800">
-        {fullAddress || t("directory.addressNotPublished")}
-        {address && placeLabel && !address.includes(placeLabel.split(",").at(-1)?.trim() ?? "") && (
-          <span className="block text-sm text-slate-600">{placeLabel}</span>
-        )}
+      <address className="flex gap-2 not-italic text-slate-800">
+        <PinIcon className="mt-1 size-4 text-brand-700" />
+        <span className="min-w-0">
+          {fullAddress || t("directory.addressNotPublished")}
+          {address && placeLabel && !address.includes(placeLabel.split(",").at(-1)?.trim() ?? "") && (
+            <span className="block text-sm text-slate-600">{placeLabel}</span>
+          )}
+        </span>
       </address>
       {links ? (
         <div className="flex flex-wrap items-start gap-2">
@@ -54,16 +58,18 @@ export function LocationBlock({
             href={links.directionsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center rounded-md bg-brand-700 px-4 text-sm font-semibold text-white hover:bg-brand-800"
+            className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand-700 px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-800"
           >
+            <NavigateIcon className="size-4" />
             {t("directory.getDirections")}
           </a>
           <a
             href={links.viewUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center rounded-md border border-slate-300 px-4 text-sm font-medium text-slate-800 hover:bg-slate-50"
+            className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 text-sm font-medium text-slate-800 ring-1 ring-slate-300 transition-colors hover:bg-slate-50"
           >
+            <MapIcon className="size-4" />
             {t("directory.viewOnGoogle")}
           </a>
           {embed && <MapPreview src={embed.src} provider={embed.provider} fullMapUrl={embed.fullMapUrl} name={name} />}

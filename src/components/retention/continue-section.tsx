@@ -2,6 +2,8 @@
 
 import { useT } from "@/i18n/client";
 import Link from "@/i18n/link";
+import { CATEGORY } from "@/components/ui/category";
+import { WHITE_CHIP_CLASS } from "@/components/ui/chip";
 import { ClockIcon, HeartIcon } from "@/components/ui/icons";
 import { clearSearches, clearViews, type EntityType } from "@/lib/local-store";
 import { routes } from "@/lib/routes";
@@ -15,8 +17,7 @@ const HREF: Record<EntityType, (slug: string) => string> = {
   doctor: routes.doctor,
 };
 
-const chip =
-  "inline-flex min-h-11 items-center rounded-full border border-slate-300 bg-white px-4 text-sm font-medium text-slate-800 shadow-sm hover:border-brand-600 hover:text-brand-800";
+const chip = WHITE_CHIP_CLASS;
 
 /** Homepage "Continue where you left off". Renders nothing until this browser has some history. */
 export function ContinueSection() {
@@ -26,9 +27,9 @@ export function ContinueSection() {
   const t = useT();
   if (searches.length === 0 && views.length === 0 && saved.length === 0) return null;
   return (
-    <section aria-labelledby="continue" className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+    <section aria-labelledby="continue" className="space-y-4 rounded-2xl bg-slate-50 p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 id="continue" className="flex items-center gap-2 text-xl font-semibold text-slate-900">
+        <h2 id="continue" className="flex items-center gap-2 text-xl font-semibold text-ink">
           <ClockIcon className="size-5" />
           {t("retention.continue.heading")}
         </h2>
@@ -63,13 +64,17 @@ export function ContinueSection() {
         <div>
           <h3 className="text-sm font-semibold text-slate-700">{t("retention.continue.views")}</h3>
           <ul className="mt-2 flex flex-wrap gap-2">
-            {views.slice(0, 6).map((v) => (
-              <li key={`${v.type}:${v.slug}`}>
-                <Link href={HREF[v.type](v.slug)} className={chip}>
-                  {v.name}
-                </Link>
-              </li>
-            ))}
+            {views.slice(0, 6).map((v) => {
+              const { Icon, fg } = CATEGORY[v.type];
+              return (
+                <li key={`${v.type}:${v.slug}`}>
+                  <Link href={HREF[v.type](v.slug)} className={chip}>
+                    <Icon className={`size-4 ${fg}`} />
+                    {v.name}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}

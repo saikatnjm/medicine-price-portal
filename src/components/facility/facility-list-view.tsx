@@ -85,7 +85,7 @@ export function FacilityListView({ data }: { data: FacilityListData }) {
       )}
       <Breadcrumbs items={breadcrumbs} />
       <header className="mt-4 mb-6 max-w-3xl space-y-3">
-        <h1 className="text-2xl font-semibold text-slate-900 sm:text-3xl">{heading}</h1>
+        <h1>{heading}</h1>
         {!data.hasParams && !data.datasetEmpty && results.total > 0 && <p className="text-slate-700">{description}</p>}
         {specialty && (
           <p className="text-slate-700">
@@ -97,7 +97,7 @@ export function FacilityListView({ data }: { data: FacilityListData }) {
         )}
       </header>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         <FilterChips
           path={path}
           keep={{
@@ -129,7 +129,7 @@ export function FacilityListView({ data }: { data: FacilityListData }) {
         </Suspense>
       </div>
 
-      <section aria-label={t("facility.list.results")} className="mt-6 space-y-3">
+      <section aria-label={t("facility.list.results")} className="mt-6 space-y-4">
         {results.total === 0 ? (
           <EmptyResults
             datasetEmpty={data.datasetEmpty}
@@ -140,7 +140,7 @@ export function FacilityListView({ data }: { data: FacilityListData }) {
           />
         ) : (
           <>
-            <ResultCount total={results.total} page={results.page} pageSize={results.pageSize} noun="hospitals and clinics" singular="hospital or clinic" />
+            <ResultCount total={results.total} page={results.page} pageSize={results.pageSize} noun="hospitals and clinics" singular="hospital or clinic" nearest={Boolean(params.near)} />
             <ResultsMap markers={facilityMarkers(results.items, lang)}>
               <ResultList label={t("facility.list.resultsLabel")}>
                 {results.items.map((item) => (

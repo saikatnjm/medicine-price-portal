@@ -74,13 +74,13 @@ export function PharmacyListView({ data }: { data: PharmacyListData }) {
       )}
       <Breadcrumbs items={breadcrumbs} />
       <header className="mt-4 mb-6 max-w-3xl space-y-3">
-        <h1 className="text-2xl font-semibold text-slate-900 sm:text-3xl">{heading}</h1>
-        <p className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800">
+        <h1>{heading}</h1>
+        <p className="rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-800">
           {t("pharmacy.list.notice")}
         </p>
       </header>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         <DirectoryFilterForm
           action={path}
           idPrefix="pharmacies"
@@ -97,7 +97,7 @@ export function PharmacyListView({ data }: { data: PharmacyListData }) {
         </Suspense>
       </div>
 
-      <section aria-label={t("pharmacy.list.results")} className="mt-6 space-y-3">
+      <section aria-label={t("pharmacy.list.results")} className="mt-6 space-y-4">
         {results.total === 0 ? (
           <EmptyResults
             datasetEmpty={data.datasetEmpty}
@@ -108,7 +108,7 @@ export function PharmacyListView({ data }: { data: PharmacyListData }) {
           />
         ) : (
           <>
-            <ResultCount total={results.total} page={results.page} pageSize={results.pageSize} noun={t("pharmacy.list.noun")} singular={t("pharmacy.list.noun_one")} />
+            <ResultCount total={results.total} page={results.page} pageSize={results.pageSize} noun={t("pharmacy.list.noun")} singular={t("pharmacy.list.noun_one")} nearest={Boolean(params.near)} />
             <ResultsMap markers={pharmacyMarkers(results.items)}>
               <ResultList label={t("pharmacy.list.list_label")}>
                 {results.items.map((item) => (

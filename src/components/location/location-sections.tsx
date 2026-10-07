@@ -1,13 +1,14 @@
 import type { ReactNode } from "react";
 import Link from "@/i18n/link";
 import { SectionHeading } from "@/components/common/section-heading";
-import { FacilityCard, ResultList } from "@/components/directory/result-cards";
+import { CompactList, FacilityRow } from "@/components/facility/compact-rows";
+import { INDEX_CHIP_CLASS } from "@/components/ui/chip";
 import type { FacilityListItem } from "@/domain/read-models";
 
 /** "See all …" link under a location section. */
 export function SeeAll({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <Link href={href} className="mr-4 inline-block font-medium text-brand-800 underline">
+    <Link href={href} className={`${INDEX_CHIP_CLASS} mr-2`}>
       {children}
     </Link>
   );
@@ -28,12 +29,12 @@ export function FacilitySection({
   return (
     <section aria-labelledby={id}>
       <SectionHeading id={id}>{title}</SectionHeading>
-      <ResultList label={title}>
+      <CompactList label={title}>
         {items.map((item) => (
-          <FacilityCard key={item.facility.id} item={item} />
+          <FacilityRow key={item.facility.id} item={item} />
         ))}
-      </ResultList>
-      <p className="mt-4">{children}</p>
+      </CompactList>
+      <p className="mt-3">{children}</p>
     </section>
   );
 }

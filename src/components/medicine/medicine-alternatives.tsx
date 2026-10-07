@@ -57,7 +57,7 @@ export function MedicineAlternatives({ detail }: { detail: MedicineDetail }) {
             <MoreLink shown={alternatives.length} total={alternativesTotal} query={generic.name} />
           </>
         ) : (
-          <p className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700">
+          <p className="rounded-xl bg-slate-50 px-4 py-3 text-slate-700">
             {t("medicine.alt.none", { product: productLabel })}
           </p>
         )}

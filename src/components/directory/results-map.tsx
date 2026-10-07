@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { localizePath, type Locale } from "@/i18n/config";
+import { MapIcon } from "@/components/ui/icons";
 import { useLocale, useT } from "@/i18n/client";
 import type { MapMarker } from "@/lib/map-markers";
 
@@ -194,19 +195,22 @@ export function ResultsMap({ markers, children }: ResultsMapProps) {
   const count = markers.length;
   return (
     <div>
-      <button
-        type="button"
-        aria-expanded={open}
-        aria-controls={regionId}
-        onClick={() => {
-          // Reset the status here (not in the effect) so opening starts from "loading".
-          if (!open) setStatus("loading");
-          setChosen(!open);
-        }}
-        className="mb-4 inline-flex min-h-11 items-center gap-2 rounded-full border border-slate-300 bg-white px-5 text-sm font-medium text-slate-800 shadow-sm hover:bg-slate-50"
-      >
-        {open ? t("directory.map.hide") : t("directory.map.show")}
-      </button>
+      <div className="sticky top-[4.5rem] z-30 mb-3 flex justify-end lg:static lg:justify-start">
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls={regionId}
+          onClick={() => {
+            // Reset the status here (not in the effect) so opening starts from "loading".
+            if (!open) setStatus("loading");
+            setChosen(!open);
+          }}
+          className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 text-sm font-medium text-slate-900 shadow-md ring-1 ring-slate-300 transition-colors hover:bg-slate-50 lg:shadow-none"
+        >
+          <MapIcon className="size-4" />
+          {open ? t("directory.map.hide") : t("directory.map.show")}
+        </button>
+      </div>
       <div className={open ? "lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-start lg:gap-6" : undefined}>
         <div id={regionId} className={open ? "mb-4 lg:order-last lg:mb-0 lg:sticky lg:top-4" : undefined}>
           {open && (
@@ -215,7 +219,7 @@ export function ResultsMap({ markers, children }: ResultsMapProps) {
                 {t(count === 1 ? "directory.map.count.one" : "directory.map.count.other", { n: count })}
               </p>
               {status === "error" ? (
-                <p role="status" className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800">
+                <p role="status" className="rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-800">
                   {t("directory.map.error")}
                 </p>
               ) : (
@@ -225,7 +229,7 @@ export function ResultsMap({ markers, children }: ResultsMapProps) {
                       {t("directory.map.loading")}
                     </p>
                   )}
-                  <div ref={containerRef} className="h-80 w-full rounded-xl border border-slate-300 lg:h-[32rem]" />
+                  <div ref={containerRef} className="h-80 w-full rounded-2xl ring-1 ring-slate-200 lg:h-[32rem]" />
                 </>
               )}
             </div>

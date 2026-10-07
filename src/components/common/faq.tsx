@@ -15,15 +15,15 @@ export function Faq({ items, id = "faq" }: { items: readonly FaqItem[]; id?: str
   const t = getT();
   return (
     <section aria-labelledby={id} className="space-y-3">
-      <h2 id={id} className="text-xl font-semibold text-slate-900">
+      <h2 id={id} className="text-xl font-semibold text-ink">
         {t("common.faq.heading")}
       </h2>
-      <div className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
+      <div className="divide-y divide-white rounded-2xl bg-slate-50">
         {items.map(({ question, answer }) => (
           <details key={question} className="group px-4 py-1">
             <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 py-2 font-medium text-slate-900 marker:hidden">
               <span>{question}</span>
-              <span aria-hidden="true" className="text-slate-500 transition-transform group-open:rotate-45">
+              <span aria-hidden="true" className="text-slate-600 transition-transform group-open:rotate-45">
                 +
               </span>
             </summary>

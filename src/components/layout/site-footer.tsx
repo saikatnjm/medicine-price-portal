@@ -8,7 +8,7 @@ import { NAV_ITEMS } from "./nav-items";
 export function SiteFooter() {
   const t = getT();
   return (
-    <footer className="mt-16 border-t border-slate-200 bg-slate-50 py-8">
+    <footer className="mt-16 bg-mist pt-8 pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-8">
       <Container className="space-y-4">
         <nav aria-label={t("layout.footerNav")}>
           <ul className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-slate-700">

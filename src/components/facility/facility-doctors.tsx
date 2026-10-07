@@ -1,6 +1,6 @@
 import Link from "@/i18n/link";
 import { SectionHeading } from "@/components/common/section-heading";
-import { DoctorCard, ResultList } from "@/components/directory/result-cards";
+import { CompactList, DoctorRow } from "./compact-rows";
 import type { DoctorListItem } from "@/domain/read-models";
 import { getT } from "@/i18n/server";
 import { routes } from "@/lib/routes";
@@ -12,11 +12,11 @@ export function FacilityDoctors({ doctors, facilityName }: { doctors: readonly D
     <section aria-labelledby="doctors">
       <SectionHeading id="doctors">{heading}</SectionHeading>
       {doctors.length > 0 ? (
-        <ResultList label={heading}>
+        <CompactList label={heading}>
           {doctors.map((item) => (
-            <DoctorCard key={item.doctor.id} item={item} />
+            <DoctorRow key={item.doctor.id} item={item} />
           ))}
-        </ResultList>
+        </CompactList>
       ) : (
         <p className="text-slate-700">
           {t("facility.doctors.empty")}{" "}

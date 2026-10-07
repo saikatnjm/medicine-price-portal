@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
+import { Figtree, Hind_Siliguri } from "next/font/google";
 import { notFound } from "next/navigation";
 import { Suspense, type ReactNode } from "react";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
+import { BottomTabBar } from "@/components/layout/bottom-tab-bar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { I18nProvider } from "@/i18n/client";
@@ -10,6 +12,14 @@ import { getT, setLocale } from "@/i18n/server";
 import { pageRobots, SOCIAL_IMAGE, twitterCard } from "@/lib/seo";
 import { siteConfig } from "@/lib/site-config";
 import "../globals.css";
+
+const figtree = Figtree({ subsets: ["latin"], display: "swap", variable: "--font-latin" });
+const hindSiliguri = Hind_Siliguri({
+  subsets: ["latin", "bengali"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-bn",
+});
 
 interface LayoutProps {
   children: ReactNode;
@@ -52,7 +62,8 @@ export async function generateMetadata({ params }: Pick<LayoutProps, "params">):
 }
 
 export const viewport: Viewport = {
-  themeColor: "#0f766e",
+  themeColor: "#0b4f4a",
+  viewportFit: "cover",
 };
 
 export default async function RootLayout({ children, params }: Readonly<LayoutProps>) {
@@ -61,7 +72,7 @@ export default async function RootLayout({ children, params }: Readonly<LayoutPr
   setLocale(lang);
   const t = getT(lang);
   return (
-    <html lang={lang}>
+    <html lang={lang} className={`${figtree.variable} ${hindSiliguri.variable}`}>
       <body className="flex min-h-dvh flex-col">
         <I18nProvider lang={lang}>
           <a
@@ -75,6 +86,7 @@ export default async function RootLayout({ children, params }: Readonly<LayoutPr
             {children}
           </main>
           <SiteFooter />
+          <BottomTabBar />
           {siteConfig.gaMeasurementId && (
             // Suspense: the page-view tracker reads search params on the client.
             <Suspense fallback={null}>

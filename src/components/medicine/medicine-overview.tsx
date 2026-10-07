@@ -1,4 +1,7 @@
 import Link from "@/i18n/link";
+import { CATEGORY } from "@/components/ui/category";
+import { ChevronIcon, PillIcon } from "@/components/ui/icons";
+import { FlaskIcon } from "@/components/ui/icons-entity";
 import { PrescriptionTag } from "@/components/common/prescription-tag";
 import { PRICE_SECTION_ID } from "@/components/medicine/price-comparison";
 import type { MedicineDetail } from "@/domain/read-models";
@@ -6,7 +9,7 @@ import { getT } from "@/i18n/server";
 import { formatMedicineName, formatPackSize } from "@/lib/format";
 import { searchHref } from "@/lib/search-params";
 
-const chip = "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold";
+const chip = "inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold";
 
 /**
  * Page header that answers "what is this?" at a glance: the product (brand, strength, form) and,
@@ -22,10 +25,13 @@ export function MedicineOverview({ detail }: { detail: MedicineDetail }) {
       : []),
   ];
   return (
-    <header className="space-y-5">
+    <header className="space-y-6">
       <div className="space-y-2">
         <p className="flex flex-wrap items-center gap-2">
-          <span className={`${chip} bg-brand-700 text-white`}>{t("medicine.overview.brand_chip")}</span>
+          <span className={`${chip} ${CATEGORY.medicine.tint}`}>
+            <PillIcon className="size-3.5" />
+            {t("medicine.overview.brand_chip")}
+          </span>
           <PrescriptionTag required={medicine.prescriptionRequired} />
         </p>
         <h1 className="text-3xl font-semibold tracking-tight break-words text-slate-900 sm:text-4xl">
@@ -34,10 +40,13 @@ export function MedicineOverview({ detail }: { detail: MedicineDetail }) {
         <p className="text-lg text-slate-700">{medicine.dosageFormLabel}</p>
       </div>
 
-      <dl className="grid gap-x-10 gap-y-4 border-l-2 border-brand-600/40 pl-4 sm:grid-cols-2">
+      <dl className="grid gap-x-10 gap-y-4 rounded-2xl bg-mist p-4 sm:grid-cols-2 sm:p-5">
         <div className="sm:col-span-2">
           <dt>
-            <span className={`${chip} bg-brand-50 text-brand-800`}>{t("medicine.overview.generic_chip")}</span>
+            <span className={`${chip} bg-mist text-pine`}>
+              <FlaskIcon className="size-3.5" />
+              {t("medicine.overview.generic_chip")}
+            </span>
           </dt>
           <dd className="mt-1 text-xl font-medium break-words text-slate-900">
             <Link href={searchHref(generic.name)} className="text-brand-800 underline underline-offset-2">
@@ -60,8 +69,9 @@ export function MedicineOverview({ detail }: { detail: MedicineDetail }) {
         <p>
           <a
             href={`#${PRICE_SECTION_ID}`}
-            className="inline-flex min-h-11 items-center rounded-xl bg-brand-700 px-5 text-sm font-semibold text-white hover:bg-brand-800"
+            className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand-700 px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-800"
           >
+            <ChevronIcon className="size-4 rotate-90" />
             {t("medicine.overview.to_prices")}
           </a>
         </p>

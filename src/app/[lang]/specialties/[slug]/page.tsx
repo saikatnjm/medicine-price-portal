@@ -7,7 +7,7 @@ import { JsonLd } from "@/components/common/json-ld";
 import { SectionHeading } from "@/components/common/section-heading";
 import { DoctorsEmptyNotice } from "@/components/doctor/doctors-empty-notice";
 import { buildHref } from "@/components/directory/pagination";
-import { DoctorCard, FacilityCard, ResultList } from "@/components/directory/result-cards";
+import { CompactList, DoctorRow, FacilityRow } from "@/components/facility/compact-rows";
 import { InformationNotice } from "@/components/specialty/information-notice";
 import {
   practitionerPlural,
@@ -17,7 +17,9 @@ import {
   specialtyJsonLd,
   specialtyTitle,
 } from "@/components/specialty/specialty-text";
+import { CHIP_CLASS, INDEX_CHIP_CLASS } from "@/components/ui/chip";
 import { Container } from "@/components/ui/container";
+import { EntityTile, HeroCard } from "@/components/ui/hero-card";
 import { services } from "@/data";
 import { DEFAULT_LOCALE } from "@/i18n/config";
 import { getT, initLocale } from "@/i18n/server";
@@ -71,18 +73,23 @@ export default async function SpecialtyPage({ params }: SpecialtyPageProps) {
     <Container className="py-8 sm:py-10">
       <JsonLd data={[specialtyJsonLd(detail, lang), breadcrumbJsonLd(breadcrumbs, path, lang)]} />
       <Breadcrumbs items={breadcrumbs} />
-      <div className="mt-4 space-y-10">
-        <header className="space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">{specialty.name}</h1>
-          <p className="max-w-3xl text-slate-700">{specialty.description}</p>
-          <p className="text-slate-700">
-            <span className="font-medium">{t("specialty.page.practitioner")}</span> {specialty.practitionerTitle}
-            {lang === DEFAULT_LOCALE && <> ({practitionerPluralLower(specialty.practitionerTitle, lang)})</>}
-          </p>
-          <p className="text-sm text-slate-600">
-            {t("specialty.counts.listedIn", { counts: specialtyCounts(detail, t) })}
-          </p>
-        </header>
+      <div className="mt-4 space-y-8">
+        <HeroCard>
+          <header className="flex gap-4">
+            <EntityTile kind="specialty" size="lg" />
+            <div className="min-w-0 space-y-2">
+              <h1>{specialty.name}</h1>
+              <p className="max-w-3xl text-slate-700">{specialty.description}</p>
+              <p className="text-slate-700">
+                <span className="font-medium">{t("specialty.page.practitioner")}</span> {specialty.practitionerTitle}
+                {lang === DEFAULT_LOCALE && <> ({practitionerPluralLower(specialty.practitionerTitle, lang)})</>}
+              </p>
+              <p className="text-sm text-slate-600">
+                {t("specialty.counts.listedIn", { counts: specialtyCounts(detail, t) })}
+              </p>
+            </div>
+          </header>
+        </HeroCard>
 
         <section aria-labelledby="specialty-facilities">
           <SectionHeading id="specialty-facilities" description={t("specialty.page.facilitiesDesc")}>
@@ -90,13 +97,13 @@ export default async function SpecialtyPage({ params }: SpecialtyPageProps) {
           </SectionHeading>
           {facilities.length > 0 ? (
             <>
-              <ResultList label={t("specialty.page.facilitiesLabel", { name: specialty.name })}>
+              <CompactList label={t("specialty.page.facilitiesLabel", { name: specialty.name })}>
                 {facilities.map((item) => (
-                  <FacilityCard key={item.facility.id} item={item} />
+                  <FacilityRow key={item.facility.id} item={item} />
                 ))}
-              </ResultList>
-              <p className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2">
-                <Link href={seeAllFacilities} className="font-medium text-brand-800 underline">
+              </CompactList>
+              <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+                <Link href={seeAllFacilities} className={INDEX_CHIP_CLASS}>
                   {t("specialty.page.seeAllFacilities", { n: detail.facilityCount })}
                 </Link>
                 <span className="text-sm text-slate-600">
@@ -119,15 +126,15 @@ export default async function SpecialtyPage({ params }: SpecialtyPageProps) {
           <SectionHeading id="specialty-doctors">{practitionerPlural(specialty.practitionerTitle, lang)}</SectionHeading>
           {doctors.length > 0 ? (
             <>
-              <ResultList label={practitionerPlural(specialty.practitionerTitle, lang)}>
+              <CompactList label={practitionerPlural(specialty.practitionerTitle, lang)}>
                 {doctors.map((item) => (
-                  <DoctorCard key={item.doctor.id} item={item} />
+                  <DoctorRow key={item.doctor.id} item={item} />
                 ))}
-              </ResultList>
-              <p className="mt-4">
+              </CompactList>
+              <p className="mt-3">
                 <Link
                   href={buildHref(routes.doctors(), { specialty: specialty.slug })}
-                  className="font-medium text-brand-800 underline"
+                  className={INDEX_CHIP_CLASS}
                 >
                   {t("specialty.page.seeAllDoctors", { n: detail.doctorCount })}
                 </Link>
@@ -143,19 +150,19 @@ export default async function SpecialtyPage({ params }: SpecialtyPageProps) {
             <SectionHeading id="specialty-locations" description={t("specialty.page.whereDesc")}>
               {t("specialty.page.whereHeading", { name: specialty.name })}
             </SectionHeading>
-            <ul className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
+            <ul className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
               {topLocations.map(({ location, count }) => (
-                <li key={location.id}>
+                <li key={location.id} className="flex flex-wrap items-center gap-x-2">
                   <Link
                     href={
                       indexableHospitals.has(location.slug)
                         ? routes.hospitals(location.slug, specialty.slug)
                         : routes.location(location.slug)
                     }
-                    className="font-medium text-brand-800 underline"
+                    className={CHIP_CLASS}
                   >
                     {location.name}
-                  </Link>{" "}
+                  </Link>
                   <span className="text-sm text-slate-600">{t("specialty.page.listed", { n: count })}</span>
                 </li>
               ))}
@@ -166,10 +173,10 @@ export default async function SpecialtyPage({ params }: SpecialtyPageProps) {
         {related.length > 0 && (
           <section aria-labelledby="related-specialties">
             <SectionHeading id="related-specialties">{t("specialty.page.related")}</SectionHeading>
-            <ul className="flex flex-wrap gap-x-6 gap-y-2">
+            <ul className="flex flex-wrap gap-2">
               {related.map((r) => (
                 <li key={r.id}>
-                  <Link href={routes.specialty(r.slug)} className="font-medium text-brand-800 underline">
+                  <Link href={routes.specialty(r.slug)} className={CHIP_CLASS}>
                     {r.name}
                   </Link>
                 </li>
@@ -178,9 +185,7 @@ export default async function SpecialtyPage({ params }: SpecialtyPageProps) {
           </section>
         )}
 
-        <div className="border-t border-slate-200 pt-6">
-          <InformationNotice />
-        </div>
+        <InformationNotice />
       </div>
     </Container>
   );

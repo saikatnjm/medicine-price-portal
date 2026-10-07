@@ -1,5 +1,6 @@
 import Link from "@/i18n/link";
 import { getT } from "@/i18n/server";
+import { CHIP_CLASS } from "@/components/ui/chip";
 import type { RelatedSearch } from "@/lib/related-searches";
 
 /** "People also search for": real links to existing pages. Renders nothing without links. */
@@ -8,7 +9,7 @@ export function RelatedSearches({ items, heading, id = "related-searches" }: { i
   const t = getT();
   return (
     <section aria-labelledby={id}>
-      <h2 id={id} className="text-xl font-semibold text-slate-900">
+      <h2 id={id} className="text-xl font-semibold text-ink">
         {heading ?? t("common.related.heading")}
       </h2>
       <ul className="mt-3 flex flex-wrap gap-2">
@@ -16,7 +17,7 @@ export function RelatedSearches({ items, heading, id = "related-searches" }: { i
           <li key={href}>
             <Link
               href={href}
-              className="inline-flex min-h-11 items-center rounded-full border border-slate-300 bg-white px-4 text-sm font-medium text-slate-800 shadow-sm hover:border-brand-600 hover:text-brand-800"
+              className={CHIP_CLASS}
             >
               {label}
             </Link>

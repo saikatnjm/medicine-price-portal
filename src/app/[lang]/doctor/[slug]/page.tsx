@@ -7,11 +7,13 @@ import { JsonLd } from "@/components/common/json-ld";
 import { SectionHeading } from "@/components/common/section-heading";
 import { ChamberSection } from "@/components/doctor/chamber-section";
 import { buildHref } from "@/components/directory/pagination";
-import { DoctorCard, ResultList } from "@/components/directory/result-cards";
+import { CompactList, DoctorRow } from "@/components/facility/compact-rows";
+import { DoctorAvatar } from "@/components/doctor/doctor-avatar";
 import { DoctorActions } from "@/components/doctor/doctor-actions";
 import { DoctorSource } from "@/components/doctor/doctor-source";
 import { InformationNotice } from "@/components/specialty/information-notice";
 import { Container } from "@/components/ui/container";
+import { HeroCard } from "@/components/ui/hero-card";
 import { services } from "@/data";
 import { getT, initLocale } from "@/i18n/server";
 import { routes } from "@/lib/routes";
@@ -88,37 +90,43 @@ export default async function DoctorPage({ params }: DoctorPageProps) {
     <Container className="py-8 sm:py-10">
       <JsonLd data={[doctorJsonLd(detail, lang), breadcrumbJsonLd(breadcrumbs, path, lang)]} />
       <Breadcrumbs items={breadcrumbs} />
-      <div className="mt-4 space-y-10">
-        <header className="space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">{doctor.name}</h1>
-          {doctor.designation && <p className="text-lg text-slate-800">{doctor.designation}</p>}
-          {specialties.length > 0 && (
-            <p className="text-slate-800">
-              <span className="sr-only">{t("doctor.page.specialties")} </span>
-              {specialties.map((s, i) => (
-                <span key={s.id}>
-                  {i > 0 && ", "}
-                  <Link href={routes.specialty(s.slug)} className="font-medium text-brand-800 underline">
-                    {s.practitionerTitle}
-                  </Link>
-                </span>
-              ))}
-            </p>
-          )}
-          {doctor.organization && <p className="text-slate-700">{doctor.organization}</p>}
-          {doctor.qualifications && (
-            <p className="text-slate-700">
-              <span className="font-medium">{t("doctor.page.qualifications")}</span> {doctor.qualifications}
-            </p>
-          )}
-          {doctor.profileSummary && <p className="max-w-prose pt-1 text-slate-800">{doctor.profileSummary}</p>}
-          <div className="pt-2">
-            <DoctorActions name={doctor.name} chambers={chambers} doctorPhone={doctor.phone} />
-          </div>
-        </header>
+      <div className="mt-4 space-y-8">
+        <HeroCard>
+          <header className="flex gap-4">
+            <DoctorAvatar name={doctor.name} />
+            <div className="min-w-0 space-y-2">
+              <h1 className="text-[1.75rem] leading-9 font-semibold tracking-tight break-words text-slate-900 sm:text-4xl sm:leading-[3rem]">
+                {doctor.name}
+              </h1>
+              {doctor.designation && <p className="text-lg text-slate-800">{doctor.designation}</p>}
+              {specialties.length > 0 && (
+                <p className="flex flex-wrap items-center gap-2">
+                  <span className="sr-only">{t("doctor.page.specialties")} </span>
+                  {specialties.map((s) => (
+                    <Link
+                      key={s.id}
+                      href={routes.specialty(s.slug)}
+                      className="inline-flex min-h-9 items-center rounded-full bg-cat-specialty-bg px-3.5 text-sm font-medium text-cat-specialty-fg hover:underline"
+                    >
+                      {s.practitionerTitle}
+                    </Link>
+                  ))}
+                </p>
+              )}
+              {doctor.organization && <p className="text-slate-700">{doctor.organization}</p>}
+              {doctor.qualifications && (
+                <p className="text-slate-700">
+                  <span className="font-medium">{t("doctor.page.qualifications")}</span> {doctor.qualifications}
+                </p>
+              )}
+              {doctor.profileSummary && <p className="max-w-prose pt-1 text-slate-800">{doctor.profileSummary}</p>}
+            </div>
+          </header>
+          <DoctorActions name={doctor.name} chambers={chambers} doctorPhone={doctor.phone} />
+        </HeroCard>
 
         {chambers.length > 0 ? (
-          <section aria-label={t("doctor.page.chambers")} className="space-y-8">
+          <section aria-label={t("doctor.page.chambers")} className="space-y-4">
             {chambers.map((view, index) => (
               <ChamberSection key={`${view.name}-${index}`} view={view} index={index} total={chambers.length} />
             ))}
@@ -134,18 +142,18 @@ export default async function DoctorPage({ params }: DoctorPageProps) {
                 ? t("doctor.page.otherProfiles", { title: practitionerLower(primarySpecialty.practitionerTitle, lang) })
                 : t("doctor.page.relatedDoctors")}
             </SectionHeading>
-            <ResultList label={t("doctor.page.relatedDoctors")}>
+            <CompactList label={t("doctor.page.relatedDoctors")}>
               {related.map((item) => (
-                <DoctorCard key={item.doctor.id} item={item} />
+                <DoctorRow key={item.doctor.id} item={item} />
               ))}
-            </ResultList>
+            </CompactList>
           </section>
         )}
 
         {(primarySpecialty || placeLinks.length > 0) && (
-          <nav aria-label={t("doctor.page.relatedPages")} className="flex flex-wrap gap-x-6 gap-y-2 border-t border-slate-200 pt-6">
+          <nav aria-label={t("doctor.page.relatedPages")} className="flex flex-wrap gap-x-6 gap-y-1">
             {primarySpecialty && (
-              <Link href={routes.specialty(primarySpecialty.slug)} className="font-medium text-brand-800 underline">
+              <Link href={routes.specialty(primarySpecialty.slug)} className="inline-flex min-h-11 items-center font-medium text-brand-800 underline">
                 {t("doctor.page.about", { name: primarySpecialty.name })}
               </Link>
             )}
@@ -157,7 +165,7 @@ export default async function DoctorPage({ params }: DoctorPageProps) {
           </nav>
         )}
 
-        <div className="space-y-4 border-t border-slate-200 pt-6">
+        <div className="space-y-4">
           <DoctorSource doctor={doctor} source={source} />
           <InformationNotice />
         </div>

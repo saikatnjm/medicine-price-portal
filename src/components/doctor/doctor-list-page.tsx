@@ -76,10 +76,10 @@ export async function DoctorListPage({
     <Container className="py-8 sm:py-10">
       <JsonLd data={breadcrumbJsonLd(breadcrumbs, basePath, lang)} />
       <Breadcrumbs items={breadcrumbs} />
-      <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900">{heading}</h1>
+      <h1 className="mt-4">{heading}</h1>
       <p className="mt-2 max-w-3xl text-slate-700">{intro}</p>
 
-      <div className="mt-6 space-y-8">
+      <div className="mt-6 space-y-6">
         {!hasDoctors && <DoctorsEmptyNotice />}
         <DoctorFilters
           query={query}
@@ -92,7 +92,7 @@ export async function DoctorListPage({
         />
         {hasDoctors && (
           <section aria-labelledby="doctor-results">
-            <h2 id="doctor-results" className="text-xl font-semibold text-slate-900">
+            <h2 id="doctor-results" className="mb-4 text-lg font-semibold text-slate-900">
               {doctorCountText(t, results.total)}
             </h2>
             {results.items.length > 0 ? (

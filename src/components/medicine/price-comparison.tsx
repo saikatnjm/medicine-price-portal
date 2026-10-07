@@ -45,7 +45,7 @@ export function PriceComparison({ detail }: { detail: MedicineDetail }) {
       </SectionHeading>
 
       {prices.length === 0 || !priceStats ? (
-        <div className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700">
+        <div className="rounded-xl bg-slate-50 px-4 py-3 text-slate-700">
           <p className="font-medium text-slate-900">{t("medicine.price.soon")}</p>
           <p className="mt-1 text-sm">
             {t("medicine.price.soon_body")}
@@ -58,7 +58,7 @@ export function PriceComparison({ detail }: { detail: MedicineDetail }) {
           </p>
         </div>
       ) : (
-        <ol className="divide-y divide-slate-200 border-y border-slate-200">
+        <ol className="divide-y divide-slate-100">
           {prices.map(({ price, pharmacy }) => {
             const isLowest = price.amount === priceStats.lowest;
             const unitPrice = unitPriceOf(price.amount);
@@ -84,7 +84,7 @@ export function PriceComparison({ detail }: { detail: MedicineDetail }) {
                   </p>
                   {unitPrice && <p className="text-xs text-slate-600">{unitPrice}</p>}
                   {isLowest && (
-                    <p className="mt-1 inline-block rounded bg-brand-50 px-1.5 py-0.5 text-xs font-medium text-brand-800">
+                    <p className="mt-1 inline-flex rounded-full bg-mist px-2.5 py-0.5 text-xs font-medium text-brand-800">
                       {t("medicine.price.lowest")}
                     </p>
                   )}

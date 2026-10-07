@@ -1,5 +1,5 @@
 import { SectionHeading } from "@/components/common/section-heading";
-import { FacilityCard, PharmacyCard, ResultList } from "@/components/directory/result-cards";
+import { CompactList, FacilityRow, PharmacyRow } from "./compact-rows";
 import { getT } from "@/i18n/server";
 import type { FacilityListItem, FacilityNearby, PharmacyListItem, PharmacyNearby } from "@/domain/read-models";
 
@@ -9,11 +9,11 @@ export function NearbyFacilityGroup({ title, id, items }: { title: string; id: s
   return (
     <section aria-labelledby={id}>
       <SectionHeading id={id}>{title}</SectionHeading>
-      <ResultList label={title}>
+      <CompactList label={title}>
         {items.map((item) => (
-          <FacilityCard key={item.facility.id} item={item} />
+          <FacilityRow key={item.facility.id} item={item} />
         ))}
-      </ResultList>
+      </CompactList>
     </section>
   );
 }
@@ -24,11 +24,11 @@ export function NearbyPharmacyGroup({ title, id, items }: { title?: string; id: 
   return (
     <section aria-labelledby={id}>
       <SectionHeading id={id}>{heading}</SectionHeading>
-      <ResultList label={heading}>
+      <CompactList label={heading}>
         {items.map((item) => (
-          <PharmacyCard key={item.pharmacy.id} item={item} />
+          <PharmacyRow key={item.pharmacy.id} item={item} />
         ))}
-      </ResultList>
+      </CompactList>
     </section>
   );
 }

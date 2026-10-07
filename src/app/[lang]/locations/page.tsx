@@ -35,7 +35,7 @@ export default async function LocationsPage({ params }: LocationsPageProps) {
     <Container className="py-8 sm:py-10">
       <JsonLd data={breadcrumbJsonLd(breadcrumbs, routes.locations(), lang)} />
       <Breadcrumbs items={breadcrumbs} />
-      <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900">{t("location.list.heading")}</h1>
+      <h1 className="mt-4">{t("location.list.heading")}</h1>
       <p className="mt-2 max-w-3xl text-slate-700">{t("location.list.intro")}</p>
       <div className="mt-8">
         {divisions.length > 0 ? (

@@ -6,6 +6,7 @@ import type { SuggestionGroup, SuggestionItem } from "@/domain/read-models";
 import { useLocale, useT } from "@/i18n/client";
 import { localizePath } from "@/i18n/config";
 import type { Translator } from "@/i18n/translate";
+import { CategoryTile } from "@/components/ui/category-tile";
 import { routes } from "@/lib/routes";
 import { SEARCH_MAX_QUERY_LENGTH, SEARCH_MIN_QUERY_LENGTH } from "@/lib/search-config";
 
@@ -171,14 +172,14 @@ export function SearchAutocomplete({
         role="listbox"
         aria-label={t("search.suggestions.aria")}
         hidden={!showList}
-        className="absolute inset-x-0 top-full z-30 mt-1 max-h-96 overflow-y-auto rounded-xl border border-slate-200 bg-white py-1 shadow-lg"
+        className="absolute inset-x-0 top-full z-30 mt-2 max-h-96 overflow-y-auto rounded-2xl border border-slate-200 bg-white py-1 shadow-lg"
       >
         {showList &&
           visibleGroups.map((group, groupIndex) => {
             const headingId = `${inputId}-group-${reactId}-${groupIndex}`;
             return (
               <div key={group.type} role="group" aria-labelledby={headingId}>
-                <p id={headingId} className="px-3 pt-2 pb-1 text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                <p id={headingId} className="px-4 pt-3 pb-1 text-xs font-semibold tracking-wide text-slate-600 uppercase">
                   {t(`search.group.${group.type}` as const)}
                 </p>
                 {group.items.map((item) => {
@@ -195,10 +196,13 @@ export function SearchAutocomplete({
                       // Keep focus in the input while clicking an option.
                       onMouseDown={(event) => event.preventDefault()}
                       onClick={() => go(item)}
-                      className={`flex min-h-11 cursor-pointer flex-col justify-center px-3 py-1.5 ${active ? "bg-brand-50 outline outline-2 -outline-offset-2 outline-brand-600" : "hover:bg-slate-50"}`}
+                      className={`flex min-h-12 cursor-pointer items-center gap-3 px-3 py-1.5 ${active ? "bg-mist outline outline-2 -outline-offset-2 outline-brand-600" : "hover:bg-slate-50"}`}
                     >
-                      <span className="text-sm font-medium break-words text-slate-900">{item.label}</span>
-                      {detail && <span className="text-xs break-words text-slate-600">{detail}</span>}
+                      <CategoryTile type={item.type} size="sm" />
+                      <span className="flex min-w-0 flex-col">
+                        <span className="text-sm font-medium break-words text-slate-900">{item.label}</span>
+                        {detail && <span className="text-xs break-words text-slate-600">{detail}</span>}
+                      </span>
                     </div>
                   );
                 })}

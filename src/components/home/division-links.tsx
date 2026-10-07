@@ -1,6 +1,8 @@
 import Link from "@/i18n/link";
 import type { DivisionWithDistricts, LocationListItem } from "@/domain/read-models";
 import { getT } from "@/i18n/server";
+import { ChevronIcon } from "@/components/ui/icons";
+import { CHIP_CLASS, INDEX_CHIP_CLASS } from "@/components/ui/chip";
 import { routes } from "@/lib/routes";
 
 const MAX_LOCATIONS = 10;
@@ -20,23 +22,21 @@ export function DivisionLinks({ divisions }: { divisions: readonly DivisionWithD
   if (items.length === 0) return null;
   return (
     <section aria-labelledby="popular-locations">
-      <h2 id="popular-locations" className="text-xl font-semibold text-slate-900">
+      <h2 id="popular-locations" className="text-xl font-semibold text-ink">
         {t("home.popularLocations")}
       </h2>
       <ul className="mt-4 flex flex-wrap gap-2">
         {items.map(({ location }) => (
           <li key={location.id}>
-            <Link
-              href={routes.location(location.slug)}
-              className="inline-flex min-h-11 items-center rounded-full border border-slate-300 bg-white px-4 text-sm font-medium text-slate-800 shadow-sm hover:border-brand-600 hover:text-brand-800"
-            >
+            <Link href={routes.location(location.slug)} className={CHIP_CLASS}>
               {location.name}
             </Link>
           </li>
         ))}
         <li>
-          <Link href={routes.locations()} className="inline-flex min-h-11 items-center px-3 text-sm font-medium text-brand-800 underline underline-offset-2">
-            {t("home.allLocations")}
+          <Link href={routes.locations()} className={INDEX_CHIP_CLASS}>
+            {t("home.cat.locations")}
+            <ChevronIcon className="size-4" />
           </Link>
         </li>
       </ul>

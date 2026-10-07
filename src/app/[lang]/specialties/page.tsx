@@ -36,7 +36,7 @@ export default async function SpecialtiesPage({ params }: SpecialtiesPageProps) 
     <Container className="py-8 sm:py-10">
       <JsonLd data={breadcrumbJsonLd(breadcrumbs, routes.specialties(), lang)} />
       <Breadcrumbs items={breadcrumbs} />
-      <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900">{t("specialty.list.heading")}</h1>
+      <h1 className="mt-4">{t("specialty.list.heading")}</h1>
       <p className="mt-2 max-w-3xl text-slate-700">{t("specialty.list.intro")}</p>
       <div className="mt-6 space-y-8">
         {specialties.length > 0 ? (

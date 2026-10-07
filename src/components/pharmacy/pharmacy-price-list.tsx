@@ -30,11 +30,11 @@ export function PharmacyPriceList({ prices, hasSampleData }: PharmacyPriceListPr
         {t(hasSampleData ? "pharmacy.prices.heading_sample" : "pharmacy.prices.heading")}
       </SectionHeading>
       {prices.length === 0 ? (
-        <p className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700">
+        <p className="rounded-xl bg-slate-50 px-4 py-3 text-slate-700">
           {t("pharmacy.prices.none")}
         </p>
       ) : (
-        <ul className="divide-y divide-slate-200 border-y border-slate-200">
+        <ul className="divide-y divide-slate-100">
           {prices.map(({ price, medicine }) => (
             <li key={price.id} className="flex items-start justify-between gap-4 py-3">
               <div className="min-w-0">

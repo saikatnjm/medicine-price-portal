@@ -1,19 +1,44 @@
 @import "tailwindcss";
 
-/* Design tokens. Restrained palette: neutral slate + one trustworthy teal accent. */
+/*
+ * Design tokens (see docs/UI-REDESIGN-BRIEF.md). The `brand-*` scale is kept for existing pages;
+ * pine / mist / ink are the refreshed core palette. Category tints are soft background + strong
+ * foreground pairs: they always sit next to an icon and a text label, never colour alone.
+ */
 @theme {
+  /* --font-latin / --font-bn are set by next/font on <html> (src/app/[lang]/layout.tsx). */
   --font-sans:
-    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Sans Bengali",
-    "Helvetica Neue", Arial, sans-serif;
+    var(--font-latin), var(--font-bn), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Noto Sans", "Noto Sans Bengali", "Helvetica Neue", Arial, sans-serif;
 
   --color-brand-50: #effaf8;
+  --color-brand-100: #d5f0ec;
   --color-brand-600: #0f766e;
   --color-brand-700: #115e59;
   --color-brand-800: #134e4a;
 
+  --color-pine: #0b4f4a;
+  --color-mist: #eaf4f2;
+  --color-ink: #12302e;
+  /* Emergency / urgent markers only, always with an icon and text. */
+  --color-flag: #c8102e;
+
   --color-notice-50: #fffbeb;
   --color-notice-200: #fde68a;
   --color-notice-900: #78350f;
+
+  --color-cat-medicine-bg: #dff3f0;
+  --color-cat-medicine-fg: #0f6b63;
+  --color-cat-doctor-bg: #e8e9fd;
+  --color-cat-doctor-fg: #3f3fc4;
+  --color-cat-hospital-bg: #def0fc;
+  --color-cat-hospital-fg: #035c8c;
+  --color-cat-pharmacy-bg: #dbf5e3;
+  --color-cat-pharmacy-fg: #13703a;
+  --color-cat-location-bg: #fdf0cc;
+  --color-cat-location-fg: #8a4208;
+  --color-cat-specialty-bg: #f1e6fd;
+  --color-cat-specialty-fg: #6d22b3;
 }
 
 @layer base {
@@ -23,11 +48,32 @@
   }
 
   body {
-    @apply bg-white text-slate-900 antialiased;
+    @apply bg-white text-base text-slate-900 antialiased;
+    line-height: 1.625;
+  }
+
+  /* Bangla needs a little more room between lines. */
+  html[lang="bn"] body {
+    line-height: 1.7;
+  }
+
+  h1 {
+    @apply text-[1.75rem] leading-9 font-semibold tracking-tight text-ink md:text-[2.5rem] md:leading-[3rem];
   }
 
   /* Consistent, clearly visible keyboard focus. */
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-brand-600;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

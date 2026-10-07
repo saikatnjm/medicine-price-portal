@@ -1,4 +1,5 @@
 import Link from "@/i18n/link";
+import { ChevronIcon } from "@/components/ui/icons";
 import { getT } from "@/i18n/server";
 import type { BreadcrumbItem } from "@/lib/seo";
 
@@ -9,7 +10,7 @@ export function Breadcrumbs({ items }: { items: readonly BreadcrumbItem[] }) {
       <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
         {items.map((item, index) => (
           <li key={`${item.name}-${index}`} className="flex items-center gap-1.5">
-            {index > 0 && <span aria-hidden="true">/</span>}
+            {index > 0 && <ChevronIcon className="size-3.5 text-slate-400" />}
             {item.href ? (
               <Link href={item.href} className="underline-offset-2 hover:underline">
                 {item.name}

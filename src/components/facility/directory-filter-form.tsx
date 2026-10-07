@@ -3,12 +3,14 @@ import Link from "@/i18n/link";
 import type { FacilityKind } from "@/domain/healthcare";
 import type { DivisionWithDistricts, FacilityKindCount, SpecialtyListItem } from "@/domain/read-models";
 import { localizePath } from "@/i18n/config";
+import { SearchIcon } from "@/components/ui/icons";
+import { SlidersIcon } from "@/components/ui/icons-entity";
 import { getLocale, getT } from "@/i18n/server";
 import { facilityKindLabel } from "@/lib/directory-labels";
 import { SEARCH_MAX_QUERY_LENGTH } from "@/lib/search-config";
 
 const controlClass =
-  "min-h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-base text-slate-900 focus-visible:border-brand-600";
+  "min-h-11 w-full rounded-xl border border-transparent bg-white px-3 text-base text-slate-900 ring-1 ring-slate-300 focus-visible:ring-brand-600";
 const labelClass = "mb-1 block text-sm font-medium text-slate-700";
 
 function Field({ id, label, children }: { id: string; label: string; children: ReactNode }) {
@@ -78,67 +80,91 @@ export function DirectoryFilterForm(props: DirectoryFilterFormProps) {
     );
   }
 
+  const kindSelect =
+    kinds && kinds.counts.length > 0 ? (
+      <Field id={id("kind")} label={t("facility.filter.type")}>
+        <select id={id("kind")} name="kind" defaultValue={kinds.selected ?? ""} className={controlClass}>
+          <option value="">{t("facility.filter.allTypes")}</option>
+          {kinds.counts.map(({ kind, count }) => (
+            <option key={kind} value={kind}>
+              {facilityKindLabel(t, kind)} ({count.toLocaleString("en-US")})
+            </option>
+          ))}
+        </select>
+      </Field>
+    ) : null;
+  const specialtySelect =
+    specialties && specialties.items.length > 0 ? (
+      <Field id={id("specialty")} label={t("facility.filter.specialty")}>
+        <select id={id("specialty")} name="specialty" defaultValue={specialties.selected} className={controlClass}>
+          <option value="">{t("facility.filter.allSpecialties")}</option>
+          {specialties.items.map(({ specialty, facilityCount }) => (
+            <option key={specialty.slug} value={specialty.slug}>
+              {specialty.name} ({facilityCount.toLocaleString("en-US")})
+            </option>
+          ))}
+        </select>
+      </Field>
+    ) : null;
+  const emergencyBox = emergency?.show ? (
+    <label htmlFor={id("emergency")} className="flex min-h-11 items-center gap-2 text-sm text-slate-800">
+      <input id={id("emergency")} type="checkbox" name="emergency" value="1" defaultChecked={emergency.checked} className="size-5" />
+      {t("directory.card.emergency")}
+    </label>
+  ) : null;
+
+  const hasMore = Boolean(locationSelect || kindSelect || specialtySelect || emergencyBox);
+  // Keep the extra filters open when one of them is in use, so the applied state is visible.
+  const moreActive = Boolean(locations?.selected || kinds?.selected || specialties?.selected || emergency?.checked);
+
   return (
-    <form role="search" action={localizePath(action, getLocale())} method="get" className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Field id={id("q")} label={props.queryLabel}>
-          <input
-            id={id("q")}
-            type="search"
-            name="q"
-            defaultValue={query}
-            maxLength={SEARCH_MAX_QUERY_LENGTH}
-            placeholder={props.queryPlaceholder}
-            autoComplete="off"
-            enterKeyHint="search"
-            className={`${controlClass} placeholder:text-slate-500`}
-          />
-        </Field>
-        {locationSelect}
-        {kinds && kinds.counts.length > 0 && (
-          <Field id={id("kind")} label={t("facility.filter.type")}>
-            <select id={id("kind")} name="kind" defaultValue={kinds.selected ?? ""} className={controlClass}>
-              <option value="">{t("facility.filter.allTypes")}</option>
-              {kinds.counts.map(({ kind, count }) => (
-                <option key={kind} value={kind}>
-                  {facilityKindLabel(t, kind)} ({count.toLocaleString("en-US")})
-                </option>
-              ))}
-            </select>
-          </Field>
-        )}
-        {specialties && specialties.items.length > 0 && (
-          <Field id={id("specialty")} label={t("facility.filter.specialty")}>
-            <select id={id("specialty")} name="specialty" defaultValue={specialties.selected} className={controlClass}>
-              <option value="">{t("facility.filter.allSpecialties")}</option>
-              {specialties.items.map(({ specialty, facilityCount }) => (
-                <option key={specialty.slug} value={specialty.slug}>
-                  {specialty.name} ({facilityCount.toLocaleString("en-US")})
-                </option>
-              ))}
-            </select>
-          </Field>
-        )}
-      </div>
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-        {emergency?.show && (
-          <label htmlFor={id("emergency")} className="flex min-h-11 items-center gap-2 text-sm text-slate-800">
-            <input id={id("emergency")} type="checkbox" name="emergency" value="1" defaultChecked={emergency.checked} className="size-5" />
-            {t("directory.card.emergency")}
+    <form role="search" action={localizePath(action, getLocale())} method="get" className="space-y-3 rounded-2xl bg-slate-50 p-3 sm:p-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+        <div className="min-w-0 flex-1">
+          <label htmlFor={id("q")} className={labelClass}>
+            {props.queryLabel}
           </label>
-        )}
+          <div className="relative">
+            <SearchIcon className="pointer-events-none absolute top-1/2 left-3 size-5 -translate-y-1/2 text-slate-500" />
+            <input
+              id={id("q")}
+              type="search"
+              name="q"
+              defaultValue={query}
+              maxLength={SEARCH_MAX_QUERY_LENGTH}
+              placeholder={props.queryPlaceholder}
+              autoComplete="off"
+              enterKeyHint="search"
+              className={`${controlClass} pl-10 placeholder:text-slate-500`}
+            />
+          </div>
+        </div>
         <button
           type="submit"
-          className="min-h-11 rounded-lg bg-brand-700 px-5 text-sm font-semibold text-white hover:bg-brand-800"
+          className="min-h-11 rounded-full bg-brand-700 px-6 text-sm font-semibold text-white transition-colors hover:bg-brand-800"
         >
           {t("facility.filter.apply")}
         </button>
-        {clearHref && (
-          <Link href={clearHref} className="inline-flex min-h-11 items-center text-sm text-brand-800 underline underline-offset-2">
-            {t("facility.filter.clear")}
-          </Link>
-        )}
       </div>
+      {hasMore && (
+        <details open={moreActive} className="group">
+          <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-slate-800 ring-1 ring-slate-200 [&::-webkit-details-marker]:hidden">
+            <SlidersIcon className="size-4" />
+            {t("facility.filter.more")}
+          </summary>
+          <div className="grid gap-4 pt-3 sm:grid-cols-2 lg:grid-cols-3">
+            {locationSelect}
+            {kindSelect}
+            {specialtySelect}
+            {emergencyBox}
+          </div>
+        </details>
+      )}
+      {clearHref && (
+        <Link href={clearHref} className="inline-flex min-h-11 items-center text-sm font-medium text-brand-800 underline underline-offset-2">
+          {t("facility.filter.clear")}
+        </Link>
+      )}
     </form>
   );
 }

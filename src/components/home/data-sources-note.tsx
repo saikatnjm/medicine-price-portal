@@ -8,8 +8,8 @@ const externalLink = "text-brand-800 underline underline-offset-2";
 export function DataSourcesNote() {
   const t = getT();
   return (
-    <section aria-labelledby="data-sources">
-      <h2 id="data-sources" className="text-xl font-semibold text-slate-900">
+    <section aria-labelledby="data-sources" className="rounded-2xl bg-slate-50 p-5">
+      <h2 id="data-sources" className="text-base font-semibold text-ink">
         {t("home.sources.title")}
       </h2>
       <dl className="mt-4 grid max-w-3xl gap-x-6 gap-y-3 text-sm text-slate-700 sm:grid-cols-[13rem_1fr]">

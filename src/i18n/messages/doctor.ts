@@ -101,6 +101,7 @@ export const doctor = defineMessages({
     "doctor.page.about": "About {name}",
     "doctor.page.healthcareIn": "Healthcare in {place}",
     "doctor.page.specialtyIn": "{specialty} in {place}",
+    "doctor.filters.more": "More filters",
   },
   bn: {
     "doctor.crumb.home": "হোম",
@@ -201,5 +202,6 @@ export const doctor = defineMessages({
     "doctor.page.about": "{name} সম্পর্কে",
     "doctor.page.healthcareIn": "{place}-এর স্বাস্থ্যসেবা",
     "doctor.page.specialtyIn": "{place}-এর {specialty}",
+    "doctor.filters.more": "আরও ফিল্টার",
   },
 });

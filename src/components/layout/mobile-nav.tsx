@@ -40,7 +40,7 @@ export function MobileNav({ items }: { items: readonly NavItem[] }) {
         aria-expanded={open}
         aria-controls="mobile-menu"
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex min-h-11 items-center rounded-md border border-slate-300 px-3 text-sm font-medium text-slate-800 hover:bg-slate-50"
+        className="inline-flex min-h-11 items-center rounded-full border border-slate-300 px-4 text-sm font-medium text-slate-800 transition-colors hover:bg-mist"
       >
         {open ? t("layout.closeMenu") : t("layout.menu")}
       </button>

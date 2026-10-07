@@ -39,10 +39,8 @@ export function SearchTabs({ query, active }: { query: string; active: SearchVie
             <Link
               href={searchViewHref(query, view)}
               aria-current={view === active ? "page" : undefined}
-              className={`inline-flex min-h-11 items-center rounded-md border px-3 text-sm font-medium ${
-                view === active
-                  ? "border-brand-700 bg-brand-50 text-brand-800"
-                  : "border-slate-300 text-slate-700 hover:bg-slate-50"
+              className={`inline-flex min-h-11 items-center rounded-full px-4 text-sm font-medium transition-colors ${
+                view === active ? "bg-pine text-white" : "bg-mist text-pine hover:bg-brand-100"
               }`}
             >
               {t(label)}

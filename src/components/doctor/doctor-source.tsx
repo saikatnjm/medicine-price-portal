@@ -1,4 +1,5 @@
 import type { Doctor, DoctorVerificationMethod } from "@/domain/healthcare";
+import { ChevronIcon } from "@/components/ui/icons";
 import { ReportIssue } from "@/components/directory/report-issue";
 import { DEFAULT_LOCALE, type Locale } from "@/i18n/config";
 import { getLocale, getT } from "@/i18n/server";
@@ -33,31 +34,37 @@ export function DoctorSource({ doctor, source }: { doctor: Doctor; source: DataS
     | undefined;
   const method = methodKey ? t(methodKey) : undefined;
   return (
-    <section aria-labelledby="doctor-source" className="space-y-2 text-sm text-slate-700">
-      <h2 id="doctor-source" className="text-base font-semibold text-slate-900">
-        {t("doctor.source.heading")}
-      </h2>
-      <p>
-        {source && (
-          <>
-            {t("doctor.source.sourceLabel")}{" "}
-            <a
-              href={provenance.recordUrl ?? source.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-brand-800 underline"
-            >
-              {source.name}
-            </a>
-            {t("doctor.dot")}{" "}
-          </>
-        )}
-        {provenance.verifiedAt && <>{t("doctor.source.verifiedOn", { date: formatVerifiedDate(provenance.verifiedAt, lang) })}</>}
-        {method && <>{provenance.verifiedAt ? ", " : t("doctor.source.verificationLabel")}{method}</>}
-        {(provenance.verifiedAt || method) && t("doctor.dot")}
-      </p>
-      <p>{t("doctor.source.note")}</p>
-      <ReportIssue entity="doctor" slug={doctor.slug} name={doctor.name} path={routes.doctor(doctor.slug)} provenance={provenance} />
-    </section>
+    <details className="group rounded-2xl bg-slate-50 px-4 py-1 sm:px-5">
+      <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 text-sm font-medium text-slate-800 [&::-webkit-details-marker]:hidden">
+        <ChevronIcon className="size-4 transition-transform group-open:rotate-90" />
+        {t("facility.sourceDetails.summary")}
+      </summary>
+      <section aria-labelledby="doctor-source" className="space-y-2 pt-3 pb-4 text-sm text-slate-700">
+        <h2 id="doctor-source" className="text-base font-semibold text-slate-900">
+          {t("doctor.source.heading")}
+        </h2>
+        <p>
+          {source && (
+            <>
+              {t("doctor.source.sourceLabel")}{" "}
+              <a
+                href={provenance.recordUrl ?? source.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-brand-800 underline"
+              >
+                {source.name}
+              </a>
+              {t("doctor.dot")}{" "}
+            </>
+          )}
+          {provenance.verifiedAt && <>{t("doctor.source.verifiedOn", { date: formatVerifiedDate(provenance.verifiedAt, lang) })}</>}
+          {method && <>{provenance.verifiedAt ? ", " : t("doctor.source.verificationLabel")}{method}</>}
+          {(provenance.verifiedAt || method) && t("doctor.dot")}
+        </p>
+        <p>{t("doctor.source.note")}</p>
+        <ReportIssue entity="doctor" slug={doctor.slug} name={doctor.name} path={routes.doctor(doctor.slug)} provenance={provenance} />
+      </section>
+    </details>
   );
 }

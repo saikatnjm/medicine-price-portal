@@ -124,3 +124,36 @@ export const ClockIcon = (p: P) => (
     <path d="M12 7v5l3 2" />
   </Icon>
 );
+export const HomeIcon = (p: P) => (
+  <Icon {...p}>
+    <path d="M4 11 12 4l8 7M6 10v10h12V10M10 20v-5h4v5" />
+  </Icon>
+);
+export const BookmarkIcon = ({ filled = false, ...p }: P & { filled?: boolean }) => (
+  <Icon {...p} fill={filled ? "currentColor" : "none"}>
+    <path d="M7 4h10a1 1 0 0 1 1 1v15l-6-4-6 4V5a1 1 0 0 1 1-1Z" />
+  </Icon>
+);
+export const FilterIcon = (p: P) => (
+  <Icon {...p}>
+    <path d="M4 6h16M7 12h10M10 18h4" />
+  </Icon>
+);
+export const CheckBadgeIcon = (p: P) => (
+  <Icon {...p}>
+    <path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6l-7-3Z" />
+    <path d="m9 12 2.2 2.2L15.5 10" />
+  </Icon>
+);
+export const InfoIcon = (p: P) => (
+  <Icon {...p}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 11v5M12 8v.01" />
+  </Icon>
+);
+export const AlertIcon = (p: P) => (
+  <Icon {...p}>
+    <path d="M12 4 3 20h18L12 4Z" />
+    <path d="M12 10v4M12 17v.01" />
+  </Icon>
+);

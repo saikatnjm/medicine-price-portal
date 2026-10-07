@@ -1,5 +1,6 @@
 import Link from "@/i18n/link";
 import type { DivisionWithDistricts, LocationCounts } from "@/domain/read-models";
+import { CategoryTile } from "@/components/ui/category-tile";
 import { getT } from "@/i18n/server";
 import type { Translator } from "@/i18n/translate";
 import { routes } from "@/lib/routes";
@@ -17,7 +18,7 @@ export function locationCountsText(c: LocationCounts, t: Translator = getT()): s
 export function LocationTree({ divisions }: { divisions: DivisionWithDistricts[] }) {
   const t = getT();
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
       {divisions.map(({ division, districts, ...counts }) => (
         <section key={division.id} aria-labelledby={`division-${division.slug}`}>
           <h2 id={`division-${division.slug}`} className="text-xl font-semibold text-slate-900">
@@ -26,13 +27,16 @@ export function LocationTree({ divisions }: { divisions: DivisionWithDistricts[]
             </Link>
           </h2>
           <p className="text-sm text-slate-600">{locationCountsText(counts, t)}</p>
-          <ul className="mt-3 grid gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-3 grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
             {districts.map(({ location, ...c }) => (
-              <li key={location.id}>
-                <Link href={routes.location(location.slug)} className="font-medium text-brand-800 underline">
-                  {location.name}
-                </Link>
-                <span className="block text-sm text-slate-600">{locationCountsText(c, t)}</span>
+              <li key={location.id} className="flex min-w-0 gap-3">
+                <CategoryTile type="location" size="sm" />
+                <div className="min-w-0">
+                  <Link href={routes.location(location.slug)} className="font-medium text-brand-800 hover:underline">
+                    {location.name}
+                  </Link>
+                  <span className="block text-sm text-slate-600">{locationCountsText(c, t)}</span>
+                </div>
               </li>
             ))}
           </ul>

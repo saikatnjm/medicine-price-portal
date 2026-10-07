@@ -16,9 +16,9 @@ interface FilterChipsProps {
   emergency?: { show: boolean; checked: boolean };
 }
 
-const base = "inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full border px-4 text-sm font-medium";
-const off = `${base} border-slate-300 bg-white text-slate-800 hover:border-brand-600`;
-const on = `${base} border-brand-700 bg-brand-700 text-white`;
+const base = "inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full px-4 text-sm font-medium transition-colors";
+const off = `${base} bg-mist text-pine hover:bg-brand-100`;
+const on = `${base} bg-pine text-white`;
 
 /** Quick toggles (type, emergency) as links: no JavaScript needed, and each state has its own URL. */
 export function FilterChips({ path, keep, kinds, selectedKind, emergency }: FilterChipsProps) {
@@ -38,7 +38,7 @@ export function FilterChips({ path, keep, kinds, selectedKind, emergency }: Filt
                 className={active ? on : off}
               >
                 {facilityKindLabel(t, kind)}
-                <span className={active ? "text-white/80" : "text-slate-500"}>{count.toLocaleString("en-US")}</span>
+                <span className={active ? "text-white/80" : "text-pine/70"}>{count.toLocaleString("en-US")}</span>
               </Link>
             </li>
           );

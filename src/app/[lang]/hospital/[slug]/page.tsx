@@ -5,8 +5,6 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { JsonLd } from "@/components/common/json-ld";
 import { GooglePlaceInfo } from "@/components/directory/google-place-info";
 import { LocationBlock } from "@/components/directory/location-block";
-import { ReportIssue } from "@/components/directory/report-issue";
-import { SourceSection } from "@/components/directory/source-attribution";
 import { ContactDetails } from "@/components/facility/contact-details";
 import { FacilityDepartments } from "@/components/facility/facility-departments";
 import { FacilityDoctors } from "@/components/facility/facility-doctors";
@@ -14,6 +12,8 @@ import { FacilityOverview } from "@/components/facility/facility-overview";
 import { MoreInArea } from "@/components/facility/more-in-area";
 import { FacilityNearbySections } from "@/components/facility/nearby-sections";
 import { QuickActions } from "@/components/facility/quick-actions";
+import { QuickFacts } from "@/components/facility/quick-facts";
+import { SourceDetails } from "@/components/facility/source-details";
 import { Faq } from "@/components/common/faq";
 import { NextSteps } from "@/components/common/next-steps";
 import { EntityToolbar } from "@/components/retention/entity-toolbar";
@@ -71,7 +71,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
     <Container className="py-8 sm:py-10">
       <JsonLd data={[facilityJsonLd(detail, lang), breadcrumbJsonLd(breadcrumbs, path, lang)]} />
       <Breadcrumbs items={breadcrumbs} />
-      <div className="mt-4 space-y-10">
+      <div className="mt-4 space-y-8">
         <HeroCard>
           <FacilityOverview detail={detail} />
           <QuickActions
@@ -92,6 +92,9 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
             path={path}
           />
         </HeroCard>
+        <QuickFacts beds={facility.beds} openingHours={facility.openingHours} departments={detail.specialties.length} />
+        <FacilityDepartments detail={detail} />
+        <FacilityDoctors doctors={detail.doctors} facilityName={facility.name} />
         <LocationBlock
           name={facility.name}
           address={facility.address}
@@ -107,12 +110,8 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
           phone={facility.phone}
           website={facility.website}
           email={facility.email}
-          openingHours={facility.openingHours}
-          beds={facility.beds}
           omitWhenEmpty
         />
-        <FacilityDepartments detail={detail} />
-        <FacilityDoctors doctors={detail.doctors} facilityName={facility.name} />
         <FacilityNearbySections nearby={detail.nearby} />
         <MoreInArea place={place} type="hospitals" />
         <NextSteps
@@ -141,9 +140,16 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
             },
           ]}
         />
-        <div className="space-y-6 border-t border-slate-200 pt-6">
-          <SourceSection source={detail.source} provenance={facility.provenance} sourceName={facility.sourceName} />
-          <ReportIssue entity="hospital" slug={facility.slug} name={facility.name} path={path} provenance={facility.provenance} />
+        <div className="space-y-4">
+          <SourceDetails
+            entity="hospital"
+            slug={facility.slug}
+            name={facility.name}
+            path={path}
+            source={detail.source}
+            provenance={facility.provenance}
+            sourceName={facility.sourceName}
+          />
           <p className="text-sm text-slate-600">{t("facility.disclaimer")}</p>
         </div>
       </div>

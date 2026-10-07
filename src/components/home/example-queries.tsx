@@ -1,5 +1,6 @@
 import Link from "@/i18n/link";
 import { getT } from "@/i18n/server";
+import { WHITE_CHIP_CLASS } from "@/components/ui/chip";
 import { searchHref } from "@/lib/search-params";
 
 const POPULAR_SEARCHES: readonly string[] = [
@@ -9,7 +10,7 @@ const POPULAR_SEARCHES: readonly string[] = [
   "Pharmacies in Dhanmondi",
 ];
 
-/** Homepage "Popular searches": quick chips that run a normal search. */
+/** Homepage "Popular searches": quick chips (for the mist hero) that run a normal search. */
 export function ExampleQueries() {
   const t = getT();
   return (
@@ -22,7 +23,7 @@ export function ExampleQueries() {
           <li key={example}>
             <Link
               href={searchHref(example)}
-              className="inline-flex min-h-11 items-center rounded-full border border-slate-300 bg-white px-4 text-sm font-medium text-slate-800 shadow-sm hover:border-brand-600 hover:text-brand-800"
+              className={WHITE_CHIP_CLASS}
             >
               {example}
             </Link>

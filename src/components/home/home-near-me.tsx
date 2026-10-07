@@ -6,6 +6,7 @@ import { useT } from "@/i18n/client";
 import { formatNearParam } from "@/lib/geo";
 import { routes } from "@/lib/routes";
 import { buildHref } from "@/components/directory/pagination";
+import { WHITE_CHIP_CLASS } from "@/components/ui/chip";
 import { PinIcon } from "@/components/ui/icons";
 
 type Status = "idle" | "locating" | "denied" | "unavailable";
@@ -35,8 +36,7 @@ export function HomeNearMe({ showDoctors = false }: { showDoctors?: boolean }) {
     );
   }
 
-  const chip =
-    "inline-flex min-h-11 items-center rounded-full border border-brand-600 bg-white px-4 text-sm font-semibold text-brand-800 hover:bg-brand-50";
+  const chip = WHITE_CHIP_CLASS;
 
   return (
     <div className="space-y-3">
@@ -68,7 +68,7 @@ export function HomeNearMe({ showDoctors = false }: { showDoctors?: boolean }) {
           type="button"
           onClick={locate}
           disabled={status === "locating"}
-          className="inline-flex min-h-12 items-center gap-2 rounded-full bg-brand-700 px-6 text-base font-semibold text-white shadow-sm hover:bg-brand-800 disabled:opacity-60"
+          className="inline-flex min-h-12 items-center gap-2 rounded-full bg-pine px-6 text-base font-semibold text-white transition-colors hover:bg-brand-700 disabled:opacity-60"
         >
           <PinIcon className="size-5" />
           {status === "locating" ? t("home.near.locating") : t("home.near.locate")}

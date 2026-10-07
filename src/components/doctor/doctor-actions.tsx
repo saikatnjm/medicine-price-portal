@@ -1,11 +1,13 @@
+import { NavigateIcon, PhoneIcon } from "@/components/ui/icons";
+import { CalendarIcon } from "@/components/ui/icons-entity";
 import type { ChamberView } from "@/domain/read-models";
 import { getT } from "@/i18n/server";
 import { mapLinksFor } from "@/lib/maps";
 
 const primary =
-  "inline-flex min-h-11 items-center rounded-md bg-brand-700 px-4 text-sm font-semibold text-white hover:bg-brand-800";
+  "inline-flex min-h-11 items-center gap-2 rounded-full bg-brand-700 px-5 text-base font-semibold text-white transition-colors hover:bg-brand-800";
 const secondary =
-  "inline-flex min-h-11 items-center rounded-md border border-slate-300 px-4 text-sm font-medium text-slate-800 hover:bg-slate-50";
+  "inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 text-base font-medium text-slate-800 ring-1 ring-slate-300 transition-colors hover:bg-slate-50";
 
 export function telHref(phone: string): string {
   return `tel:${phone.replace(/[^\d+]/g, "")}`;
@@ -49,17 +51,20 @@ export function DoctorActions({
     <div className="flex flex-wrap gap-2" role="group" aria-label={t("doctor.actions.contact", { name })}>
       {phone && (
         <a href={telHref(phone)} className={primary}>
+          <PhoneIcon />
           {t("doctor.actions.call")}<span className="sr-only"> {phone}</span>
         </a>
       )}
       {directions && (
         <a href={directions.directionsUrl} target="_blank" rel="noopener noreferrer" className={secondary}>
+          <NavigateIcon />
           {t("doctor.actions.directions")}
           <span className="sr-only"> {t("doctor.actions.directionsSr", { name: located?.name ?? "" })}</span>
         </a>
       )}
       {appointmentUrl && (
         <a href={appointmentUrl} target="_blank" rel="noopener noreferrer" className={secondary}>
+          <CalendarIcon />
           {t("doctor.actions.appointment")}
           <span className="sr-only"> {t("doctor.actions.appointmentSr", { name })}</span>
         </a>
