@@ -2,6 +2,7 @@
  * Site-wide configuration from environment variables.
  * See .env.example. No secrets are required in Phase 1.
  */
+import { resolveGaMeasurementId } from "./analytics";
 
 const LOCAL_SITE_URL = "http://localhost:3000";
 
@@ -47,4 +48,6 @@ export const siteConfig = {
   url: resolveSiteUrl(),
   indexable: resolveIndexable(),
   reportUrl: resolveReportUrl(),
+  /** GA4 measurement id; null disables analytics (unset, invalid, or a Vercel preview). */
+  gaMeasurementId: resolveGaMeasurementId(),
 } as const;

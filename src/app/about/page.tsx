@@ -136,6 +136,20 @@ export default async function AboutPage() {
             </p>
           ) : null}
         </section>
+
+        {siteConfig.gaMeasurementId ? (
+          <section aria-labelledby="analytics" className="space-y-3 text-slate-700">
+            <h2 id="analytics" className={h2}>
+              Visitor statistics
+            </h2>
+            <p>
+              We use Google Analytics to count visits and see which pages are useful. It records
+              the pages you open and general device and country information. We do not send your
+              location from the &ldquo;near me&rdquo; button, and we have no accounts or personal
+              profiles.
+            </p>
+          </section>
+        ) : null}
       </div>
     </Container>
   );

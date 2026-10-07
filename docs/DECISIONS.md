@@ -129,3 +129,12 @@ Hospital and pharmacy list pages offer a "Show map" button (`ResultsMap`) that s
 
 ## D35 — Optional Google Places enrichment: place ID stored, ratings live only (Phase 3)
 Supersedes the "no Places API" part of D27. Listings may carry `google: { placeId, lastChecked }`, produced by an optional manual script (`npm run data:match-google-places`, official Places API (New) Text Search; accepts a match only within 150 m and with name similarity >= 0.6) and merged by `data:build-healthcare` from `data/google/place-ids.json`. Ratings and review counts are never stored (Google terms): `GooglePlaceInfo` fetches them live per request (Place Details, `no-store`, 2.5 s timeout, any failure = no details) only when `GOOGLE_PLACES_API_KEY` (server-only) and `GOOGLE_PLACES_LIVE_DETAILS=true` are set. Without live details it shows a key-free "View on Google Maps" link; without a place ID, nothing. Google data is labelled "Google rating" and attributed "Information from Google Maps", never mixed with our own information; no review text and no `aggregateRating` JSON-LD. Rationale: useful extra context for visitors, opt-in cost, no dependency (the site works without any Google key), and compliance with caching terms.
+
+## D36 — Optional Google Analytics 4
+
+GA4 loads only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set and never on Vercel
+preview deployments. Scripts load `afterInteractive` via `next/script` (no npm
+dependency). Automatic page views are disabled; a client tracker sends one
+`page_view` per navigation after removing the `near` parameter (the visitor's
+rounded position from "near me"), so location never reaches analytics. The
+/about page discloses analytics when it is enabled.

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { pageRobots, twitterCard } from "@/lib/seo";
@@ -42,6 +43,12 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
           {children}
         </main>
         <SiteFooter />
+        {siteConfig.gaMeasurementId && (
+          // Suspense: the page-view tracker reads search params on the client.
+          <Suspense fallback={null}>
+            <GoogleAnalytics measurementId={siteConfig.gaMeasurementId} />
+          </Suspense>
+        )}
       </body>
     </html>
   );
