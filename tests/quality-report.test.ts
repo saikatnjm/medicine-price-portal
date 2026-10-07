@@ -54,11 +54,11 @@ describe("quality report checks", () => {
     const copy = JSON.stringify(facilities);
     const report = buildQualityReport({ facilities }, { now: new Date("2026-10-07T00:00:00Z"), cap: 2 });
     const f = report.datasets.facilities as Record<string, { count: number; examples: string[] }>;
-    expect(f.missingName.count).toBe(1);
-    expect(f.malformedPhone.count).toBe(5);
-    expect(f.malformedPhone.examples).toHaveLength(2);
-    expect(f.missingCoordinates.count).toBe(5);
-    expect(f.needsReview.count).toBe(5);
+    expect(f.missingName!.count).toBe(1);
+    expect(f.malformedPhone!.count).toBe(5);
+    expect(f.malformedPhone!.examples).toHaveLength(2);
+    expect(f.missingCoordinates!.count).toBe(5);
+    expect(f.needsReview!.count).toBe(5);
     expect(report.totals.error).toBeGreaterThan(0);
     expect(JSON.stringify(facilities)).toBe(copy);
   });
