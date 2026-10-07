@@ -59,7 +59,7 @@ Focused commits. Never commit `.env`, `.env.local`, `node_modules`, `.next`, sec
 
 ## Vercel
 
-Deploys from GitHub. Node.js 24.x. Set `NEXT_PUBLIC_SITE_URL` for production. Decide on indexing (`SITE_INDEXABLE`) deliberately; preview deployments are never indexed.
+Deploys from GitHub. Node.js 24.x. Set `NEXT_PUBLIC_SITE_URL` for production. Decide on indexing (`SITE_INDEXABLE`) deliberately; preview deployments are never indexed. Production: `NEXT_PUBLIC_SITE_URL=https://bdhealthsearch.vercel.app`.
 
 ## Dependencies
 

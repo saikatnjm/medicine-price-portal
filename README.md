@@ -8,7 +8,7 @@ A medicine search and healthcare directory portal for Bangladesh. The catalogue 
 
 ## Domain and branding
 
-No domain is hard-coded. Every absolute URL (canonical, OpenGraph, sitemap, JSON-LD) comes from `siteConfig.url`: `NEXT_PUBLIC_SITE_URL`, else `VERCEL_PROJECT_PRODUCTION_URL`, else `http://localhost:3000`. To move to a custom domain, set `NEXT_PUBLIC_SITE_URL` and redeploy. The GitHub repository is still named `medicine-price-portal`.
+No domain is hard-coded. Every absolute URL (canonical, OpenGraph, sitemap, JSON-LD) comes from `siteConfig.url`: `NEXT_PUBLIC_SITE_URL`, else `VERCEL_PROJECT_PRODUCTION_URL`, else `http://localhost:3000`. To move to a custom domain, set `NEXT_PUBLIC_SITE_URL` and redeploy. The GitHub repository is still named `medicine-price-portal`. Production domain: `https://bdhealthsearch.vercel.app` (set `NEXT_PUBLIC_SITE_URL` to it in Vercel, no trailing slash).
 
 ## Optional integrations
 
