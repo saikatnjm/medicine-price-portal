@@ -43,16 +43,17 @@ describe("real medicine catalogue", () => {
 
   it("has required fields, controlled dosage forms and traceable provenance", () => {
     const sourceIds = new Set(sources.map((s) => s.id));
+    const forms = new Set<string>(DOSAGE_FORMS);
+    // Collect failures instead of calling expect() 36,000 times (slow under load).
+    const problems: string[] = [];
     for (const m of medicines) {
-      expect(
-        m.brandName && m.genericId && m.manufacturerId && m.dosageFormLabel,
-        m.id,
-      ).toBeTruthy();
-      expect(DOSAGE_FORMS).toContain(m.dosageForm);
-      expect(sourceIds.has(m.provenance.sourceId), m.id).toBe(true);
-      expect(m.provenance.recordId, m.id).toBeTruthy();
-      expect(m.provenance.status).toBe("registered");
+      if (!(m.brandName && m.genericId && m.manufacturerId && m.dosageFormLabel)) problems.push(`${m.id}: missing field`);
+      if (!forms.has(m.dosageForm)) problems.push(`${m.id}: dosage form ${m.dosageForm}`);
+      if (!sourceIds.has(m.provenance.sourceId)) problems.push(`${m.id}: unknown source`);
+      if (!m.provenance.recordId) problems.push(`${m.id}: no record id`);
+      if (m.provenance.status !== "registered") problems.push(`${m.id}: status ${m.provenance.status}`);
     }
+    expect(problems).toEqual([]);
   });
 
   it("does not invent prices, doctors, pharmacies or unpublished fields", () => {
