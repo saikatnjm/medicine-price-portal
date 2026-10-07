@@ -1,5 +1,7 @@
 import type { ComponentType } from "react";
-import Link from "next/link";
+import Link from "@/i18n/link";
+import { getT } from "@/i18n/server";
+import type { Translator } from "@/i18n/translate";
 import type { DirectorySummary } from "@/domain/read-models";
 import { routes } from "@/lib/routes";
 import {
@@ -23,25 +25,31 @@ interface Category {
   fallback: string;
 }
 
-function countText(count: number, singular: string, plural: string): string | null {
-  return count > 0 ? `${numberFormatter.format(count)} ${count === 1 ? singular : plural}` : null;
+type CountUnit = "product" | "listing" | "district" | "specialty";
+
+function countText(t: Translator, count: number, unit: CountUnit): string | null {
+  if (count <= 0) return null;
+  const key = `home.count.${unit}.${count === 1 ? "one" : "other"}` as const;
+  return t(key, { n: numberFormatter.format(count) });
 }
 
 /** Large entry-point cards with real counts; empty datasets are labelled honestly. */
 export function CategoryLinks({ summary }: { summary: DirectorySummary }) {
+  const t = getT();
+  const notLoaded = t("home.cat.notLoaded");
   const categories: Category[] = [
-    { label: "Medicines", href: routes.search(), Icon: PillIcon, detail: countText(summary.medicineCount, "product", "products"), fallback: "Not loaded yet" },
+    { label: t("home.cat.medicines"), href: routes.search(), Icon: PillIcon, detail: countText(t, summary.medicineCount, "product"), fallback: notLoaded },
     // Doctor profiles have no legitimate source yet: say so instead of showing 0.
-    { label: "Doctors", href: routes.doctors(), Icon: DoctorIcon, detail: null, fallback: "Coming soon" },
-    { label: "Hospitals & Clinics", href: routes.hospitals(), Icon: HospitalIcon, detail: countText(summary.facilityCount, "listing", "listings"), fallback: "Not loaded yet" },
-    { label: "Pharmacies", href: routes.pharmacies(), Icon: PharmacyIcon, detail: countText(summary.pharmacyCount, "listing", "listings"), fallback: "Not loaded yet" },
-    { label: "Locations", href: routes.locations(), Icon: PinIcon, detail: countText(summary.districtCount, "district", "districts"), fallback: "Not loaded yet" },
-    { label: "Specialties", href: routes.specialties(), Icon: StethoscopeIcon, detail: countText(summary.specialtyCount, "specialty", "specialties"), fallback: "Not loaded yet" },
+    { label: t("home.cat.doctors"), href: routes.doctors(), Icon: DoctorIcon, detail: null, fallback: t("home.cat.comingSoon") },
+    { label: t("home.cat.hospitals"), href: routes.hospitals(), Icon: HospitalIcon, detail: countText(t, summary.facilityCount, "listing"), fallback: notLoaded },
+    { label: t("home.cat.pharmacies"), href: routes.pharmacies(), Icon: PharmacyIcon, detail: countText(t, summary.pharmacyCount, "listing"), fallback: notLoaded },
+    { label: t("home.cat.locations"), href: routes.locations(), Icon: PinIcon, detail: countText(t, summary.districtCount, "district"), fallback: notLoaded },
+    { label: t("home.cat.specialties"), href: routes.specialties(), Icon: StethoscopeIcon, detail: countText(t, summary.specialtyCount, "specialty"), fallback: notLoaded },
   ];
   return (
     <section aria-labelledby="browse-categories">
       <h2 id="browse-categories" className="sr-only">
-        Browse the directory
+        {t("home.cat.browse")}
       </h2>
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
         {categories.map(({ label, href, Icon, detail, fallback }) => (

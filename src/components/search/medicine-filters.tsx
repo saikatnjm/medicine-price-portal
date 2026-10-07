@@ -1,5 +1,7 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 import type { FacetOption, SearchResult } from "@/domain/read-models";
+import { localizePath } from "@/i18n/config";
+import { getLocale, getT } from "@/i18n/server";
 import { searchViewHref } from "./search-tabs";
 
 interface FilterSelectProps {
@@ -9,6 +11,7 @@ interface FilterSelectProps {
 }
 
 function FilterSelect({ name, label, options }: FilterSelectProps) {
+  const t = getT();
   const id = `filter-${name}`;
   return (
     <div className="flex flex-col gap-1">
@@ -21,7 +24,7 @@ function FilterSelect({ name, label, options }: FilterSelectProps) {
         defaultValue={options.find((o) => o.selected)?.value ?? ""}
         className="min-h-11 rounded-md border border-slate-300 bg-white px-3 text-base text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
       >
-        <option value="">All</option>
+        <option value="">{t("search.filter.all")}</option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label} ({option.count})
@@ -38,20 +41,21 @@ function FilterSelect({ name, label, options }: FilterSelectProps) {
  */
 export function MedicineFilters({ result }: { result: SearchResult }) {
   if (result.status !== "ok") return null;
+  const t = getT();
   const { facets, appliedFilters, query } = result;
   const selects = [
-    { name: "generic", label: "Generic", options: facets.generics },
-    { name: "manufacturer", label: "Manufacturer", options: facets.manufacturers },
-    { name: "form", label: "Dosage form", options: facets.dosageForms },
+    { name: "generic", label: t("search.filter.generic"), options: facets.generics },
+    { name: "manufacturer", label: t("search.filter.manufacturer"), options: facets.manufacturers },
+    { name: "form", label: t("search.filter.form"), options: facets.dosageForms },
   ].filter((select) => select.options.length > 1);
   if (selects.length === 0) return null;
 
   const hasFilters = Object.keys(appliedFilters).length > 0;
   return (
     <form
-      action="/search"
+      action={localizePath("/search", getLocale())}
       method="get"
-      aria-label="Filter medicines"
+      aria-label={t("search.filter.aria")}
       className="mb-6 rounded-md border border-slate-200 bg-slate-50 p-4"
     >
       <input type="hidden" name="q" value={query} />
@@ -66,14 +70,14 @@ export function MedicineFilters({ result }: { result: SearchResult }) {
           type="submit"
           className="inline-flex min-h-11 items-center rounded-md bg-brand-700 px-4 text-sm font-medium text-white hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
         >
-          Apply
+          {t("search.filter.apply")}
         </button>
         {hasFilters && (
           <Link
             href={searchViewHref(query, "medicine")}
             className="inline-flex min-h-11 items-center text-sm font-medium text-brand-800 underline"
           >
-            Clear filters
+            {t("search.filter.clear")}
           </Link>
         )}
       </div>

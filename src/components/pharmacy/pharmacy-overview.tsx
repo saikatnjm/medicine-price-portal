@@ -1,8 +1,10 @@
 import { ReviewNotice, TrustBadge } from "@/components/directory/trust-badge";
 import type { PharmacyDetail } from "@/domain/read-models";
+import { getT } from "@/i18n/server";
 
 /** h1, Bangla name, kind, place, address, trust badge and description. */
 export function PharmacyOverview({ detail }: { detail: PharmacyDetail }) {
+  const t = getT();
   const { pharmacy, place } = detail;
   return (
     <header className="space-y-2">
@@ -13,7 +15,7 @@ export function PharmacyOverview({ detail }: { detail: PharmacyDetail }) {
         </p>
       )}
       <p className="text-lg text-slate-800">
-        Pharmacy
+        {t("pharmacy.overview.kind")}
         {place.label && <span className="text-slate-600"> · {place.label}</span>}
       </p>
       {pharmacy.address && <p className="text-slate-700">{pharmacy.address}</p>}

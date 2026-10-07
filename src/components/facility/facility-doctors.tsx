@@ -1,27 +1,29 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 import { SectionHeading } from "@/components/common/section-heading";
 import { DoctorCard, ResultList } from "@/components/directory/result-cards";
 import type { DoctorListItem } from "@/domain/read-models";
+import { getT } from "@/i18n/server";
 import { routes } from "@/lib/routes";
 
 export function FacilityDoctors({ doctors, facilityName }: { doctors: readonly DoctorListItem[]; facilityName: string }) {
+  const t = getT();
+  const heading = t("facility.doctors.heading", { name: facilityName });
   return (
     <section aria-labelledby="doctors">
-      <SectionHeading id="doctors">Doctors at {facilityName}</SectionHeading>
+      <SectionHeading id="doctors">{heading}</SectionHeading>
       {doctors.length > 0 ? (
-        <ResultList label={`Doctors at ${facilityName}`}>
+        <ResultList label={heading}>
           {doctors.map((item) => (
             <DoctorCard key={item.doctor.id} item={item} />
           ))}
         </ResultList>
       ) : (
         <p className="text-slate-700">
-          Doctor listings for this place are not available yet. We only publish doctor profiles from sources that are
-          verified or given with consent.{" "}
+          {t("facility.doctors.empty")}{" "}
           <Link href={routes.doctors()} className="text-brand-800 underline underline-offset-2">
-            See the doctors section
+            {t("facility.doctors.see")}
           </Link>
-          .
+          {t("directory.stop")}
         </p>
       )}
     </section>

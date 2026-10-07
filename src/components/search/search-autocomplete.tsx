@@ -3,10 +3,23 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
 import type { SuggestionGroup, SuggestionItem } from "@/domain/read-models";
+import { useLocale, useT } from "@/i18n/client";
+import { localizePath } from "@/i18n/config";
+import type { Translator } from "@/i18n/translate";
 import { routes } from "@/lib/routes";
 import { SEARCH_MAX_QUERY_LENGTH, SEARCH_MIN_QUERY_LENGTH } from "@/lib/search-config";
 
 const DEBOUNCE_MS = 200;
+
+/** The suggest API is locale-free (English), so its fixed location labels are translated here. */
+function suggestionDetail(t: Translator, item: SuggestionItem): string | undefined {
+  if (item.type !== "location" || !item.detail) return item.detail;
+  if (item.detail === "Division") return t("search.suggestions.division");
+  if (item.detail === "District") return t("search.suggestions.district");
+  if (item.detail === "Area") return t("search.suggestions.area");
+  const district = /^Area · (.+)$/.exec(item.detail)?.[1];
+  return district ? t("search.suggestions.areaIn", { district }) : item.detail;
+}
 
 interface SearchAutocompleteProps {
   /** Id of the <input>; the visible <label htmlFor> must point at it. */
@@ -27,6 +40,8 @@ export function SearchAutocomplete({
   placeholder,
   className = "",
 }: SearchAutocompleteProps) {
+  const t = useT();
+  const lang = useLocale();
   const reactId = useId();
   const listboxId = `${inputId}-listbox`;
   const [value, setValue] = useState(defaultValue);
@@ -58,7 +73,11 @@ export function SearchAutocomplete({
         const count = next.reduce((sum, group) => sum + group.items.length, 0);
         setGroups(next);
         setActiveIndex(-1);
-        setStatus(count > 0 ? `${count} suggestion${count === 1 ? "" : "s"} available` : "No suggestions");
+        setStatus(
+          count > 0
+            ? t(count === 1 ? "search.suggestions.available.one" : "search.suggestions.available.other", { n: count })
+            : t("search.suggestions.none"),
+        );
       } catch (error) {
         if ((error as Error).name === "AbortError") return;
         // Suggestions are optional: fall back to the plain form.
@@ -70,12 +89,12 @@ export function SearchAutocomplete({
       clearTimeout(timer);
       controller.abort();
     };
-  }, [query, tooShort]);
+  }, [query, tooShort, t]);
 
   function go(item: SuggestionItem) {
     setOpen(false);
     // Full navigation keeps this component free of router context (and works in tests).
-    window.location.assign(item.href);
+    window.location.assign(localizePath(item.href, lang));
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
@@ -150,7 +169,7 @@ export function SearchAutocomplete({
       <div
         id={listboxId}
         role="listbox"
-        aria-label="Search suggestions"
+        aria-label={t("search.suggestions.aria")}
         hidden={!showList}
         className="absolute inset-x-0 top-full z-30 mt-1 max-h-96 overflow-y-auto rounded-xl border border-slate-200 bg-white py-1 shadow-lg"
       >
@@ -160,12 +179,13 @@ export function SearchAutocomplete({
             return (
               <div key={group.type} role="group" aria-labelledby={headingId}>
                 <p id={headingId} className="px-3 pt-2 pb-1 text-xs font-semibold tracking-wide text-slate-600 uppercase">
-                  {group.label}
+                  {t(`search.group.${group.type}` as const)}
                 </p>
                 {group.items.map((item) => {
                   optionIndex += 1;
                   const index = optionIndex;
                   const active = index === activeIndex;
+                  const detail = suggestionDetail(t, item);
                   return (
                     <div
                       key={item.href}
@@ -178,7 +198,7 @@ export function SearchAutocomplete({
                       className={`flex min-h-11 cursor-pointer flex-col justify-center px-3 py-1.5 ${active ? "bg-brand-50 outline outline-2 -outline-offset-2 outline-brand-600" : "hover:bg-slate-50"}`}
                     >
                       <span className="text-sm font-medium break-words text-slate-900">{item.label}</span>
-                      {item.detail && <span className="text-xs break-words text-slate-600">{item.detail}</span>}
+                      {detail && <span className="text-xs break-words text-slate-600">{detail}</span>}
                     </div>
                   );
                 })}

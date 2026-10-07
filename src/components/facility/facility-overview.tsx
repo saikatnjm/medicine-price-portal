@@ -1,13 +1,12 @@
 import { ReviewNotice, TrustBadge } from "@/components/directory/trust-badge";
-import { FACILITY_KIND_LABEL, OWNERSHIP_LABEL } from "@/domain/healthcare";
 import type { FacilityDetail } from "@/domain/read-models";
+import { getT } from "@/i18n/server";
+import { facilityKindPhrase } from "@/lib/directory-labels";
 
 /** h1, Bangla name, kind/ownership, place, trust badge and any review notice. */
 export function FacilityOverview({ detail }: { detail: FacilityDetail }) {
   const { facility, place } = detail;
-  const kind = [facility.ownership ? OWNERSHIP_LABEL[facility.ownership] : null, FACILITY_KIND_LABEL[facility.kind].toLowerCase()]
-    .filter(Boolean)
-    .join(" ");
+  const t = getT();
   return (
     <header className="space-y-2">
       <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">{facility.name}</h1>
@@ -17,7 +16,7 @@ export function FacilityOverview({ detail }: { detail: FacilityDetail }) {
         </p>
       )}
       <p className="text-lg text-slate-800">
-        {kind.charAt(0).toUpperCase() + kind.slice(1)}
+        {facilityKindPhrase(t, facility.kind, facility.ownership)}
         {place.label && <span className="text-slate-600"> · {place.label}</span>}
       </p>
       <p>
@@ -25,8 +24,8 @@ export function FacilityOverview({ detail }: { detail: FacilityDetail }) {
       </p>
       {facility.emergency === true && (
         <p className="text-sm font-medium text-slate-900">
-          Emergency services listed{" "}
-          <span className="font-normal text-slate-600">(as stated by the data source; confirm by phone)</span>
+          {t("directory.card.emergency")}{" "}
+          <span className="font-normal text-slate-600">{t("facility.overview.emergencyNote")}</span>
         </p>
       )}
       <ReviewNotice record={facility} />

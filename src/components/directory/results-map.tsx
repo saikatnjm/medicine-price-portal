@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { localizePath, type Locale } from "@/i18n/config";
+import { useLocale, useT } from "@/i18n/client";
 import type { MapMarker } from "@/lib/map-markers";
 
 const LEAFLET_VERSION = "1.9.4";
@@ -82,10 +84,11 @@ function loadLeaflet(): Promise<LeafletGlobal> {
 }
 
 /** Popup content built with textContent only, so record data is never parsed as HTML. */
-function popupFor(marker: MapMarker): HTMLElement {
+function popupFor(marker: MapMarker, viewLabel: string, lang: Locale): HTMLElement {
+  const href = localizePath(marker.href, lang);
   const root = document.createElement("div");
   const link = document.createElement("a");
-  link.href = marker.href;
+  link.href = href;
   link.textContent = marker.name;
   link.style.fontWeight = "600";
   root.appendChild(link);
@@ -96,19 +99,19 @@ function popupFor(marker: MapMarker): HTMLElement {
     root.appendChild(label);
   }
   const view = document.createElement("a");
-  view.href = marker.href;
-  view.textContent = "View details";
+  view.href = href;
+  view.textContent = viewLabel;
   view.style.display = "inline-block";
   view.style.marginTop = "6px";
   root.appendChild(view);
   return root;
 }
 
-function drawMap(L: LeafletGlobal, element: HTMLElement, markers: readonly MapMarker[]): LeafletMap {
+function drawMap(L: LeafletGlobal, element: HTMLElement, markers: readonly MapMarker[], viewLabel: string, lang: Locale): LeafletMap {
   const map = L.map(element);
   L.tileLayer(TILE_URL, { maxZoom: 19, attribution: TILE_ATTRIBUTION }).addTo(map);
   for (const m of markers) {
-    L.marker([m.lat, m.lon], { title: m.name, alt: m.name }).addTo(map).bindPopup(popupFor(m));
+    L.marker([m.lat, m.lon], { title: m.name, alt: m.name }).addTo(map).bindPopup(popupFor(m, viewLabel, lang));
   }
   const [first] = markers;
   if (markers.length === 1 && first) {
@@ -153,6 +156,9 @@ interface ResultsMapProps {
  * the visitor presses "Show map". Mobile: the map opens above the list. Desktop: list and map side by side.
  */
 export function ResultsMap({ markers, children }: ResultsMapProps) {
+  const t = useT();
+  const lang = useLocale();
+  const viewLabel = t("directory.card.viewDetails");
   // Desktop: list and map side by side from the start (Leaflet is still only fetched on the client, after
   // hydration). Mobile: the map stays closed until "Show map". A choice by the visitor always wins.
   const isDesktop = useSyncExternalStore(subscribeDesktop, desktopSnapshot, () => false);
@@ -170,7 +176,7 @@ export function ResultsMap({ markers, children }: ResultsMapProps) {
       (L) => {
         const element = containerRef.current;
         if (cancelled || !element) return;
-        map = drawMap(L, element, markers);
+        map = drawMap(L, element, markers, viewLabel, lang);
         setStatus("ready");
       },
       () => {
@@ -181,7 +187,7 @@ export function ResultsMap({ markers, children }: ResultsMapProps) {
       cancelled = true;
       map?.remove();
     };
-  }, [open, markers]);
+  }, [open, markers, viewLabel, lang]);
 
   if (markers.length < 1) return <>{children}</>;
 
@@ -199,24 +205,24 @@ export function ResultsMap({ markers, children }: ResultsMapProps) {
         }}
         className="mb-4 inline-flex min-h-11 items-center gap-2 rounded-full border border-slate-300 bg-white px-5 text-sm font-medium text-slate-800 shadow-sm hover:bg-slate-50"
       >
-        {open ? "Hide map" : "Show map"}
+        {open ? t("directory.map.hide") : t("directory.map.show")}
       </button>
       <div className={open ? "lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-start lg:gap-6" : undefined}>
         <div id={regionId} className={open ? "mb-4 lg:order-last lg:mb-0 lg:sticky lg:top-4" : undefined}>
           {open && (
-            <div role="region" aria-label="Map of results on this page" className="space-y-2">
+            <div role="region" aria-label={t("directory.map.regionLabel")} className="space-y-2">
               <p className="text-sm text-slate-700">
-                Map shows the {count} {count === 1 ? "result" : "results"} on this page
+                {t(count === 1 ? "directory.map.count.one" : "directory.map.count.other", { n: count })}
               </p>
               {status === "error" ? (
                 <p role="status" className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800">
-                  Map could not be loaded. Use the Directions links instead.
+                  {t("directory.map.error")}
                 </p>
               ) : (
                 <>
                   {status === "loading" && (
                     <p role="status" className="text-sm text-slate-700">
-                      Loading map…
+                      {t("directory.map.loading")}
                     </p>
                   )}
                   <div ref={containerRef} className="h-80 w-full rounded-xl border border-slate-300 lg:h-[32rem]" />

@@ -1,12 +1,14 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/i18n/link";
+import { useT } from "@/i18n/client";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import type { NavItem } from "./nav-items";
 
 /** Disclosure menu for small screens. Hidden from md upwards, where the inline nav shows. */
 export function MobileNav({ items }: { items: readonly NavItem[] }) {
+  const t = useT();
   const pathname = usePathname();
   // The menu belongs to the page it was opened on, so it closes after navigating
   // without an effect: it is open only while the path is unchanged.
@@ -40,12 +42,12 @@ export function MobileNav({ items }: { items: readonly NavItem[] }) {
         onClick={() => setOpen((value) => !value)}
         className="inline-flex min-h-11 items-center rounded-md border border-slate-300 px-3 text-sm font-medium text-slate-800 hover:bg-slate-50"
       >
-        {open ? "Close menu" : "Menu"}
+        {open ? t("layout.closeMenu") : t("layout.menu")}
       </button>
       {open && (
         <nav
           id="mobile-menu"
-          aria-label="Main"
+          aria-label={t("layout.mainNav")}
           className="absolute inset-x-0 top-full z-40 border-b border-slate-200 bg-white shadow-sm"
         >
           <ul className="mx-auto max-w-5xl px-4 py-2 sm:px-6">
@@ -55,7 +57,7 @@ export function MobileNav({ items }: { items: readonly NavItem[] }) {
                   href={item.href}
                   className="flex min-h-11 items-center text-base font-medium text-slate-800 hover:text-brand-800"
                 >
-                  {item.label}
+                  {t(item.labelKey)}
                 </Link>
               </li>
             ))}

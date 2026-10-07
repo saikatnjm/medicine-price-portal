@@ -1,9 +1,9 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 import type { ReactNode } from "react";
 import { DoctorCard, FacilityCard, PharmacyCard, ResultList } from "@/components/directory/result-cards";
 import { MedicineList } from "@/components/medicine/medicine-list";
 import type { GlobalSearchResult, MedicineListItem } from "@/domain/read-models";
-import { pluralize } from "@/lib/format";
+import { getT } from "@/i18n/server";
 import { routes } from "@/lib/routes";
 import { SEARCH_MIN_QUERY_LENGTH } from "@/lib/search-config";
 import { DirectoryEmptyNote } from "./directory-empty-note";
@@ -53,11 +53,13 @@ interface GlobalSearchResultsProps {
 
 /** Grouped results across the whole directory ("All" view). */
 export function GlobalSearchResults({ result, suggestions }: GlobalSearchResultsProps) {
+  const t = getT();
+  const facilityText = (n: number) => t(n === 1 ? "search.count.facility.one" : "search.count.facility.other", { n: n.toLocaleString("en-US") });
   if (result.status === "empty_query") {
     return (
       <div className="space-y-6">
         <p className="text-slate-700">
-          Search for a medicine, hospital, clinic, pharmacy, specialty or place.
+          {t("search.promptAll")}
         </p>
         <ExampleSearches />
       </div>
@@ -66,7 +68,7 @@ export function GlobalSearchResults({ result, suggestions }: GlobalSearchResults
   if (result.status === "query_too_short") {
     return (
       <p role="status" className="text-slate-700">
-        Please enter at least {SEARCH_MIN_QUERY_LENGTH} characters.
+        {t("search.tooShort", { n: SEARCH_MIN_QUERY_LENGTH })}
       </p>
     );
   }
@@ -79,16 +81,16 @@ export function GlobalSearchResults({ result, suggestions }: GlobalSearchResults
     return (
       <div className="space-y-8">
         <div role="status" className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3">
-          <p className="font-medium text-slate-900">No results found for “{query}”.</p>
+          <p className="font-medium text-slate-900">{t("search.noResults.title", { query })}</p>
           <p className="mt-1 text-slate-700">
-            Check the spelling, try a generic name, or search with fewer words.
+            {t("search.noResults.hint")}
           </p>
         </div>
         <ExampleSearches />
         {suggestions.length > 0 && (
           <section aria-labelledby="popular-medicines-heading">
             <h2 id="popular-medicines-heading" className="mb-2 text-lg font-semibold text-slate-900">
-              Popular medicines
+              {t("search.popularMedicines")}
             </h2>
             <MedicineList items={suggestions} />
           </section>
@@ -102,17 +104,22 @@ export function GlobalSearchResults({ result, suggestions }: GlobalSearchResults
     <div className="space-y-10">
       <UnderstoodAs intent={intent} />
       <p role="status" className="sr-only">
-        {pluralize(result.total, "result", "results")} found for {query}
+        {t(result.total === 1 ? "search.found.result.one" : "search.found.result.other", {
+          n: result.total.toLocaleString("en-US"),
+          query,
+        })}
       </p>
 
       {medicines.total > 0 && (
         <Group
           id="group-medicines"
-          title="Medicines"
+          title={t("search.group.medicine")}
           total={medicines.total}
           seeAll={{
             href: searchViewHref(query, "medicine"),
-            label: `See all ${pluralize(medicines.total, "medicine", "medicines")}`,
+            label: t(medicines.total === 1 ? "search.seeAll.medicine.one" : "search.seeAll.medicine.other", {
+              n: medicines.total.toLocaleString("en-US"),
+            }),
           }}
         >
           <MedicineList items={medicines.items} headingLevel="h3" />
@@ -122,22 +129,22 @@ export function GlobalSearchResults({ result, suggestions }: GlobalSearchResults
       {(doctors.total > 0 || asksForDoctors) && (
         <Group
           id="group-doctors"
-          title="Doctors"
+          title={t("search.group.doctor")}
           total={doctors.total}
-          seeAll={doctors.total > 0 ? { href: withText(routes.doctors(intent.location?.slug, intent.specialty?.slug), text), label: "See all doctors" } : undefined}
+          seeAll={doctors.total > 0 ? { href: withText(routes.doctors(intent.location?.slug, intent.specialty?.slug), text), label: t("search.seeAll.doctors") } : undefined}
         >
           {doctors.total > 0 ? (
-            <ResultList label="Doctors">
+            <ResultList label={t("search.list.doctors")}>
               {doctors.items.map((item) => (
                 <DoctorCard key={item.doctor.id} item={item} />
               ))}
             </ResultList>
           ) : (
             <DirectoryEmptyNote
-              title="Doctor profiles are not available yet."
-              body="We do not list doctors until there is a reliable source. You can browse hospitals and clinics instead."
+              title={t("search.doctorsEmpty.title")}
+              body={t("search.doctorsEmpty.body")}
               href={routes.hospitals(intent.location?.slug, intent.specialty?.slug)}
-              linkLabel="Browse hospitals and clinics"
+              linkLabel={t("search.doctorsEmpty.link")}
             />
           )}
         </Group>
@@ -146,11 +153,11 @@ export function GlobalSearchResults({ result, suggestions }: GlobalSearchResults
       {facilities.total > 0 && (
         <Group
           id="group-hospitals"
-          title="Hospitals & clinics"
+          title={t("search.group.hospital")}
           total={facilities.total}
-          seeAll={{ href: withText(routes.hospitals(intent.location?.slug, intent.specialty?.slug), text), label: "See all hospitals & clinics" }}
+          seeAll={{ href: withText(routes.hospitals(intent.location?.slug, intent.specialty?.slug), text), label: t("search.seeAll.hospitals") }}
         >
-          <ResultList label="Hospitals and clinics">
+          <ResultList label={t("search.list.hospitals")}>
             {facilities.items.map((item) => (
               <FacilityCard key={item.facility.id} item={item} />
             ))}
@@ -161,11 +168,11 @@ export function GlobalSearchResults({ result, suggestions }: GlobalSearchResults
       {pharmacies.total > 0 && (
         <Group
           id="group-pharmacies"
-          title="Pharmacies"
+          title={t("search.group.pharmacy")}
           total={pharmacies.total}
-          seeAll={{ href: withText(routes.pharmacies(intent.location?.slug), text), label: "See all pharmacies" }}
+          seeAll={{ href: withText(routes.pharmacies(intent.location?.slug), text), label: t("search.seeAll.pharmacies") }}
         >
-          <ResultList label="Pharmacies">
+          <ResultList label={t("search.list.pharmacies")}>
             {pharmacies.items.map((item) => (
               <PharmacyCard key={item.pharmacy.id} item={item} />
             ))}
@@ -176,9 +183,9 @@ export function GlobalSearchResults({ result, suggestions }: GlobalSearchResults
       {specialties.total > 0 && (
         <Group
           id="group-specialties"
-          title="Specialties"
+          title={t("search.group.specialty")}
           total={specialties.total}
-          seeAll={specialties.total > specialties.items.length ? { href: routes.specialties(), label: "See all specialties" } : undefined}
+          seeAll={specialties.total > specialties.items.length ? { href: routes.specialties(), label: t("search.seeAll.specialties") } : undefined}
         >
           <ul className="border-t border-slate-200">
             {specialties.items.map(({ specialty, facilityCount }) => (
@@ -186,7 +193,7 @@ export function GlobalSearchResults({ result, suggestions }: GlobalSearchResults
                 <Link href={routes.specialty(specialty.slug)} className="flex min-h-12 items-center justify-between gap-3 py-2">
                   <span className="font-medium text-brand-800 underline-offset-2 hover:underline">{specialty.name}</span>
                   {facilityCount > 0 && (
-                    <span className="text-sm text-slate-600">{pluralize(facilityCount, "facility", "facilities")}</span>
+                    <span className="text-sm text-slate-600">{facilityText(facilityCount)}</span>
                   )}
                 </Link>
               </li>
@@ -198,9 +205,9 @@ export function GlobalSearchResults({ result, suggestions }: GlobalSearchResults
       {locations.total > 0 && (
         <Group
           id="group-locations"
-          title="Locations"
+          title={t("search.group.location")}
           total={locations.total}
-          seeAll={locations.total > locations.items.length ? { href: routes.locations(), label: "See all locations" } : undefined}
+          seeAll={locations.total > locations.items.length ? { href: routes.locations(), label: t("search.seeAll.locations") } : undefined}
         >
           <ul className="border-t border-slate-200">
             {locations.items.map(({ location, facilityCount }) => (
@@ -208,7 +215,7 @@ export function GlobalSearchResults({ result, suggestions }: GlobalSearchResults
                 <Link href={routes.location(location.slug)} className="flex min-h-12 items-center justify-between gap-3 py-2">
                   <span className="font-medium text-brand-800 underline-offset-2 hover:underline">{location.name}</span>
                   {facilityCount > 0 && (
-                    <span className="text-sm text-slate-600">{pluralize(facilityCount, "facility", "facilities")}</span>
+                    <span className="text-sm text-slate-600">{facilityText(facilityCount)}</span>
                   )}
                 </Link>
               </li>
@@ -219,11 +226,11 @@ export function GlobalSearchResults({ result, suggestions }: GlobalSearchResults
 
       {(facilities.total > 0 || pharmacies.total > 0) && (
         <p className="text-sm text-slate-600">
-          Hospital, clinic and pharmacy data: ©{" "}
+          {t("search.osm.pre")}{" "}
           <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="underline">
-            OpenStreetMap contributors
+            {t("search.osm.link")}
           </a>
-          , unverified.
+          {t("search.osm.post")}
         </p>
       )}
     </div>

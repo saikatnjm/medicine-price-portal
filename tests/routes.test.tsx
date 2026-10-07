@@ -1,10 +1,10 @@
 // @vitest-environment jsdom
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import HomePage from "@/app/page";
-import MedicinePage, { generateMetadata as medicineMetadata } from "@/app/medicine/[slug]/page";
-import PharmacyPage from "@/app/pharmacy/[slug]/page";
-import SearchPage from "@/app/search/page";
+import HomePage from "@/app/[lang]/page";
+import MedicinePage, { generateMetadata as medicineMetadata } from "@/app/[lang]/medicine/[slug]/page";
+import PharmacyPage from "@/app/[lang]/pharmacy/[slug]/page";
+import SearchPage from "@/app/[lang]/search/page";
 
 vi.mock("next/link", () => import("./components/next-link-mock"));
 afterEach(cleanup);

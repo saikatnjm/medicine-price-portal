@@ -1,7 +1,7 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 import { MedicineList } from "@/components/medicine/medicine-list";
 import type { MedicineListItem, SearchResult } from "@/domain/read-models";
-import { pluralize } from "@/lib/format";
+import { getT } from "@/i18n/server";
 import { searchHref } from "@/lib/search-params";
 import { SEARCH_MIN_QUERY_LENGTH } from "@/lib/search-config";
 
@@ -14,10 +14,11 @@ interface SearchResultsProps {
 }
 
 function Suggestions({ items }: { items: readonly MedicineListItem[] }) {
+  const t = getT();
   if (items.length === 0) return null;
   return (
     <div className="mt-8">
-      <h2 className="mb-2 text-lg font-semibold text-slate-900">Popular medicines</h2>
+      <h2 className="mb-2 text-lg font-semibold text-slate-900">{t("search.popularMedicines")}</h2>
       <MedicineList items={items} />
     </div>
   );
@@ -30,26 +31,27 @@ function Pagination({
   result: SearchResult;
   pageHref: (query: string, page: number) => string;
 }) {
+  const t = getT();
   if (result.totalPages <= 1) return null;
   const { page, totalPages, query } = result;
   return (
     <nav
-      aria-label="Search results pages"
+      aria-label={t("search.pages.aria")}
       className="mt-6 flex items-center justify-between text-sm"
     >
       {page > 1 ? (
         <Link href={pageHref(query, page - 1)} className="font-medium text-brand-800 underline">
-          Previous
+          {t("search.pages.previous")}
         </Link>
       ) : (
         <span />
       )}
       <span className="text-slate-600">
-        Page {page} of {totalPages}
+        {t("search.pages.status", { page, total: totalPages })}
       </span>
       {page < totalPages ? (
         <Link href={pageHref(query, page + 1)} className="font-medium text-brand-800 underline">
-          Next
+          {t("search.pages.next")}
         </Link>
       ) : (
         <span />
@@ -60,11 +62,12 @@ function Pagination({
 
 /** Renders every search state: prompt, too short, no results, results. */
 export function SearchResults({ result, suggestions, pageHref = searchHref }: SearchResultsProps) {
+  const t = getT();
   if (result.status === "empty_query") {
     return (
       <>
         <p className="text-slate-700">
-          Enter a brand name (e.g. Napa) or a generic name (e.g. Paracetamol).
+          {t("search.promptMedicine")}
         </p>
         <Suggestions items={suggestions} />
       </>
@@ -74,7 +77,7 @@ export function SearchResults({ result, suggestions, pageHref = searchHref }: Se
   if (result.status === "query_too_short") {
     return (
       <p role="status" className="text-slate-700">
-        Please enter at least {SEARCH_MIN_QUERY_LENGTH} characters.
+        {t("search.tooShort", { n: SEARCH_MIN_QUERY_LENGTH })}
       </p>
     );
   }
@@ -84,9 +87,9 @@ export function SearchResults({ result, suggestions, pageHref = searchHref }: Se
     return (
       <div role="status" className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3">
         <p className="font-medium text-slate-900">
-          No medicines match these filters for “{result.matchedQuery}”.
+          {t("search.noFilterMatch.title", { query: result.matchedQuery })}
         </p>
-        <p className="mt-1 text-slate-700">Try a different combination or clear the filters.</p>
+        <p className="mt-1 text-slate-700">{t("search.noFilterMatch.hint")}</p>
       </div>
     );
   }
@@ -95,9 +98,9 @@ export function SearchResults({ result, suggestions, pageHref = searchHref }: Se
     return (
       <>
         <div role="status" className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3">
-          <p className="font-medium text-slate-900">No medicines found for “{result.query}”.</p>
+          <p className="font-medium text-slate-900">{t("search.noMedicines.title", { query: result.query })}</p>
           <p className="mt-1 text-slate-700">
-            Check the spelling, try the generic name, or search with fewer words.
+            {t("search.noMedicines.hint")}
           </p>
         </div>
         <Suggestions items={suggestions} />
@@ -110,17 +113,20 @@ export function SearchResults({ result, suggestions, pageHref = searchHref }: Se
     <>
       <p role="status" className="mb-4 text-slate-700">
         {result.matchedQuery !== result.query && (
-          <>No medicines match every word of “{result.query}”. </>
+          <>{t("search.noMatchEvery", { query: result.query })} </>
         )}
-        {pluralize(result.total, "medicine", "medicines")} found for “{result.matchedQuery}”
+        {t(result.total === 1 ? "search.found.medicine.one" : "search.found.medicine.other", {
+          n: result.total.toLocaleString("en-US"),
+          query: result.matchedQuery,
+        })}
       </p>
       {outOfRange ? (
         <p className="text-slate-700">
-          This page has no results.{" "}
+          {t("search.noPage")}{" "}
           <Link href={pageHref(result.query, 1)} className="text-brand-800 underline">
-            Go to the first page
+            {t("search.firstPage")}
           </Link>
-          .
+          {t("search.stop")}
         </p>
       ) : (
         <MedicineList items={result.items} headingLevel="h2" />

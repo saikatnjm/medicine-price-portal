@@ -1,6 +1,9 @@
 /** Serialisable marker data passed from list views (server) to the results map (client). */
-import { FACILITY_KIND_LABEL } from "../domain/healthcare";
 import type { FacilityListItem, PharmacyListItem } from "../domain/read-models";
+import { localizePath, type Locale } from "../i18n/config";
+import { getLocale } from "../i18n/server";
+import { createT } from "../i18n/translate";
+import { facilityKindLabel } from "./directory-labels";
 import { isValidCoordinates } from "./geo";
 import { routes } from "./routes";
 
@@ -18,8 +21,9 @@ function joinLabel(kind: string, place: string): string {
   return place ? `${kind} · ${place}` : kind;
 }
 
-/** Markers for the given page of facilities; records without valid coordinates are skipped. */
-export function facilityMarkers(items: readonly FacilityListItem[]): MapMarker[] {
+/** Markers for the given page of facilities (labels and links in the request language unless `lang` is given); records without valid coordinates are skipped. */
+export function facilityMarkers(items: readonly FacilityListItem[], lang: Locale = getLocale()): MapMarker[] {
+  const t = createT(lang);
   const markers: MapMarker[] = [];
   for (const { facility, place } of items) {
     const c = facility.coordinates;
@@ -27,17 +31,18 @@ export function facilityMarkers(items: readonly FacilityListItem[]): MapMarker[]
     markers.push({
       id: facility.id,
       name: facility.name,
-      href: routes.hospital(facility.slug),
+      href: localizePath(routes.hospital(facility.slug), lang),
       lat: c.lat,
       lon: c.lon,
-      label: joinLabel(FACILITY_KIND_LABEL[facility.kind], place.label),
+      label: joinLabel(facilityKindLabel(t, facility.kind), place.label),
     });
   }
   return markers;
 }
 
 /** Markers for the given page of pharmacies; records without valid coordinates are skipped. */
-export function pharmacyMarkers(items: readonly PharmacyListItem[]): MapMarker[] {
+export function pharmacyMarkers(items: readonly PharmacyListItem[], lang: Locale = getLocale()): MapMarker[] {
+  const t = createT(lang);
   const markers: MapMarker[] = [];
   for (const { pharmacy, place } of items) {
     const c = pharmacy.coordinates;
@@ -45,10 +50,10 @@ export function pharmacyMarkers(items: readonly PharmacyListItem[]): MapMarker[]
     markers.push({
       id: pharmacy.id,
       name: pharmacy.name,
-      href: routes.pharmacy(pharmacy.slug),
+      href: localizePath(routes.pharmacy(pharmacy.slug), lang),
       lat: c.lat,
       lon: c.lon,
-      label: joinLabel("Pharmacy", place.label),
+      label: joinLabel(t("directory.card.pharmacy"), place.label),
     });
   }
   return markers;

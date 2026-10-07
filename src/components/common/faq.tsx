@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { getT } from "@/i18n/server";
 
 export interface FaqItem {
   question: string;
@@ -11,10 +12,11 @@ export interface FaqItem {
  */
 export function Faq({ items, id = "faq" }: { items: readonly FaqItem[]; id?: string }) {
   if (items.length === 0) return null;
+  const t = getT();
   return (
     <section aria-labelledby={id} className="space-y-3">
       <h2 id={id} className="text-xl font-semibold text-slate-900">
-        Frequently asked questions
+        {t("common.faq.heading")}
       </h2>
       <div className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
         {items.map(({ question, answer }) => (

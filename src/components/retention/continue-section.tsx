@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { useT } from "@/i18n/client";
+import Link from "@/i18n/link";
 import { ClockIcon, HeartIcon } from "@/components/ui/icons";
 import { clearSearches, clearViews, type EntityType } from "@/lib/local-store";
 import { routes } from "@/lib/routes";
@@ -22,13 +23,14 @@ export function ContinueSection() {
   const searches = useRecentSearches();
   const views = useRecentViews();
   const saved = useSavedItems();
+  const t = useT();
   if (searches.length === 0 && views.length === 0 && saved.length === 0) return null;
   return (
     <section aria-labelledby="continue" className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 id="continue" className="flex items-center gap-2 text-xl font-semibold text-slate-900">
           <ClockIcon className="size-5" />
-          Continue where you left off
+          {t("retention.continue.heading")}
         </h2>
         {(searches.length > 0 || views.length > 0) && (
           <button
@@ -39,13 +41,13 @@ export function ContinueSection() {
             }}
             className="inline-flex min-h-11 items-center text-sm text-brand-800 underline underline-offset-2"
           >
-            Clear history
+            {t("retention.continue.clear")}
           </button>
         )}
       </div>
       {searches.length > 0 && (
         <div>
-          <h3 className="text-sm font-semibold text-slate-700">Recent searches</h3>
+          <h3 className="text-sm font-semibold text-slate-700">{t("retention.continue.searches")}</h3>
           <ul className="mt-2 flex flex-wrap gap-2">
             {searches.map((q) => (
               <li key={q}>
@@ -59,7 +61,7 @@ export function ContinueSection() {
       )}
       {views.length > 0 && (
         <div>
-          <h3 className="text-sm font-semibold text-slate-700">Recently viewed</h3>
+          <h3 className="text-sm font-semibold text-slate-700">{t("retention.continue.views")}</h3>
           <ul className="mt-2 flex flex-wrap gap-2">
             {views.slice(0, 6).map((v) => (
               <li key={`${v.type}:${v.slug}`}>
@@ -75,11 +77,11 @@ export function ContinueSection() {
         <p className="text-sm text-slate-700">
           <Link href={routes.saved()} className="inline-flex min-h-11 items-center gap-2 font-medium text-brand-800 underline">
             <HeartIcon className="size-4" />
-            Saved: {saved.length} {saved.length === 1 ? "item" : "items"}
+            {t(saved.length === 1 ? "retention.continue.saved.one" : "retention.continue.saved.other", { n: saved.length })}
           </Link>
         </p>
       )}
-      <p className="text-xs text-slate-600">Kept in this browser only. It is never sent to us.</p>
+      <p className="text-xs text-slate-600">{t("retention.continue.note")}</p>
     </section>
   );
 }

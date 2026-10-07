@@ -1,4 +1,5 @@
 import type { Provenance } from "@/domain/types";
+import { getT } from "@/i18n/server";
 
 const OSM_RECORD = /^(node|way|relation)\/(\d+)$/;
 
@@ -32,6 +33,7 @@ interface ReportIssueProps {
 
 /** "Is something incorrect?": fix at the source (OSM) and/or report to us. Renders nothing without options. */
 export function ReportIssue({ name, path, provenance, reportUrl = process.env.NEXT_PUBLIC_REPORT_URL }: ReportIssueProps) {
+  const t = getT();
   const edit = osmEditUrl(provenance);
   const report = reportHref(reportUrl, `Incorrect information: ${name} (${path})`);
   if (!edit && !report) return null;
@@ -39,13 +41,13 @@ export function ReportIssue({ name, path, provenance, reportUrl = process.env.NE
   return (
     <section aria-labelledby="report-issue" className="space-y-3">
       <h2 id="report-issue" className="text-lg font-semibold text-slate-900">
-        Is something incorrect?
+        {t("directory.report.heading")}
       </h2>
       <div className="flex flex-wrap gap-2">
         {edit && (
           <a href={edit} target="_blank" rel="noopener noreferrer" className={linkClass}>
-            Suggest an edit on OpenStreetMap
-            <span className="sr-only"> (opens in a new tab)</span>
+            {t("directory.report.suggestOsm")}
+            <span className="sr-only">{t("directory.newTab")}</span>
           </a>
         )}
         {report && (
@@ -54,14 +56,14 @@ export function ReportIssue({ name, path, provenance, reportUrl = process.env.NE
             {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             className={linkClass}
           >
-            Report this information
-            {external && <span className="sr-only"> (opens in a new tab)</span>}
+            {t("directory.report.link")}
+            {external && <span className="sr-only">{t("directory.newTab")}</span>}
           </a>
         )}
       </div>
       {edit && (
         <p className="text-sm text-slate-600">
-          Corrections made on OpenStreetMap appear here after the next data update.
+          {t("directory.report.osmNote")}
         </p>
       )}
     </section>

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import type { MedicineDetail } from "../domain/read-models";
-import { formatMedicineName, pluralize, pricesLabel } from "./format";
+import { formatMedicineName } from "./format";
+import { DEFAULT_LOCALE, LOCALES, localizePath, OG_LOCALES, type Locale } from "../i18n/config";
+import { createT } from "../i18n/translate";
 import { routes } from "./routes";
 import { siteConfig } from "./site-config";
 
@@ -28,12 +30,12 @@ export const SOCIAL_IMAGE = {
 } as const;
 
 /** Page-level OpenGraph (Next.js replaces, not merges, the layout's openGraph object). */
-export function openGraph(path: string, title: string, description: string): Metadata["openGraph"] {
+export function openGraph(path: string, title: string, description: string, lang: Locale = DEFAULT_LOCALE): Metadata["openGraph"] {
   return {
     type: "website",
     siteName: siteConfig.name,
-    locale: siteConfig.locale,
-    url: path,
+    locale: lang === DEFAULT_LOCALE ? siteConfig.locale : OG_LOCALES[lang],
+    url: localizePath(path, lang),
     title,
     description,
     images: [SOCIAL_IMAGE],
@@ -53,35 +55,66 @@ export interface PageMetadataInput {
   path: string;
   /** False for thin, empty or filtered pages: noindex (still followed). */
   indexable?: boolean;
+  /** Page language (default English). The canonical points at the same-language URL. */
+  lang?: Locale;
+}
+
+/** Canonical + hreflang alternates for the same page in every language. */
+export function languageAlternates(path: string, lang: Locale = DEFAULT_LOCALE): NonNullable<Metadata["alternates"]> {
+  const languages: Record<string, string> = Object.fromEntries(LOCALES.map((l) => [l, localizePath(path, l)]));
+  languages["x-default"] = path;
+  return { canonical: localizePath(path, lang), languages };
 }
 
 /** Standard metadata for a page: title, description, canonical, OpenGraph and robots. */
-export function pageMetadata({ title, description, path, indexable = true }: PageMetadataInput): Metadata {
+export function pageMetadata({ title, description, path, indexable = true, lang = DEFAULT_LOCALE }: PageMetadataInput): Metadata {
   return {
     title,
     description,
-    alternates: { canonical: path },
-    openGraph: openGraph(path, title, description),
+    alternates: languageAlternates(path, lang),
+    openGraph: openGraph(path, title, description, lang),
     twitter: twitterCard(title, description),
     robots: pageRobots(indexable),
   };
 }
 
 /** "Napa 500 mg — Medicine Information", with " & Price" only when price records exist. */
-export function medicineTitle(detail: MedicineDetail): string {
+export function medicineTitle(detail: MedicineDetail, lang: Locale = DEFAULT_LOCALE): string {
   const { medicine, priceStats } = detail;
+  const t = createT(lang);
   // The dosage form keeps titles unique across forms of the same brand and strength.
-  return `${formatMedicineName(medicine)} ${medicine.dosageFormLabel} — Medicine Information${priceStats ? " & Price" : ""}`;
+  return t(priceStats ? "medicine.seo.title_price" : "medicine.seo.title", {
+    name: formatMedicineName(medicine),
+    form: medicine.dosageFormLabel,
+  });
 }
 
-export function medicineDescription(detail: MedicineDetail): string {
+export function medicineDescription(detail: MedicineDetail, lang: Locale = DEFAULT_LOCALE): string {
   const { medicine, generic, manufacturer, priceStats } = detail;
+  const t = createT(lang);
   const maker = manufacturer.name.replace(/\.$/, "");
-  const intro = `${formatMedicineName(medicine)} ${medicine.dosageFormLabel.toLowerCase()} by ${maker}, registered with DGDA Bangladesh. Generic: ${generic.name}.`;
-  const prices = priceStats
-    ? ` Compare ${pricesLabel(priceStats.hasSampleData).toLowerCase()} from ${pluralize(priceStats.count, "pharmacy", "pharmacies")} and see same-generic brands.`
-    : ` See ${detail.alternativesTotal > 0 ? `${pluralize(detail.alternativesTotal, "other brand", "other brands")} of the same generic, strength and form` : "other strengths and forms of the same generic"}.`;
-  return intro + prices;
+  const intro = t("medicine.seo.desc_intro", {
+    name: formatMedicineName(medicine),
+    form: medicine.dosageFormLabel.toLowerCase(),
+    maker,
+    generic: generic.name,
+  });
+  const count = (n: number) => n.toLocaleString("en-US");
+  let rest: string;
+  if (priceStats) {
+    const label = t(priceStats.hasSampleData ? "medicine.seo.label_sample" : "medicine.seo.label");
+    rest = t(priceStats.count === 1 ? "medicine.seo.desc_prices.one" : "medicine.seo.desc_prices.other", {
+      label,
+      n: count(priceStats.count),
+    });
+  } else if (detail.alternativesTotal > 0) {
+    rest = t(detail.alternativesTotal === 1 ? "medicine.seo.desc_alts.one" : "medicine.seo.desc_alts.other", {
+      n: count(detail.alternativesTotal),
+    });
+  } else {
+    rest = t("medicine.seo.desc_forms");
+  }
+  return `${intro} ${rest}`;
 }
 
 // ------------------------------------------------------------ structured data
@@ -94,7 +127,7 @@ export interface BreadcrumbItem {
   href?: string;
 }
 
-export function breadcrumbJsonLd(items: readonly BreadcrumbItem[], currentPath: string): JsonLd {
+export function breadcrumbJsonLd(items: readonly BreadcrumbItem[], currentPath: string, lang: Locale = DEFAULT_LOCALE): JsonLd {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -102,21 +135,22 @@ export function breadcrumbJsonLd(items: readonly BreadcrumbItem[], currentPath: 
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: absoluteUrl(item.href ?? currentPath),
+      item: absoluteUrl(localizePath(item.href ?? currentPath, lang)),
     })),
   };
 }
 
 /** Homepage WebSite with a sitelinks search box target (/search?q=...). */
-export function websiteJsonLd(): JsonLd {
+export function websiteJsonLd(lang: Locale = DEFAULT_LOCALE): JsonLd {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: siteConfig.name,
-    url: absoluteUrl(routes.home()),
+    url: absoluteUrl(localizePath(routes.home(), lang)),
+    inLanguage: lang,
     potentialAction: {
       "@type": "SearchAction",
-      target: `${siteConfig.url}/search?q={search_term_string}`,
+      target: `${siteConfig.url}${localizePath("/search", lang)}?q={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
   };
@@ -138,13 +172,14 @@ export function webPageJsonLd(input: { name: string; description: string; path: 
  * schema.org Drug. Deliberately contains no offers/prices. Prescription status
  * is included only when a source publishes it.
  */
-export function medicineJsonLd(detail: MedicineDetail): JsonLd {
+export function medicineJsonLd(detail: MedicineDetail, lang: Locale = DEFAULT_LOCALE): JsonLd {
   const { medicine, generic, manufacturer } = detail;
   return {
     "@context": "https://schema.org",
     "@type": "Drug",
     name: formatMedicineName(medicine),
-    url: absoluteUrl(routes.medicine(medicine.slug)),
+    url: absoluteUrl(localizePath(routes.medicine(medicine.slug), lang)),
+    ...(lang === DEFAULT_LOCALE ? {} : { inLanguage: lang }),
     description: medicine.description,
     nonProprietaryName: generic.name,
     activeIngredient: generic.name,

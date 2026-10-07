@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
-import Link from "next/link";
-import { FACILITY_KIND_LABEL, OWNERSHIP_LABEL } from "@/domain/healthcare";
+import Link from "@/i18n/link";
 import type { FacilityKind } from "@/domain/healthcare";
 import type { DoctorListItem, FacilityListItem, PharmacyListItem } from "@/domain/read-models";
-import { formatDistance } from "@/lib/geo";
+import { getT } from "@/i18n/server";
+import { facilityKindPhrase, formatDistanceT } from "@/lib/directory-labels";
 import { routes } from "@/lib/routes";
 import { DoctorIcon, HospitalIcon, PharmacyIcon, PinIcon, SirenIcon } from "@/components/ui/icons";
 import { DirectionsLink } from "./directions-link";
@@ -18,8 +18,9 @@ const FACILITY_ICON: Partial<Record<FacilityKind, typeof HospitalIcon>> = {
 };
 
 function Distance({ km }: { km?: number }) {
-  return km === undefined ? null : (
-    <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-800">{formatDistance(km)}</span>
+  if (km === undefined) return null;
+  return (
+    <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-800">{formatDistanceT(getT(), km)}</span>
   );
 }
 
@@ -44,9 +45,7 @@ function CardIcon({ children }: { children: ReactNode }) {
 export function FacilityCard({ item, headingLevel = "h3" }: { item: FacilityListItem; headingLevel?: "h2" | "h3" }) {
   const { facility, place, specialties, distanceKm } = item;
   const Heading = headingLevel;
-  const kind = [facility.ownership ? OWNERSHIP_LABEL[facility.ownership] : null, FACILITY_KIND_LABEL[facility.kind].toLowerCase()]
-    .filter(Boolean)
-    .join(" ");
+  const t = getT();
   const Icon = FACILITY_ICON[facility.kind] ?? HospitalIcon;
   return (
     <li className={cardClass}>
@@ -61,11 +60,11 @@ export function FacilityCard({ item, headingLevel = "h3" }: { item: FacilityList
             </Link>
           </Heading>
           <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-700">
-            <span>{kind.charAt(0).toUpperCase() + kind.slice(1)}</span>
+            <span>{facilityKindPhrase(t, facility.kind, facility.ownership)}</span>
             {facility.emergency && (
               <span className="inline-flex items-center gap-1 font-medium text-slate-900">
                 <SirenIcon className="size-4" />
-                Emergency services listed
+                {t("directory.card.emergency")}
               </span>
             )}
             <Distance km={distanceKm} />
@@ -78,7 +77,8 @@ export function FacilityCard({ item, headingLevel = "h3" }: { item: FacilityList
       </div>
       <div className="flex shrink-0 gap-2">
         <Link href={routes.hospital(facility.slug)} className={viewClass}>
-          View details<span className="sr-only"> of {facility.name}</span>
+          {t("directory.card.viewDetails")}
+          <span className="sr-only">{t("directory.card.viewDetailsSr", { name: facility.name })}</span>
         </Link>
         <DirectionsLink name={facility.name} address={facility.address} coordinates={facility.coordinates} google={facility.google} />
       </div>
@@ -89,6 +89,7 @@ export function FacilityCard({ item, headingLevel = "h3" }: { item: FacilityList
 export function PharmacyCard({ item, headingLevel = "h3" }: { item: PharmacyListItem; headingLevel?: "h2" | "h3" }) {
   const { pharmacy, place, distanceKm } = item;
   const Heading = headingLevel;
+  const t = getT();
   return (
     <li className={cardClass}>
       <div className="flex min-w-0 gap-3">
@@ -102,7 +103,7 @@ export function PharmacyCard({ item, headingLevel = "h3" }: { item: PharmacyList
             </Link>
           </Heading>
           <p className="flex flex-wrap items-center gap-x-2 text-sm text-slate-700">
-            <span>Pharmacy</span>
+            <span>{t("directory.card.pharmacy")}</span>
             <Distance km={distanceKm} />
           </p>
           <Place label={place.label} />
@@ -111,7 +112,8 @@ export function PharmacyCard({ item, headingLevel = "h3" }: { item: PharmacyList
       </div>
       <div className="flex shrink-0 gap-2">
         <Link href={routes.pharmacy(pharmacy.slug)} className={viewClass}>
-          View details<span className="sr-only"> of {pharmacy.name}</span>
+          {t("directory.card.viewDetails")}
+          <span className="sr-only">{t("directory.card.viewDetailsSr", { name: pharmacy.name })}</span>
         </Link>
         <DirectionsLink name={pharmacy.name} address={pharmacy.address} coordinates={pharmacy.coordinates} google={pharmacy.google} />
       </div>
@@ -122,6 +124,7 @@ export function PharmacyCard({ item, headingLevel = "h3" }: { item: PharmacyList
 export function DoctorCard({ item, headingLevel = "h3" }: { item: DoctorListItem; headingLevel?: "h2" | "h3" }) {
   const { doctor, specialties, chamber, distanceKm } = item;
   const Heading = headingLevel;
+  const t = getT();
   return (
     <li className={cardClass}>
       <div className="flex min-w-0 gap-3">
@@ -146,7 +149,8 @@ export function DoctorCard({ item, headingLevel = "h3" }: { item: DoctorListItem
       </div>
       <div className="flex shrink-0 gap-2">
         <Link href={routes.doctor(doctor.slug)} className={viewClass}>
-          View profile<span className="sr-only"> of {doctor.name}</span>
+          {t("directory.card.viewProfile")}
+          <span className="sr-only">{t("directory.card.viewDetailsSr", { name: doctor.name })}</span>
         </Link>
         {chamber && <DirectionsLink name={chamber.name} address={chamber.chamber.address} coordinates={chamber.coordinates} />}
       </div>

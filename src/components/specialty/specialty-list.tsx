@@ -1,17 +1,12 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 import type { SpecialtyListItem } from "@/domain/read-models";
-import { pluralize } from "@/lib/format";
+import { getLocale, getT } from "@/i18n/server";
 import { routes } from "@/lib/routes";
-import { pluralTitle } from "@/lib/seo-directory";
-
-export function specialtyCounts(item: Pick<SpecialtyListItem, "facilityCount" | "doctorCount">): string {
-  return [
-    pluralize(item.facilityCount, "facility", "facilities"),
-    pluralize(item.doctorCount, "doctor", "doctors"),
-  ].join(" · ");
-}
+import { practitionerPlural, specialtyCounts } from "./specialty-text";
 
 export function SpecialtyList({ items }: { items: SpecialtyListItem[] }) {
+  const t = getT();
+  const lang = getLocale();
   return (
     <ul className="border-t border-slate-200">
       {items.map((item) => (
@@ -21,9 +16,9 @@ export function SpecialtyList({ items }: { items: SpecialtyListItem[] }) {
               {item.specialty.name}
             </Link>
           </h2>
-          <p className="text-sm text-slate-700">{pluralTitle(item.specialty.practitionerTitle)}</p>
+          <p className="text-sm text-slate-700">{practitionerPlural(item.specialty.practitionerTitle, lang)}</p>
           <p className="mt-1 text-slate-700">{item.specialty.description}</p>
-          <p className="mt-1 text-sm text-slate-600">{specialtyCounts(item)} listed</p>
+          <p className="mt-1 text-sm text-slate-600">{t("specialty.counts.listed", { counts: specialtyCounts(item, t) })}</p>
         </li>
       ))}
     </ul>

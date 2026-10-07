@@ -1,5 +1,6 @@
 import { SampleDataNotice } from "@/components/common/sample-data-notice";
 import type { PharmacyDetail } from "@/domain/read-models";
+import { getT } from "@/i18n/server";
 import { PharmacyPriceList } from "./pharmacy-price-list";
 
 /** Price list when records exist; otherwise a single honest "not available" line. */
@@ -12,5 +13,5 @@ export function PharmacyPricesSection({ detail }: { detail: PharmacyDetail }) {
       </div>
     );
   }
-  return <p className="text-slate-700">Medicine prices and stock are not available for this pharmacy.</p>;
+  return <p className="text-slate-700">{getT()("pharmacy.prices.unavailable")}</p>;
 }

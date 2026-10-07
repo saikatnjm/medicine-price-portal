@@ -2,6 +2,8 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { localizePath, stripLocale } from "@/i18n/config";
+import { useLocale, useT } from "@/i18n/client";
 import { formatNearParam } from "@/lib/geo";
 
 /**
@@ -10,6 +12,8 @@ import { formatNearParam } from "@/lib/geo";
  * stored. Hidden until the visitor asks; works without it (filter by location).
  */
 export function NearMeButton() {
+  const t = useT();
+  const lang = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -22,7 +26,8 @@ export function NearMeButton() {
     if (near) params.set("near", near);
     else params.delete("near");
     const qs = params.toString();
-    router.push(qs ? `${pathname}?${qs}` : pathname);
+    const base = localizePath(stripLocale(pathname), lang);
+    router.push(qs ? `${base}?${qs}` : base);
   }
 
   function locate() {
@@ -49,7 +54,7 @@ export function NearMeButton() {
           onClick={() => update(null)}
           className="inline-flex min-h-11 items-center rounded-full border border-slate-300 bg-white px-5 text-sm font-medium text-slate-800 shadow-sm hover:bg-slate-50"
         >
-          Clear “near me”
+          {t("directory.nearMe.clear")}
         </button>
       ) : (
         <button
@@ -58,12 +63,12 @@ export function NearMeButton() {
           disabled={status === "locating"}
           className="inline-flex min-h-11 items-center rounded-full border border-slate-300 bg-white px-5 text-sm font-medium text-slate-800 shadow-sm hover:bg-slate-50 disabled:opacity-60"
         >
-          {status === "locating" ? "Finding your location…" : "Sort by distance from me"}
+          {status === "locating" ? t("directory.nearMe.locating") : t("directory.nearMe.sort")}
         </button>
       )}
       <p role="status" className="text-sm text-slate-600">
-        {status === "denied" && "Location permission was not given. Search by area instead."}
-        {status === "unavailable" && "Your location is not available. Search by area instead."}
+        {status === "denied" && t("directory.nearMe.denied")}
+        {status === "unavailable" && t("directory.nearMe.unavailable")}
       </p>
     </div>
   );

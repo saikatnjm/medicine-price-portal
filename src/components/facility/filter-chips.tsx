@@ -1,8 +1,10 @@
-import Link from "next/link";
-import { FACILITY_KIND_LABEL, type FacilityKind } from "@/domain/healthcare";
+import Link from "@/i18n/link";
+import type { FacilityKind } from "@/domain/healthcare";
 import type { FacilityKindCount } from "@/domain/read-models";
 import { buildHref } from "@/components/directory/pagination";
 import { SirenIcon } from "@/components/ui/icons";
+import { getT } from "@/i18n/server";
+import { facilityKindLabel } from "@/lib/directory-labels";
 
 interface FilterChipsProps {
   /** Clean list path (no query string). */
@@ -21,9 +23,10 @@ const on = `${base} border-brand-700 bg-brand-700 text-white`;
 /** Quick toggles (type, emergency) as links: no JavaScript needed, and each state has its own URL. */
 export function FilterChips({ path, keep, kinds, selectedKind, emergency }: FilterChipsProps) {
   if (kinds.length === 0 && !emergency?.show) return null;
+  const t = getT();
   const emergencyParam = emergency?.checked ? "1" : undefined;
   return (
-    <nav aria-label="Quick filters">
+    <nav aria-label={t("facility.filter.quick")}>
       <ul className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
         {kinds.map(({ kind, count }) => {
           const active = selectedKind === kind;
@@ -34,7 +37,7 @@ export function FilterChips({ path, keep, kinds, selectedKind, emergency }: Filt
                 aria-current={active ? "true" : undefined}
                 className={active ? on : off}
               >
-                {FACILITY_KIND_LABEL[kind]}
+                {facilityKindLabel(t, kind)}
                 <span className={active ? "text-white/80" : "text-slate-500"}>{count.toLocaleString("en-US")}</span>
               </Link>
             </li>
@@ -48,7 +51,7 @@ export function FilterChips({ path, keep, kinds, selectedKind, emergency }: Filt
               className={emergency.checked ? on : off}
             >
               <SirenIcon className="size-4" />
-              Emergency
+              {t("facility.filter.emergency")}
             </Link>
           </li>
         )}

@@ -1,0 +1,61 @@
+import { defineMessages } from "../define";
+
+/** Shared strings used across pages. Keys are prefixed "common.". */
+export const common = defineMessages({
+  en: {
+    "common.home": "Home",
+    "common.breadcrumb": "Breadcrumb",
+    "common.newTab": "(opens in a new tab)",
+    "common.availability.in_stock": "In stock",
+    "common.availability.limited": "Limited stock",
+    "common.availability.out_of_stock": "Out of stock",
+    "common.availability.unknown": "Availability unknown",
+    "common.faq.heading": "Frequently asked questions",
+    "common.disclaimer":
+      "This site provides general medicine and price information only. It is not medical advice. Do not start, stop or change any medicine without consulting a qualified healthcare professional.",
+    "common.nextSteps.label": "What next?",
+    "common.related.heading": "People also search for",
+    "common.related.hospitalsIn": "Hospitals in {place}",
+    "common.related.pharmaciesIn": "Pharmacies in {place}",
+    "common.related.doctorsIn": "{who} in {place}",
+    "common.related.doctorsInPlace": "Doctors in {place}",
+    "common.related.specialtyHospitalsIn": "{specialty} hospitals in {place}",
+    "common.prescription": "Prescription medicine",
+    "common.sampleData.label": "Sample data:",
+    "common.sampleData.text":
+      "prices and availability shown on this site are for demonstration only and are not live pharmacy information.",
+    "common.trust.registered": "Official registry",
+    "common.trust.unverified": "Community-mapped",
+    "common.trust.needs_review": "Needs review",
+    "common.trust.verified": "Source verified",
+    "common.trust.user_reported": "User reported",
+  },
+  bn: {
+    "common.home": "হোম",
+    "common.breadcrumb": "পৃষ্ঠার পথ",
+    "common.newTab": "(নতুন ট্যাবে খুলবে)",
+    "common.availability.in_stock": "স্টকে আছে",
+    "common.availability.limited": "সীমিত স্টক",
+    "common.availability.out_of_stock": "স্টক নেই",
+    "common.availability.unknown": "প্রাপ্যতা অজানা",
+    "common.faq.heading": "সচরাচর জিজ্ঞাসা",
+    "common.disclaimer":
+      "এই সাইটে ওষুধ ও দামের শুধু সাধারণ তথ্য দেওয়া হয়। এটি চিকিৎসা পরামর্শ নয়। যোগ্য স্বাস্থ্যসেবা পেশাজীবীর সঙ্গে কথা না বলে কোনো ওষুধ শুরু, বন্ধ বা পরিবর্তন করবেন না।",
+    "common.nextSteps.label": "এরপর কী করবেন?",
+    "common.related.heading": "আরও যা খোঁজা হয়",
+    "common.related.hospitalsIn": "{place}-এর হাসপাতাল",
+    "common.related.pharmaciesIn": "{place}-এর ফার্মেসি",
+    "common.related.doctorsIn": "{place}-এর {who}",
+    "common.related.doctorsInPlace": "{place}-এর ডাক্তার",
+    "common.related.specialtyHospitalsIn": "{place}-এর {specialty} হাসপাতাল",
+    "common.prescription": "প্রেসক্রিপশনের ওষুধ",
+    "common.sampleData.label": "নমুনা তথ্য:",
+    "common.sampleData.text":
+      "এই সাইটে দেখানো দাম ও প্রাপ্যতা শুধু প্রদর্শনের জন্য, এগুলো ফার্মেসির বর্তমান (লাইভ) তথ্য নয়।",
+    "common.trust.registered": "অফিসিয়াল রেজিস্ট্রি",
+    "common.trust.unverified": "কমিউনিটি-ম্যাপ করা",
+    "common.trust.needs_review": "পর্যালোচনা প্রয়োজন",
+    "common.trust.verified": "উৎস যাচাই করা",
+    "common.trust.user_reported": "ব্যবহারকারীর জানানো",
+  },
+});

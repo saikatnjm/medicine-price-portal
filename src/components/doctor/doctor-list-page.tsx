@@ -1,12 +1,13 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { JsonLd } from "@/components/common/json-ld";
 import { DoctorCard, ResultList } from "@/components/directory/result-cards";
 import { buildHref, Pagination } from "@/components/directory/pagination";
 import { InformationNotice } from "@/components/specialty/information-notice";
+import { doctorCountText } from "@/components/specialty/specialty-text";
 import { Container } from "@/components/ui/container";
 import { services } from "@/data";
-import { pluralize } from "@/lib/format";
+import { getLocale, getT } from "@/i18n/server";
 import { routes } from "@/lib/routes";
 import { firstParam, parsePageParam, type SearchParamValue } from "@/lib/search-params";
 import { breadcrumbJsonLd, type BreadcrumbItem } from "@/lib/seo";
@@ -35,6 +36,8 @@ export async function DoctorListPage({
   fixedSpecialty,
   searchParams,
 }: DoctorListPageProps) {
+  const t = getT();
+  const lang = getLocale();
   const query = firstParam(searchParams.q)?.trim() ?? "";
   const location = fixedLocation ?? firstParam(searchParams.location) ?? "";
   const specialty = fixedSpecialty ?? firstParam(searchParams.specialty) ?? "";
@@ -71,7 +74,7 @@ export async function DoctorListPage({
 
   return (
     <Container className="py-8 sm:py-10">
-      <JsonLd data={breadcrumbJsonLd(breadcrumbs, basePath)} />
+      <JsonLd data={breadcrumbJsonLd(breadcrumbs, basePath, lang)} />
       <Breadcrumbs items={breadcrumbs} />
       <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900">{heading}</h1>
       <p className="mt-2 max-w-3xl text-slate-700">{intro}</p>
@@ -90,24 +93,24 @@ export async function DoctorListPage({
         {hasDoctors && (
           <section aria-labelledby="doctor-results">
             <h2 id="doctor-results" className="text-xl font-semibold text-slate-900">
-              {pluralize(results.total, "doctor", "doctors")}
+              {doctorCountText(t, results.total)}
             </h2>
             {results.items.length > 0 ? (
               <>
-                <ResultList label="Doctors">
+                <ResultList label={t("doctor.listPage.label")}>
                   {results.items.map((item) => (
                     <DoctorCard key={item.doctor.id} item={item} />
                   ))}
                 </ResultList>
-                <Pagination page={results.page} totalPages={results.totalPages} hrefFor={hrefFor} label="Doctors pagination" />
+                <Pagination page={results.page} totalPages={results.totalPages} hrefFor={hrefFor} label={t("doctor.listPage.pagination")} />
               </>
             ) : (
               <p className="mt-3 text-slate-700">
-                No doctors match these filters. Try a wider location or fewer filters, or{" "}
+                {t("doctor.listPage.noMatchPre")}{" "}
                 <Link href={routes.specialties()} className="font-medium text-brand-800 underline">
-                  browse specialties
+                  {t("doctor.listPage.browseSpecialties")}
                 </Link>
-                .
+                {t("doctor.dot")}
               </p>
             )}
           </section>

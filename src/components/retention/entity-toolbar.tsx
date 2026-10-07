@@ -1,6 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import { useLocale, useT } from "@/i18n/client";
+import { localizePath } from "@/i18n/config";
+import Link from "@/i18n/link";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { CompareIcon, HeartIcon, LinkIcon, ShareIcon } from "@/components/ui/icons";
 import { track } from "@/lib/events";
@@ -43,6 +45,8 @@ export function EntityToolbar({ type, slug, name, subtitle, path, compare = fals
   const compareList = useCompareList();
   const inCompare = compareList.includes(slug);
   const [message, setMessage] = useState("");
+  const t = useT();
+  const lang = useLocale();
 
   // Record this page as recently viewed (a browser-local write; no state is set here).
   useEffect(() => {
@@ -50,15 +54,15 @@ export function EntityToolbar({ type, slug, name, subtitle, path, compare = fals
     track({ name: "view_entity", entity: type, slug });
   }, [type, slug, name, subtitle]);
 
-  const url = () => `${window.location.origin}${path}`;
+  const url = () => `${window.location.origin}${localizePath(path, lang)}`;
 
   async function copy() {
     try {
       await navigator.clipboard.writeText(url());
-      setMessage("Link copied.");
+      setMessage(t("retention.toolbar.linkCopied"));
       track({ name: "share", method: "copy" });
     } catch {
-      setMessage("Could not copy the link. Copy it from the address bar.");
+      setMessage(t("retention.toolbar.copyFailed"));
     }
   }
 
@@ -74,45 +78,45 @@ export function EntityToolbar({ type, slug, name, subtitle, path, compare = fals
 
   return (
     <div className="space-y-2">
-      <div role="group" aria-label={`Save and share ${name}`} className="flex flex-wrap gap-2">
+      <div role="group" aria-label={t("retention.toolbar.group", { name })} className="flex flex-wrap gap-2">
         <button
           type="button"
           aria-pressed={saved}
           onClick={() => {
             const now = toggleSaved({ type, slug, name, subtitle });
             track({ name: "save_toggle", entity: type, saved: now });
-            setMessage(now ? "Saved on this device." : "Removed from saved.");
+            setMessage(now ? t("retention.toolbar.savedMsg") : t("retention.toolbar.removedMsg"));
           }}
           className={button}
         >
           <HeartIcon filled={saved} className="size-5" />
-          {saved ? "Saved" : "Save"}
+          {saved ? t("retention.toolbar.saved") : t("retention.toolbar.save")}
           <span className="sr-only"> {name}</span>
         </button>
         <button type="button" onClick={share} className={button}>
           <ShareIcon className="size-5" />
-          Share<span className="sr-only"> {name}</span>
+          {t("retention.toolbar.share")}<span className="sr-only"> {name}</span>
         </button>
         <button type="button" onClick={copy} className={button}>
           <LinkIcon className="size-5" />
-          Copy link
+          {t("retention.toolbar.copy")}
         </button>
         {compare && (
           <button
             type="button"
             aria-pressed={inCompare}
-            onClick={() => setMessage(toggleCompare(slug).includes(slug) ? "Added to compare." : "Removed from compare.")}
+            onClick={() => setMessage(toggleCompare(slug).includes(slug) ? t("retention.compare.added") : t("retention.compare.removed"))}
             className={button}
           >
             <CompareIcon className="size-5" />
-            {inCompare ? "In compare list" : "Compare"}
+            {inCompare ? t("retention.compare.inList") : t("retention.compare.button")}
           </button>
         )}
       </div>
       {compare && compareList.length > 0 && (
         <p className="text-sm text-slate-700">
           <Link href={routes.compare(compareList)} className="font-medium text-brand-800 underline">
-            Compare {compareList.length} {compareList.length === 1 ? "medicine" : "medicines"}
+            {t(compareList.length === 1 ? "retention.compare.count.one" : "retention.compare.count.other", { n: compareList.length })}
           </Link>
         </p>
       )}

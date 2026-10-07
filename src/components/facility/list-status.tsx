@@ -1,4 +1,21 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
+import type { MessageKey } from "@/i18n/messages";
+import { getT } from "@/i18n/server";
+import type { Translator } from "@/i18n/translate";
+
+/** Nouns the list views pass in English; they are looked up so Bangla pages read naturally. */
+const NOUN_KEYS: Record<string, MessageKey> = {
+  pharmacies: "facility.noun.pharmacies",
+  pharmacy: "facility.noun.pharmacy",
+  "hospitals or clinics": "facility.noun.hospitalsOrClinics",
+  "hospitals and clinics": "facility.noun.hospitalsAndClinics",
+  "hospital or clinic": "facility.noun.hospitalOrClinic",
+};
+
+function localNoun(t: Translator, noun: string): string {
+  const key = NOUN_KEYS[noun];
+  return key ? t(key) : noun;
+}
 
 export function ResultCount({
   total,
@@ -14,13 +31,19 @@ export function ResultCount({
   /** Used when total is 1. */
   singular: string;
 }) {
+  const t = getT();
   const from = (page - 1) * pageSize + 1;
   const to = Math.min(total, page * pageSize);
   return (
     <p className="text-base font-medium text-slate-900" role="status">
       {total <= pageSize
-        ? `${total.toLocaleString("en-US")} ${total === 1 ? singular : noun}`
-        : `Showing ${from.toLocaleString("en-US")}–${to.toLocaleString("en-US")} of ${total.toLocaleString("en-US")} ${noun}`}
+        ? t("facility.count.all", { total: total.toLocaleString("en-US"), noun: localNoun(t, total === 1 ? singular : noun) })
+        : t("facility.count.range", {
+            from: from.toLocaleString("en-US"),
+            to: to.toLocaleString("en-US"),
+            total: total.toLocaleString("en-US"),
+            noun: localNoun(t, noun),
+          })}
     </p>
   );
 }
@@ -36,13 +59,15 @@ interface EmptyResultsProps {
 
 /** Two distinct empty states: no data at all, and no matches. */
 export function EmptyResults({ datasetEmpty, hasFilters, noun, scopeName, clearHref }: EmptyResultsProps) {
+  const t = getT();
+  const nounText = localNoun(t, noun);
   const box = "rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-slate-800";
   if (datasetEmpty) {
     return (
       <div className={box}>
-        <p className="font-medium">No {noun} are available yet.</p>
+        <p className="font-medium">{t("facility.empty.noData", { noun: nounText })}</p>
         <p className="mt-1 text-sm text-slate-700">
-          This directory is filled from community-mapped OpenStreetMap data and that import has not run on this site yet.
+          {t("facility.empty.noDataHelp")}
         </p>
       </div>
     );
@@ -50,12 +75,16 @@ export function EmptyResults({ datasetEmpty, hasFilters, noun, scopeName, clearH
   return (
     <div className={box}>
       <p className="font-medium">
-        {hasFilters ? `No ${noun} match your search.` : `No ${noun} are listed${scopeName ? ` for ${scopeName}` : ""} yet.`}
+        {hasFilters
+          ? t("facility.empty.noMatch", { noun: nounText })
+          : scopeName
+            ? t("facility.empty.noneInScope", { noun: nounText, scope: scopeName })
+            : t("facility.empty.none", { noun: nounText })}
       </p>
-      <p className="mt-1 text-sm text-slate-700">Check the spelling, or try a wider location or fewer filters.</p>
+      <p className="mt-1 text-sm text-slate-700">{t("facility.empty.tips")}</p>
       <p className="mt-3">
         <Link href={clearHref} className="font-medium text-brand-800 underline underline-offset-2">
-          {hasFilters ? "Clear filters" : "Browse all"}
+          {hasFilters ? t("facility.filter.clear") : t("facility.empty.browseAll")}
         </Link>
       </p>
     </div>

@@ -1,4 +1,5 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
+import { getT } from "@/i18n/server";
 
 interface PaginationProps {
   page: number;
@@ -9,24 +10,25 @@ interface PaginationProps {
 }
 
 /** Previous / next pagination with the current position announced. */
-export function Pagination({ page, totalPages, hrefFor, label = "Pagination" }: PaginationProps) {
+export function Pagination({ page, totalPages, hrefFor, label }: PaginationProps) {
   if (totalPages <= 1) return null;
+  const t = getT();
   const linkClass = "inline-flex min-h-11 items-center rounded-md border border-slate-300 px-4 text-sm font-medium hover:bg-slate-50";
   return (
-    <nav aria-label={label} className="mt-6 flex items-center justify-between gap-4">
+    <nav aria-label={label ?? t("directory.pagination.label")} className="mt-6 flex items-center justify-between gap-4">
       {page > 1 ? (
         <Link href={hrefFor(page - 1)} className={linkClass} rel="prev">
-          Previous
+          {t("directory.pagination.previous")}
         </Link>
       ) : (
         <span />
       )}
       <p className="text-sm text-slate-600">
-        Page {page} of {totalPages}
+        {t("directory.pagination.page", { page, total: totalPages })}
       </p>
       {page < totalPages ? (
         <Link href={hrefFor(page + 1)} className={linkClass} rel="next">
-          Next
+          {t("directory.pagination.next")}
         </Link>
       ) : (
         <span />

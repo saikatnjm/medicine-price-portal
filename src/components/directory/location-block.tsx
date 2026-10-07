@@ -1,4 +1,5 @@
 import type { Coordinates, GooglePlaceRef } from "@/domain/healthcare";
+import { getT } from "@/i18n/server";
 import { formatPlace } from "@/lib/format";
 import { mapEmbedFor, mapLinksFor } from "@/lib/maps";
 import { MapPreview } from "./map-preview";
@@ -28,8 +29,9 @@ export function LocationBlock({
   coordinates,
   google,
   headingId = "location",
-  heading = "Location",
+  heading,
 }: LocationBlockProps) {
+  const t = getT();
   const fullAddress = address ?? formatPlace(placeLabel, postalCode);
   const target = { name, address: fullAddress || undefined, coordinates: coordinates ?? undefined, google };
   const links = mapLinksFor(target);
@@ -38,10 +40,10 @@ export function LocationBlock({
   return (
     <section aria-labelledby={headingId} className="space-y-3">
       <h2 id={headingId} className="text-xl font-semibold text-slate-900">
-        {heading}
+        {heading ?? t("directory.location")}
       </h2>
       <address className="not-italic text-slate-800">
-        {fullAddress || "Address not published."}
+        {fullAddress || t("directory.addressNotPublished")}
         {address && placeLabel && !address.includes(placeLabel.split(",").at(-1)?.trim() ?? "") && (
           <span className="block text-sm text-slate-600">{placeLabel}</span>
         )}
@@ -54,7 +56,7 @@ export function LocationBlock({
             rel="noopener noreferrer"
             className="inline-flex min-h-11 items-center rounded-md bg-brand-700 px-4 text-sm font-semibold text-white hover:bg-brand-800"
           >
-            Get directions
+            {t("directory.getDirections")}
           </a>
           <a
             href={links.viewUrl}
@@ -62,18 +64,16 @@ export function LocationBlock({
             rel="noopener noreferrer"
             className="inline-flex min-h-11 items-center rounded-md border border-slate-300 px-4 text-sm font-medium text-slate-800 hover:bg-slate-50"
           >
-            View on Google Maps
+            {t("directory.viewOnGoogle")}
           </a>
           {embed && <MapPreview src={embed.src} provider={embed.provider} fullMapUrl={embed.fullMapUrl} name={name} />}
         </div>
       ) : (
-        <p className="text-sm text-slate-600">No map location is published for this place.</p>
+        <p className="text-sm text-slate-600">{t("directory.noMapLocation")}</p>
       )}
       {links && !links.isGooglePlace && (
         <p className="text-xs text-slate-500">
-          {links.hasExactLocation
-            ? "Opens Google Maps at the mapped location; it is not a verified Google listing."
-            : "Opens a Google Maps search for this address; the result may not be exact."}
+          {links.hasExactLocation ? t("directory.mapExactNote") : t("directory.mapSearchNote")}
         </p>
       )}
     </section>

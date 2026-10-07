@@ -1,8 +1,13 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 import type { SearchIntent } from "@/domain/read-models";
+import { getT } from "@/i18n/server";
 import { routes } from "@/lib/routes";
 
-const ENTITY_LABEL = { doctor: "Doctors", hospital: "Hospitals & clinics", pharmacy: "Pharmacies" } as const;
+const ENTITY_LABEL = {
+  doctor: "search.entity.doctor",
+  hospital: "search.entity.hospital",
+  pharmacy: "search.entity.pharmacy",
+} as const;
 
 /** Path (with optional ?q=) of the directory page that best matches the understood query. */
 export function intentHref(intent: SearchIntent): string | null {
@@ -20,16 +25,17 @@ export function intentHref(intent: SearchIntent): string | null {
 
 /** "Understood as: Cardiologists · Gulshan" with a link to the matching directory page. */
 export function UnderstoodAs({ intent }: { intent: SearchIntent }) {
+  const t = getT();
   const { entity, specialty, location } = intent;
   if (!entity && !specialty && !location) return null;
   const subject = entity === "doctor" && specialty
-    ? `${specialty.practitionerTitle}s`
-    : [entity ? ENTITY_LABEL[entity] : null, specialty?.name].filter(Boolean).join(" · ") || null;
+    ? t("search.understood.doctorTitle", { title: specialty.practitionerTitle })
+    : [entity ? t(ENTITY_LABEL[entity]) : null, specialty?.name].filter(Boolean).join(" · ") || null;
   const label = [subject, location?.name].filter(Boolean).join(" · ");
   const href = intentHref(intent);
   return (
     <p className="mb-6 text-sm text-slate-700">
-      <span className="text-slate-600">Understood as: </span>
+      <span className="text-slate-600">{t("search.understood.label")}</span>
       {href ? (
         <Link href={href} className="font-medium text-brand-800 underline">
           {label}

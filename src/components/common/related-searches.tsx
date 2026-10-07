@@ -1,13 +1,15 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
+import { getT } from "@/i18n/server";
 import type { RelatedSearch } from "@/lib/related-searches";
 
 /** "People also search for": real links to existing pages. Renders nothing without links. */
-export function RelatedSearches({ items, heading = "People also search for", id = "related-searches" }: { items: readonly RelatedSearch[]; heading?: string; id?: string }) {
+export function RelatedSearches({ items, heading, id = "related-searches" }: { items: readonly RelatedSearch[]; heading?: string; id?: string }) {
   if (items.length === 0) return null;
+  const t = getT();
   return (
     <section aria-labelledby={id}>
       <h2 id={id} className="text-xl font-semibold text-slate-900">
-        {heading}
+        {heading ?? t("common.related.heading")}
       </h2>
       <ul className="mt-3 flex flex-wrap gap-2">
         {items.map(({ label, href }) => (

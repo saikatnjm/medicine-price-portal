@@ -1,5 +1,6 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 import type { DivisionWithDistricts, LocationListItem } from "@/domain/read-models";
+import { getT } from "@/i18n/server";
 import { routes } from "@/lib/routes";
 
 type CountKey = "facilityCount" | "pharmacyCount";
@@ -26,19 +27,20 @@ export function BrowseByLocation({
   type: "hospitals" | "pharmacies";
   countOf: CountKey;
 }) {
+  const t = getT();
   const base = type === "hospitals" ? routes.hospitals : routes.pharmacies;
   const divisions = tree.filter((d) => d[countOf] > 0);
   if (divisions.length === 0) return null;
   return (
     <section aria-labelledby="browse-location" className="space-y-4">
       <h2 id="browse-location" className="text-xl font-semibold text-slate-900">
-        Browse by location
+        {t("facility.browse.byLocation")}
       </h2>
       {divisions.map(({ division, districts, ...counts }) => (
         <div key={division.slug}>
           <h3 className="mb-2 text-base font-semibold text-slate-800">
             <Link href={base(division.slug)} className="underline-offset-2 hover:underline">
-              {division.name} Division
+              {t("directory.division", { name: division.name })}
             </Link>{" "}
             <span className="font-normal text-slate-600">({counts[countOf].toLocaleString("en-US")})</span>
           </h3>
@@ -69,13 +71,14 @@ export function SubAreaLinks({
   type: "hospitals" | "pharmacies";
   countOf: CountKey;
 }) {
+  const t = getT();
   const base = type === "hospitals" ? routes.hospitals : routes.pharmacies;
   const items = areas.filter((c) => c[countOf] > 0);
   if (items.length === 0) return null;
   return (
     <section aria-labelledby="sub-areas" className="space-y-3">
       <h2 id="sub-areas" className="text-xl font-semibold text-slate-900">
-        Browse within {parentName}
+        {t("facility.browse.within", { name: parentName })}
       </h2>
       <ul className="flex flex-wrap gap-2">
         {items.map((c) => (
@@ -90,20 +93,21 @@ export function SubAreaLinks({
 
 /** Cross links from a location list to the other kind of list and the location page. */
 export function RelatedLocationLinks({ locationSlug, name, type }: { locationSlug: string; name: string; type: "hospitals" | "pharmacies" }) {
+  const t = getT();
   const linkClass = "text-brand-800 underline underline-offset-2";
   return (
-    <nav aria-label={`More about ${name}`} className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <nav aria-label={t("facility.related.label", { name })} className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
       {type === "hospitals" ? (
         <Link href={routes.pharmacies(locationSlug)} className={linkClass}>
-          Pharmacies in {name}
+          {t("facility.related.pharmaciesIn", { name })}
         </Link>
       ) : (
         <Link href={routes.hospitals(locationSlug)} className={linkClass}>
-          Hospitals &amp; clinics in {name}
+          {t("facility.related.hospitalsIn", { name })}
         </Link>
       )}
       <Link href={routes.location(locationSlug)} className={linkClass}>
-        About {name}
+        {t("facility.related.about", { name })}
       </Link>
     </nav>
   );

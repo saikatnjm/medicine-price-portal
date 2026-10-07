@@ -1,5 +1,7 @@
 import type { DataSource, Provenance } from "@/domain/types";
-import { formatDate } from "@/lib/format";
+import type { MessageKey } from "@/i18n/messages";
+import { getLocale, getT } from "@/i18n/server";
+import { formatDateIn } from "@/lib/directory-labels";
 
 /**
  * Where a directory record comes from. OpenStreetMap data must carry the
@@ -7,39 +9,40 @@ import { formatDate } from "@/lib/format";
  */
 export function SourceAttribution({ source, provenance }: { source: DataSource | null; provenance?: Provenance }) {
   if (!source) return null;
+  const t = getT();
+  const lang = getLocale();
   return (
     <p className="text-sm text-slate-600">
-      Source:{" "}
+      {t("directory.source.label")}{" "}
       <a href={provenance?.recordUrl ?? source.url} target="_blank" rel="noopener noreferrer" className="underline">
         {source.attribution ?? source.name}
-        <span className="sr-only"> (opens in a new tab)</span>
+        <span className="sr-only">{t("directory.newTab")}</span>
       </a>
       {source.licenceUrl && (
         <>
           {" "}
           (
           <a href={source.licenceUrl} target="_blank" rel="noopener noreferrer" className="underline">
-            {source.licence ?? "licence"}
-            <span className="sr-only"> (opens in a new tab)</span>
+            {source.licence ?? t("directory.source.licence")}
+            <span className="sr-only">{t("directory.newTab")}</span>
           </a>
           )
         </>
       )}
-      , retrieved {formatDate(source.retrievedAt)}.{" "}
-      {provenance?.status === "unverified" &&
-        "Community-mapped information that we have not verified. Call ahead before visiting."}
-      {provenance?.status === "verified" && "Verified by us."}
+      {t("directory.source.retrieved", { date: formatDateIn(source.retrievedAt, lang) })}{" "}
+      {provenance?.status === "unverified" && t("directory.source.unverifiedNote")}
+      {provenance?.status === "verified" && t("directory.source.verifiedNote")}
     </p>
   );
 }
 
-const STATUS_WORDS: Record<Provenance["status"], string> = {
-  registered: "Listed in an official registry",
-  unverified: "Community-mapped; not verified by us",
-  needs_review: "Awaiting review",
-  verified: "Verified by us",
-  user_reported: "Reported by a user",
-};
+const STATUS_KEYS = {
+  registered: "directory.source.status.registered",
+  unverified: "directory.source.status.unverified",
+  needs_review: "directory.source.status.needs_review",
+  verified: "directory.source.status.verified",
+  user_reported: "directory.source.status.user_reported",
+} as const satisfies Record<Provenance["status"], MessageKey>;
 
 /** "Source & last checked": source, plain-words status, dates and the name as it appears in the source. */
 export function SourceSection({
@@ -54,14 +57,16 @@ export function SourceSection({
   sourceName?: string;
   headingId?: string;
 }) {
-  const rows: Array<[string, string]> = [["Status", STATUS_WORDS[provenance.status]]];
-  if (provenance.lastCheckedAt) rows.push(["Last checked", formatDate(provenance.lastCheckedAt)]);
-  if (provenance.sourceUpdatedAt) rows.push(["Source updated", formatDate(provenance.sourceUpdatedAt)]);
-  if (sourceName) rows.push(["Name in source data", sourceName]);
+  const t = getT();
+  const lang = getLocale();
+  const rows: Array<[string, string]> = [[t("directory.source.row.status"), t(STATUS_KEYS[provenance.status])]];
+  if (provenance.lastCheckedAt) rows.push([t("directory.source.row.lastChecked"), formatDateIn(provenance.lastCheckedAt, lang)]);
+  if (provenance.sourceUpdatedAt) rows.push([t("directory.source.row.sourceUpdated"), formatDateIn(provenance.sourceUpdatedAt, lang)]);
+  if (sourceName) rows.push([t("directory.source.row.sourceName"), sourceName]);
   return (
     <section aria-labelledby={headingId} className="space-y-2">
       <h2 id={headingId} className="text-lg font-semibold text-slate-900">
-        Source &amp; last checked
+        {t("directory.source.heading")}
       </h2>
       <SourceAttribution source={source} provenance={provenance} />
       <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm text-slate-700">

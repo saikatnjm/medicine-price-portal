@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import Link from "next/link";
+import Link from "@/i18n/link";
 import { SectionHeading } from "@/components/common/section-heading";
 import { FacilityCard, ResultList } from "@/components/directory/result-cards";
 import type { FacilityListItem } from "@/domain/read-models";

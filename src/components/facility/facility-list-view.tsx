@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 import { Suspense } from "react";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { JsonLd } from "@/components/common/json-ld";
@@ -7,6 +7,8 @@ import { ResultsMap } from "@/components/directory/results-map";
 import { NearMeButton } from "@/components/directory/near-me-button";
 import { buildHref, Pagination } from "@/components/directory/pagination";
 import { Container } from "@/components/ui/container";
+import type { Locale } from "@/i18n/config";
+import { getLocale, getT } from "@/i18n/server";
 import { facilityMarkers } from "@/lib/map-markers";
 import { routes } from "@/lib/routes";
 import {
@@ -26,16 +28,17 @@ import { EmptyResults, ResultCount } from "./list-status";
 import { OsmCredit } from "./osm-credit";
 
 /** Scope text for copy, e.g. "Dhanmondi, Dhaka"; undefined for the national list. */
-export function facilityScopeName(data: FacilityListData): string | undefined {
-  return data.location ? locationScopeName(data.location.location, data.location.ancestors) : undefined;
+export function facilityScopeName(data: FacilityListData, lang: Locale = getLocale()): string | undefined {
+  return data.location ? locationScopeName(data.location.location, data.location.ancestors, lang) : undefined;
 }
 
-export function facilityListCopy(data: FacilityListData) {
-  const scope = { scopeName: facilityScopeName(data), specialtyName: data.specialty?.name };
+/** Title, h1 and description of the list in the given language (default: the request language). */
+export function facilityListCopy(data: FacilityListData, lang: Locale = getLocale()) {
+  const scope = { scopeName: facilityScopeName(data, lang), specialtyName: data.specialty?.name };
   return {
-    title: facilityListTitle(scope),
-    heading: facilityListHeading(scope),
-    description: facilityListDescription({ ...scope, total: data.list.results.total, kindCounts: data.kindCounts }),
+    title: facilityListTitle(scope, lang),
+    heading: facilityListHeading(scope, lang),
+    description: facilityListDescription({ ...scope, total: data.list.results.total, kindCounts: data.kindCounts }, lang),
   };
 }
 
@@ -46,12 +49,14 @@ export function facilityListPath(data: FacilityListData): string {
 
 /** Shared by /hospitals, /hospitals/[location] and /hospitals/[location]/[specialty]. */
 export function FacilityListView({ data }: { data: FacilityListData }) {
+  const t = getT();
+  const lang = getLocale();
   const { params, list, location, specialty } = data;
   const { results, filters } = list;
   const path = facilityListPath(data);
-  const { heading, description } = facilityListCopy(data);
-  const scopeName = facilityScopeName(data);
-  const breadcrumbs = directoryListBreadcrumbs("hospitals", location?.location, location?.ancestors, specialty ?? undefined);
+  const { heading, description } = facilityListCopy(data, lang);
+  const scopeName = facilityScopeName(data, lang);
+  const breadcrumbs = directoryListBreadcrumbs("hospitals", location?.location, location?.ancestors, specialty ?? undefined, lang);
 
   const hrefFor = (page: number) =>
     buildHref(path, {
@@ -66,7 +71,7 @@ export function FacilityListView({ data }: { data: FacilityListData }) {
 
   return (
     <Container className="py-8 sm:py-10">
-      <JsonLd data={breadcrumbJsonLd(breadcrumbs, path)} />
+      <JsonLd data={breadcrumbJsonLd(breadcrumbs, path, lang)} />
       {results.items.length > 0 && data.indexable && (
         <JsonLd
           data={directoryListJsonLd({
@@ -74,6 +79,7 @@ export function FacilityListView({ data }: { data: FacilityListData }) {
             description,
             path,
             items: results.items.map(({ facility }) => ({ name: facility.name, path: routes.hospital(facility.slug) })),
+            lang,
           })}
         />
       )}
@@ -85,7 +91,7 @@ export function FacilityListView({ data }: { data: FacilityListData }) {
           <p className="text-slate-700">
             {specialty.description}{" "}
             <Link href={routes.specialty(specialty.slug)} className="text-brand-800 underline underline-offset-2">
-              About {specialty.name}
+              {t("facility.list.aboutSpecialty", { name: specialty.name })}
             </Link>
           </p>
         )}
@@ -108,8 +114,8 @@ export function FacilityListView({ data }: { data: FacilityListData }) {
           action={path}
           idPrefix="hospitals"
           query={params.q}
-          queryLabel="Name or keyword"
-          queryPlaceholder="e.g. Square, eye, diagnostic"
+          queryLabel={t("facility.list.queryLabel")}
+          queryPlaceholder={t("facility.list.queryPlaceholder")}
           locations={
             location ? undefined : { tree: data.tree, selected: filters.location?.slug ?? "", selectedName: filters.location?.name, countOf: "facilityCount" }
           }
@@ -123,7 +129,7 @@ export function FacilityListView({ data }: { data: FacilityListData }) {
         </Suspense>
       </div>
 
-      <section aria-label="Results" className="mt-6 space-y-3">
+      <section aria-label={t("facility.list.results")} className="mt-6 space-y-3">
         {results.total === 0 ? (
           <EmptyResults
             datasetEmpty={data.datasetEmpty}
@@ -135,8 +141,8 @@ export function FacilityListView({ data }: { data: FacilityListData }) {
         ) : (
           <>
             <ResultCount total={results.total} page={results.page} pageSize={results.pageSize} noun="hospitals and clinics" singular="hospital or clinic" />
-            <ResultsMap markers={facilityMarkers(results.items)}>
-              <ResultList label="Hospitals and clinics">
+            <ResultsMap markers={facilityMarkers(results.items, lang)}>
+              <ResultList label={t("facility.list.resultsLabel")}>
                 {results.items.map((item) => (
                   <FacilityCard key={item.facility.id} item={item} headingLevel="h2" />
                 ))}
@@ -152,9 +158,9 @@ export function FacilityListView({ data }: { data: FacilityListData }) {
           <>
             {!specialty && <SubAreaLinks items={location.children} parentName={location.location.name} type="hospitals" countOf="facilityCount" />}
             {specialty && (
-              <nav aria-label="All hospitals here">
+              <nav aria-label={t("facility.list.allHere")}>
                 <Link href={routes.hospitals(location.location.slug)} className="text-brand-800 underline underline-offset-2">
-                  All hospitals &amp; clinics in {scopeName}
+                  {t("facility.list.allIn", { scope: scopeName ?? "" })}
                 </Link>
               </nav>
             )}

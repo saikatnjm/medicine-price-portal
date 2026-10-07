@@ -4,6 +4,7 @@ import type { Repositories } from "../repositories";
 import { loadDirectoryStats, MIN_COMBINATION_RESULTS } from "./directory-stats";
 import { PlaceResolver } from "./places";
 import { relatedForLocation, relatedForSpecialty, type RelatedSearch } from "../lib/related-searches";
+import type { Translator } from "../i18n/translate";
 
 /** Site-wide directory facts: homepage counts and indexable combination pages. */
 export class DirectoryService {
@@ -62,7 +63,7 @@ export class DirectoryService {
   }
 
   /** "People also search for" links for a specialty page (only existing, indexable pages). */
-  async relatedForSpecialty(specialtySlug: string, limit?: number): Promise<RelatedSearch[]> {
+  async relatedForSpecialty(specialtySlug: string, limit?: number, t?: Translator): Promise<RelatedSearch[]> {
     const [places, specialty, combinations] = await Promise.all([
       PlaceResolver.create(this.repos),
       this.repos.specialties.findBySlug(specialtySlug),
@@ -74,11 +75,11 @@ export class DirectoryService {
       const location = places.all.find((l) => l.slug === slug);
       return location && location.level !== "area" ? location.name : undefined;
     };
-    return relatedForSpecialty({ specialty, combinations, placeName, limit });
+    return relatedForSpecialty({ specialty, combinations, placeName, limit, t });
   }
 
   /** "People also search for" links for a location page. */
-  async relatedForLocation(locationSlug: string, placeName: string, limit?: number): Promise<RelatedSearch[]> {
+  async relatedForLocation(locationSlug: string, placeName: string, limit?: number, t?: Translator): Promise<RelatedSearch[]> {
     const [specialties, combinations] = await Promise.all([this.repos.specialties.listAll(), this.listCombinations()]);
     return relatedForLocation({
       locationSlug,
@@ -86,6 +87,7 @@ export class DirectoryService {
       combinations,
       specialtyOf: (slug) => specialties.find((s) => s.slug === slug),
       limit,
+      t,
     });
   }
 

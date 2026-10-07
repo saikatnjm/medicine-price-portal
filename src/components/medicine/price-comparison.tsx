@@ -1,17 +1,11 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 import { AvailabilityStatus } from "@/components/common/availability-status";
 import { SectionHeading } from "@/components/common/section-heading";
+import { isUnitDosageForm } from "@/domain/medicine";
 import type { MedicineDetail } from "@/domain/read-models";
-import {
-  formatDate,
-  formatPackSize,
-  formatPlace,
-  formatPrice,
-  formatPriceRange,
-  formatUnitPrice,
-  pluralize,
-  pricesLabel,
-} from "@/lib/format";
+import { getLocale, getT } from "@/i18n/server";
+import { formatPackSize, formatPlace, formatPrice, formatPriceRange } from "@/lib/format";
+import { formatDateIn } from "@/lib/format-locale";
 import { routes } from "@/lib/routes";
 
 const HEADING_ID = "price-comparison";
@@ -22,8 +16,14 @@ const HEADING_ID = "price-comparison";
  * a wide table so it stays readable on narrow screens.
  */
 export function PriceComparison({ detail }: { detail: MedicineDetail }) {
+  const t = getT();
+  const lang = getLocale();
   const { medicine, prices, priceStats } = detail;
-  const packLabel = medicine.packSize ? `per pack of ${formatPackSize(medicine.packSize)}` : "";
+  const packLabel = medicine.packSize ? t("medicine.price.pack", { size: formatPackSize(medicine.packSize) }) : "";
+  const unitPriceOf = (amount: number): string | null =>
+    isUnitDosageForm(medicine) && medicine.packSize && medicine.packSize.quantity > 0
+      ? t("medicine.price.per_unit", { price: formatPrice(amount / medicine.packSize.quantity), unit: t(medicine.dosageForm === "capsule" ? "medicine.price.unit_capsule" : "medicine.price.unit_tablet") })
+      : null;
 
   return (
     <section aria-labelledby={HEADING_ID}>
@@ -31,32 +31,36 @@ export function PriceComparison({ detail }: { detail: MedicineDetail }) {
         id={HEADING_ID}
         description={
           priceStats
-            ? `${pricesLabel(priceStats.hasSampleData)} ${formatPriceRange(priceStats)}${packLabel ? ` ${packLabel}` : ""}, from ${pluralize(priceStats.count, "pharmacy", "pharmacies")}. Lowest first.`
+            ? t(priceStats.count === 1 ? "medicine.price.desc.one" : "medicine.price.desc.other", {
+                label: t(priceStats.hasSampleData ? "medicine.price.label_sample" : "medicine.price.label"),
+                range: formatPriceRange(priceStats),
+                pack: packLabel ? ` ${packLabel}` : "",
+                n: priceStats.count.toLocaleString("en-US"),
+              })
             : undefined
         }
       >
-        Price comparison
+        {t("medicine.price.heading")}
       </SectionHeading>
 
       {prices.length === 0 || !priceStats ? (
         <div className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700">
-          <p className="font-medium text-slate-900">Price information coming soon.</p>
+          <p className="font-medium text-slate-900">{t("medicine.price.soon")}</p>
           <p className="mt-1 text-sm">
-            We only show prices from a verified source, and none is available for this medicine yet.
-            Prices and availability vary by pharmacy.
+            {t("medicine.price.soon_body")}
           </p>
           <p className="mt-2 text-sm">
             <Link href={routes.pharmacies()} className="font-medium text-brand-800 underline">
-              Browse pharmacies
+              {t("medicine.price.browse")}
             </Link>{" "}
-            (listings only, without prices).
+            {t("medicine.price.listings_only")}
           </p>
         </div>
       ) : (
         <ol className="divide-y divide-slate-200 border-y border-slate-200">
           {prices.map(({ price, pharmacy }) => {
             const isLowest = price.amount === priceStats.lowest;
-            const unitPrice = formatUnitPrice(price.amount, medicine);
+            const unitPrice = unitPriceOf(price.amount);
             return (
               <li key={price.id} className="flex items-start justify-between gap-4 py-4">
                 <div className="min-w-0">
@@ -80,12 +84,12 @@ export function PriceComparison({ detail }: { detail: MedicineDetail }) {
                   {unitPrice && <p className="text-xs text-slate-600">{unitPrice}</p>}
                   {isLowest && (
                     <p className="mt-1 inline-block rounded bg-brand-50 px-1.5 py-0.5 text-xs font-medium text-brand-800">
-                      Lowest listed
+                      {t("medicine.price.lowest")}
                     </p>
                   )}
                   <p className="mt-1 text-xs text-slate-500">
-                    {price.source === "sample" ? "Sample" : "Updated"} ·{" "}
-                    {formatDate(price.updatedAt)}
+                    {t(price.source === "sample" ? "medicine.price.sample" : "medicine.price.updated")} ·{" "}
+                    {formatDateIn(price.updatedAt, lang)}
                   </p>
                 </div>
               </li>

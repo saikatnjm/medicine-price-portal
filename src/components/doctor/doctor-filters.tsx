@@ -1,6 +1,8 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 import type { Location, Specialty } from "@/domain/healthcare";
 import type { DivisionWithDistricts } from "@/domain/read-models";
+import { localizePath } from "@/i18n/config";
+import { getLocale, getT } from "@/i18n/server";
 import { routes } from "@/lib/routes";
 
 interface DoctorFiltersProps {
@@ -24,12 +26,19 @@ function LocationOption({ location, label }: { location: Location; label?: strin
 
 /** Plain GET form (works without JavaScript); always searches the main doctors list. */
 export function DoctorFilters({ query, location, specialty, hospital, divisions, specialties, hospitals }: DoctorFiltersProps) {
+  const t = getT();
   return (
-    <form action={routes.doctors()} method="get" role="search" aria-label="Find doctors" className="space-y-4">
+    <form
+      action={localizePath(routes.doctors(), getLocale())}
+      method="get"
+      role="search"
+      aria-label={t("doctor.filters.aria")}
+      className="space-y-4"
+    >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="sm:col-span-2 lg:col-span-4">
           <label htmlFor="doctor-q" className={labelClass}>
-            Doctor name
+            {t("doctor.filters.name")}
           </label>
           <input
             id="doctor-q"
@@ -42,13 +51,13 @@ export function DoctorFilters({ query, location, specialty, hospital, divisions,
         </div>
         <div>
           <label htmlFor="doctor-location" className={labelClass}>
-            Location
+            {t("doctor.filters.location")}
           </label>
           <select id="doctor-location" name="location" defaultValue={location} className={controlClass}>
-            <option value="">All of Bangladesh</option>
+            <option value="">{t("doctor.filters.allBangladesh")}</option>
             {divisions.map(({ division, districts }) => (
-              <optgroup key={division.id} label={`${division.name} Division`}>
-                <LocationOption location={division} label={`All of ${division.name} Division`} />
+              <optgroup key={division.id} label={t("location.place.division", { name: division.name })}>
+                <LocationOption location={division} label={t("doctor.filters.allDivision", { name: division.name })} />
                 {districts.map(({ location: district }) => (
                   <LocationOption key={district.id} location={district} />
                 ))}
@@ -58,10 +67,10 @@ export function DoctorFilters({ query, location, specialty, hospital, divisions,
         </div>
         <div>
           <label htmlFor="doctor-specialty" className={labelClass}>
-            Specialty
+            {t("doctor.filters.specialty")}
           </label>
           <select id="doctor-specialty" name="specialty" defaultValue={specialty} className={controlClass}>
-            <option value="">All specialties</option>
+            <option value="">{t("doctor.filters.allSpecialties")}</option>
             {specialties.map((s) => (
               <option key={s.id} value={s.slug}>
                 {s.name}
@@ -72,10 +81,10 @@ export function DoctorFilters({ query, location, specialty, hospital, divisions,
         {hospitals && hospitals.length > 0 && (
           <div>
             <label htmlFor="doctor-hospital" className={labelClass}>
-              Hospital
+              {t("doctor.filters.hospital")}
             </label>
             <select id="doctor-hospital" name="hospital" defaultValue={hospital} className={controlClass}>
-              <option value="">Any hospital</option>
+              <option value="">{t("doctor.filters.anyHospital")}</option>
               {hospitals.map((h) => (
                 <option key={h.slug} value={h.slug}>
                   {h.name}
@@ -90,10 +99,10 @@ export function DoctorFilters({ query, location, specialty, hospital, divisions,
           type="submit"
           className="inline-flex min-h-11 items-center rounded-md bg-brand-700 px-5 text-sm font-semibold text-white hover:bg-brand-800"
         >
-          Search doctors
+          {t("doctor.filters.submit")}
         </button>
         <Link href={routes.doctors()} className="text-sm font-medium text-brand-800 underline">
-          Clear filters
+          {t("doctor.filters.clear")}
         </Link>
       </div>
     </form>

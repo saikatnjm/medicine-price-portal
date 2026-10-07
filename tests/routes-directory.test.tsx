@@ -8,15 +8,15 @@
 import { cleanup, render, screen, within } from "@testing-library/react";
 import type { ReactElement } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import DoctorPage, { generateMetadata as doctorMetadata } from "@/app/doctor/[slug]/page";
-import DoctorsPage from "@/app/doctors/page";
-import FacilityPage, { generateMetadata as facilityMetadata } from "@/app/hospital/[slug]/page";
-import HospitalsPage, { generateMetadata as hospitalsMetadata } from "@/app/hospitals/page";
-import LocationPage from "@/app/locations/[slug]/page";
-import PharmacyPage, { generateMetadata as pharmacyMetadata } from "@/app/pharmacy/[slug]/page";
-import SearchPage from "@/app/search/page";
+import DoctorPage, { generateMetadata as doctorMetadata } from "@/app/[lang]/doctor/[slug]/page";
+import DoctorsPage from "@/app/[lang]/doctors/page";
+import FacilityPage, { generateMetadata as facilityMetadata } from "@/app/[lang]/hospital/[slug]/page";
+import HospitalsPage, { generateMetadata as hospitalsMetadata } from "@/app/[lang]/hospitals/page";
+import LocationPage from "@/app/[lang]/locations/[slug]/page";
+import PharmacyPage, { generateMetadata as pharmacyMetadata } from "@/app/[lang]/pharmacy/[slug]/page";
+import SearchPage from "@/app/[lang]/search/page";
 import { PharmacyPricesSection } from "@/components/pharmacy/pharmacy-prices-section";
-import SpecialtyPage from "@/app/specialties/[slug]/page";
+import SpecialtyPage from "@/app/[lang]/specialties/[slug]/page";
 import { notFound } from "next/navigation";
 
 // Indexing is opt-in; enable it before the site config is evaluated so the tests

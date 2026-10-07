@@ -1,35 +1,38 @@
 import { SectionHeading } from "@/components/common/section-heading";
 import type { MedicineDetail } from "@/domain/read-models";
-import { formatDate, formatPackSize } from "@/lib/format";
+import { getLocale, getT } from "@/i18n/server";
+import { formatPackSize } from "@/lib/format";
+import { formatDateIn } from "@/lib/format-locale";
 
 const HEADING_ID = "medicine-information";
 
 /** Additional information as a definition list. Fields a source does not publish are omitted. */
 export function MedicineFacts({ detail }: { detail: MedicineDetail }) {
+  const t = getT();
   const { medicine, generic, manufacturer, source } = detail;
   const facts: [string, string | undefined][] = [
-    ["Brand name", medicine.brandName],
-    ["Registered name", medicine.registeredName],
-    ["Generic name", generic.name],
-    ["Strength", medicine.strength || undefined],
-    ["Dosage form", medicine.dosageFormLabel],
-    ["Pack size", medicine.packSize && formatPackSize(medicine.packSize)],
-    ["Manufacturer", manufacturer.name],
-    ["Category", medicine.category],
+    [t("medicine.facts.brand"), medicine.brandName],
+    [t("medicine.facts.registered"), medicine.registeredName],
+    [t("medicine.facts.generic"), generic.name],
+    [t("medicine.facts.strength"), medicine.strength || undefined],
+    [t("medicine.facts.form"), medicine.dosageFormLabel],
+    [t("medicine.facts.pack"), medicine.packSize && formatPackSize(medicine.packSize)],
+    [t("medicine.facts.manufacturer"), manufacturer.name],
+    [t("medicine.facts.category"), medicine.category],
     [
-      "Prescription",
+      t("medicine.facts.prescription"),
       medicine.prescriptionRequired === undefined
         ? undefined
         : medicine.prescriptionRequired
-          ? "Prescription medicine"
-          : "Not prescription-only",
+          ? t("medicine.facts.rx_yes")
+          : t("medicine.facts.rx_no"),
     ],
-    ["DGDA registration (DAR) no.", medicine.provenance.darNumber],
+    [t("medicine.facts.dar"), medicine.provenance.darNumber],
   ];
 
   return (
     <section aria-labelledby={HEADING_ID}>
-      <SectionHeading id={HEADING_ID}>Medicine information</SectionHeading>
+      <SectionHeading id={HEADING_ID}>{t("medicine.facts.heading")}</SectionHeading>
       {medicine.description && <p className="mb-4 text-slate-800">{medicine.description}</p>}
       {generic.description && (
         <p className="mb-4 text-slate-700">
@@ -48,12 +51,11 @@ export function MedicineFacts({ detail }: { detail: MedicineDetail }) {
       </dl>
       {source && (
         <p className="mt-4 text-sm text-slate-600">
-          Source:{" "}
+          {t("medicine.facts.source")}{" "}
           <a href={source.url} className="text-brand-800 underline" rel="noopener">
             {source.name}
           </a>{" "}
-          ({source.publisher}), retrieved {formatDate(source.retrievedAt)}. Registration data shows
-          the product is registered in Bangladesh; it does not confirm current availability.
+          ({source.publisher}), {t("medicine.facts.source_note", { date: formatDateIn(source.retrievedAt, getLocale()) })}
         </p>
       )}
     </section>

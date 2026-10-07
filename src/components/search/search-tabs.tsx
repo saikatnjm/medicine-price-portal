@@ -1,11 +1,13 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 import type { MedicineFilterValues } from "@/domain/read-models";
+import type { MessageKey } from "@/i18n/messages";
+import { getT } from "@/i18n/server";
 
 export type SearchView = "all" | "medicine";
 
-const TABS: readonly { view: SearchView; label: string }[] = [
-  { view: "all", label: "All results" },
-  { view: "medicine", label: "Medicines only" },
+const TABS: readonly { view: SearchView; label: MessageKey }[] = [
+  { view: "all", label: "search.tabs.all" },
+  { view: "medicine", label: "search.tabs.medicine" },
 ];
 
 export function searchViewHref(
@@ -27,9 +29,10 @@ export function searchViewHref(
 
 /** Links (not ARIA tabs) that switch between the grouped and the medicine-only view. */
 export function SearchTabs({ query, active }: { query: string; active: SearchView }) {
+  const t = getT();
   if (!query) return null;
   return (
-    <nav aria-label="Search views" className="mb-6">
+    <nav aria-label={t("search.tabs.aria")} className="mb-6">
       <ul className="flex gap-2">
         {TABS.map(({ view, label }) => (
           <li key={view}>
@@ -42,7 +45,7 @@ export function SearchTabs({ query, active }: { query: string; active: SearchVie
                   : "border-slate-300 text-slate-700 hover:bg-slate-50"
               }`}
             >
-              {label}
+              {t(label)}
             </Link>
           </li>
         ))}

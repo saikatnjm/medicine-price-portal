@@ -9,7 +9,7 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
   const ids = await listSitemapIds();
   return {
     // Search and filter state is never a landing page (those URLs are also noindex).
-    rules: { userAgent: "*", allow: "/", disallow: ["/api/", "/search", "/*?*q=", "/*?*near=", "/*?*page="] },
+    rules: { userAgent: "*", allow: "/", disallow: ["/api/", "/search", "/bn/search", "/*?*q=", "/*?*near=", "/*?*page="] },
     sitemap: ids.map((id) => `${siteConfig.url}/sitemap/${id}.xml`),
     host: siteConfig.url,
   };

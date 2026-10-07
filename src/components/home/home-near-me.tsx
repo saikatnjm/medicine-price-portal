@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/i18n/link";
 import { useState } from "react";
+import { useT } from "@/i18n/client";
 import { formatNearParam } from "@/lib/geo";
 import { routes } from "@/lib/routes";
 import { buildHref } from "@/components/directory/pagination";
@@ -14,6 +15,7 @@ type Status = "idle" | "locating" | "denied" | "unavailable";
  * position goes into the link addresses only (never stored or sent anywhere else).
  */
 export function HomeNearMe({ showDoctors = false }: { showDoctors?: boolean }) {
+  const t = useT();
   const [status, setStatus] = useState<Status>("idle");
   const [near, setNear] = useState<string | null>(null);
 
@@ -40,22 +42,22 @@ export function HomeNearMe({ showDoctors = false }: { showDoctors?: boolean }) {
     <div className="space-y-3">
       {near ? (
         <div>
-          <p className="text-sm font-medium text-slate-800">Healthcare near you, sorted by distance</p>
+          <p className="text-sm font-medium text-slate-800">{t("home.near.heading")}</p>
           <ul className="mt-2 flex flex-wrap gap-2">
             <li>
               <Link href={buildHref(routes.hospitals(), { near })} className={chip}>
-                Hospitals &amp; clinics
+                {t("home.near.hospitals")}
               </Link>
             </li>
             <li>
               <Link href={buildHref(routes.pharmacies(), { near })} className={chip}>
-                Pharmacies
+                {t("home.near.pharmacies")}
               </Link>
             </li>
             {showDoctors && (
               <li>
                 <Link href={buildHref(routes.doctors(), { near })} className={chip}>
-                  Doctors
+                  {t("home.near.doctors")}
                 </Link>
               </li>
             )}
@@ -69,12 +71,12 @@ export function HomeNearMe({ showDoctors = false }: { showDoctors?: boolean }) {
           className="inline-flex min-h-12 items-center gap-2 rounded-full bg-brand-700 px-6 text-base font-semibold text-white shadow-sm hover:bg-brand-800 disabled:opacity-60"
         >
           <PinIcon className="size-5" />
-          {status === "locating" ? "Finding your location…" : "Use my location"}
+          {status === "locating" ? t("home.near.locating") : t("home.near.locate")}
         </button>
       )}
       <p role="status" className="text-sm text-slate-600">
-        {status === "denied" && "Location permission was not given. Search by area instead."}
-        {status === "unavailable" && "Your location is not available. Search by area instead."}
+        {status === "denied" && t("home.near.denied")}
+        {status === "unavailable" && t("home.near.unavailable")}
       </p>
     </div>
   );

@@ -1,20 +1,21 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 import { SectionHeading } from "@/components/common/section-heading";
 import { MedicineList } from "@/components/medicine/medicine-list";
 import type { MedicineDetail } from "@/domain/read-models";
-import { pluralize } from "@/lib/format";
+import { getT } from "@/i18n/server";
 import { searchHref } from "@/lib/search-params";
 
 const ALTERNATIVES_ID = "alternatives";
 const OTHER_FORMS_ID = "other-forms";
 
 function MoreLink({ shown, total, query }: { shown: number; total: number; query: string }) {
+  const t = getT();
   if (total <= shown) return null;
   return (
     <p className="mt-3 text-sm text-slate-700">
-      Showing {shown} of {total}.{" "}
+      {t("medicine.alt.showing", { shown, total })}{" "}
       <Link href={searchHref(query)} className="font-medium text-brand-800 underline">
-        See all {query} medicines
+        {t("medicine.alt.see_all", { query })}
       </Link>
     </p>
   );
@@ -24,6 +25,7 @@ function MoreLink({ shown, total, query }: { shown: number; total: number; query
  * Same-generic brands, presented strictly as an informational comparison.
  */
 export function MedicineAlternatives({ detail }: { detail: MedicineDetail }) {
+  const t = getT();
   const { medicine, generic, alternatives, alternativesTotal, otherForms, otherFormsTotal } =
     detail;
   const productLabel = [generic.name, medicine.strength, medicine.dosageFormLabel.toLowerCase()]
@@ -38,14 +40,16 @@ export function MedicineAlternatives({ detail }: { detail: MedicineDetail }) {
           description={
             <>
               {alternativesTotal > 0
-                ? `${pluralize(alternativesTotal, "other registered brand", "other registered brands")} with the same generic, strength and form (${productLabel}). `
+                ? `${t(alternativesTotal === 1 ? "medicine.alt.intro.one" : "medicine.alt.intro.other", {
+                    n: alternativesTotal.toLocaleString("en-US"),
+                    product: productLabel,
+                  })} `
                 : ""}
-              Shown for information only, not as a recommendation. Ask your doctor or pharmacist
-              before changing any medicine.
+              {t("medicine.alt.disclaimer")}
             </>
           }
         >
-          Same-generic brands
+          {t("medicine.alt.heading")}
         </SectionHeading>
         {alternatives.length > 0 ? (
           <>
@@ -54,7 +58,7 @@ export function MedicineAlternatives({ detail }: { detail: MedicineDetail }) {
           </>
         ) : (
           <p className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700">
-            No other brands of {productLabel} are listed.
+            {t("medicine.alt.none", { product: productLabel })}
           </p>
         )}
       </section>
@@ -63,9 +67,9 @@ export function MedicineAlternatives({ detail }: { detail: MedicineDetail }) {
         <section aria-labelledby={OTHER_FORMS_ID}>
           <SectionHeading
             id={OTHER_FORMS_ID}
-            description={`${generic.name} in a different strength or dosage form. These are not interchangeable without professional advice.`}
+            description={t("medicine.alt.other_desc", { generic: generic.name })}
           >
-            Other strengths and forms
+            {t("medicine.alt.other_heading")}
           </SectionHeading>
           <MedicineList items={otherForms} />
           <MoreLink shown={otherForms.length} total={otherFormsTotal} query={generic.name} />

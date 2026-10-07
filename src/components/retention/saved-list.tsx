@@ -1,6 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import { useT } from "@/i18n/client";
+import Link from "@/i18n/link";
+import type { MessageKey } from "@/i18n/messages";
 import { ENTITY_TYPES, toggleSaved, type EntityType } from "@/lib/local-store";
 import { routes } from "@/lib/routes";
 import { useSavedItems } from "@/lib/use-local-store";
@@ -11,37 +13,36 @@ const HREF: Record<EntityType, (slug: string) => string> = {
   pharmacy: routes.pharmacy,
   doctor: routes.doctor,
 };
-const HEADING: Record<EntityType, string> = {
-  medicine: "Medicines",
-  hospital: "Hospitals & clinics",
-  pharmacy: "Pharmacies",
-  doctor: "Doctors",
+const HEADING: Record<EntityType, MessageKey> = {
+  medicine: "retention.saved.medicine",
+  hospital: "retention.saved.hospital",
+  pharmacy: "retention.saved.pharmacy",
+  doctor: "retention.saved.doctor",
 };
 
 /** Saved items, grouped by type. Lives in this browser only. */
 export function SavedList() {
   const saved = useSavedItems();
+  const t = useT();
   if (saved.length === 0) {
     return (
       <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-slate-800">
-        <p className="font-medium">Nothing saved yet.</p>
-        <p className="mt-1 text-sm text-slate-700">
-          Use the Save button on a medicine, hospital, pharmacy or doctor page. Saved items stay in this browser.
-        </p>
+        <p className="font-medium">{t("retention.saved.emptyTitle")}</p>
+        <p className="mt-1 text-sm text-slate-700">{t("retention.saved.emptyText")}</p>
         <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
           <li>
             <Link href={routes.search()} className="inline-flex min-h-11 items-center font-medium text-brand-800 underline">
-              Search medicines
+              {t("retention.compare.search")}
             </Link>
           </li>
           <li>
             <Link href={routes.hospitals()} className="inline-flex min-h-11 items-center font-medium text-brand-800 underline">
-              Browse hospitals
+              {t("retention.saved.browseHospitals")}
             </Link>
           </li>
           <li>
             <Link href={routes.pharmacies()} className="inline-flex min-h-11 items-center font-medium text-brand-800 underline">
-              Browse pharmacies
+              {t("retention.saved.browsePharmacies")}
             </Link>
           </li>
         </ul>
@@ -57,7 +58,7 @@ export function SavedList() {
         return (
           <section key={type} aria-labelledby={`saved-${type}`}>
             <h2 id={`saved-${type}`} className="text-xl font-semibold text-slate-900">
-              {HEADING[type]}
+              {t(HEADING[type])}
             </h2>
             <ul className="mt-3 space-y-2">
               {items.map((item) => (
@@ -76,7 +77,7 @@ export function SavedList() {
                     onClick={() => toggleSaved({ type, slug: item.slug, name: item.name, subtitle: item.subtitle })}
                     className="inline-flex min-h-11 shrink-0 items-center rounded-lg border border-slate-300 px-3 text-sm font-medium text-slate-800 hover:bg-slate-50"
                   >
-                    Remove<span className="sr-only"> {item.name}</span>
+                    {t("retention.saved.remove")}<span className="sr-only"> {item.name}</span>
                   </button>
                 </li>
               ))}
@@ -90,7 +91,7 @@ export function SavedList() {
             href={routes.compare(medicineSlugs.slice(0, 4))}
             className="inline-flex min-h-11 items-center rounded-xl bg-brand-700 px-5 font-semibold text-white hover:bg-brand-800"
           >
-            Compare saved medicines
+            {t("retention.saved.compare")}
           </Link>
         </p>
       )}

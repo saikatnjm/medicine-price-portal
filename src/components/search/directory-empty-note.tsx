@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 
 /** Honest empty state with one onward link. */
 export function DirectoryEmptyNote({

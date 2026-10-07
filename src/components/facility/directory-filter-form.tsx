@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
-import Link from "next/link";
+import Link from "@/i18n/link";
 import type { FacilityKind } from "@/domain/healthcare";
-import { FACILITY_KIND_LABEL } from "@/domain/healthcare";
 import type { DivisionWithDistricts, FacilityKindCount, SpecialtyListItem } from "@/domain/read-models";
+import { localizePath } from "@/i18n/config";
+import { getLocale, getT } from "@/i18n/server";
+import { facilityKindLabel } from "@/lib/directory-labels";
 import { SEARCH_MAX_QUERY_LENGTH } from "@/lib/search-config";
 
 const controlClass =
@@ -39,6 +41,7 @@ export interface DirectoryFilterFormProps {
 /** Filters for hospital and pharmacy lists. Only controls that have values to choose from are shown. */
 export function DirectoryFilterForm(props: DirectoryFilterFormProps) {
   const { action, idPrefix, query, locations, kinds, specialties, emergency, clearHref } = props;
+  const t = getT();
   const id = (name: string) => `${idPrefix}-${name}`;
 
   let locationSelect: ReactNode = null;
@@ -54,14 +57,14 @@ export function DirectoryFilterForm(props: DirectoryFilterFormProps) {
       .filter((g) => g.districts.length > 0);
     const extra = locations.selected && !known.has(locations.selected);
     locationSelect = (
-      <Field id={id("location")} label="Location">
+      <Field id={id("location")} label={t("facility.filter.location")}>
         <select id={id("location")} name="location" defaultValue={locations.selected} className={controlClass}>
-          <option value="">All of Bangladesh</option>
+          <option value="">{t("facility.filter.allBangladesh")}</option>
           {extra && <option value={locations.selected}>{locations.selectedName ?? locations.selected}</option>}
           {groups.map(({ division, districts, divisionCount }) => (
-            <optgroup key={division.slug} label={`${division.name} Division`}>
+            <optgroup key={division.slug} label={t("directory.division", { name: division.name })}>
               <option value={division.slug}>
-                All of {division.name} Division ({divisionCount.toLocaleString("en-US")})
+                {t("facility.filter.allOfDivision", { name: division.name, count: divisionCount.toLocaleString("en-US") })}
               </option>
               {districts.map((d) => (
                 <option key={d.location.slug} value={d.location.slug}>
@@ -76,7 +79,7 @@ export function DirectoryFilterForm(props: DirectoryFilterFormProps) {
   }
 
   return (
-    <form role="search" action={action} method="get" className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+    <form role="search" action={localizePath(action, getLocale())} method="get" className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Field id={id("q")} label={props.queryLabel}>
           <input
@@ -93,21 +96,21 @@ export function DirectoryFilterForm(props: DirectoryFilterFormProps) {
         </Field>
         {locationSelect}
         {kinds && kinds.counts.length > 0 && (
-          <Field id={id("kind")} label="Type">
+          <Field id={id("kind")} label={t("facility.filter.type")}>
             <select id={id("kind")} name="kind" defaultValue={kinds.selected ?? ""} className={controlClass}>
-              <option value="">All types</option>
+              <option value="">{t("facility.filter.allTypes")}</option>
               {kinds.counts.map(({ kind, count }) => (
                 <option key={kind} value={kind}>
-                  {FACILITY_KIND_LABEL[kind]} ({count.toLocaleString("en-US")})
+                  {facilityKindLabel(t, kind)} ({count.toLocaleString("en-US")})
                 </option>
               ))}
             </select>
           </Field>
         )}
         {specialties && specialties.items.length > 0 && (
-          <Field id={id("specialty")} label="Specialty">
+          <Field id={id("specialty")} label={t("facility.filter.specialty")}>
             <select id={id("specialty")} name="specialty" defaultValue={specialties.selected} className={controlClass}>
-              <option value="">All specialties</option>
+              <option value="">{t("facility.filter.allSpecialties")}</option>
               {specialties.items.map(({ specialty, facilityCount }) => (
                 <option key={specialty.slug} value={specialty.slug}>
                   {specialty.name} ({facilityCount.toLocaleString("en-US")})
@@ -121,18 +124,18 @@ export function DirectoryFilterForm(props: DirectoryFilterFormProps) {
         {emergency?.show && (
           <label htmlFor={id("emergency")} className="flex min-h-11 items-center gap-2 text-sm text-slate-800">
             <input id={id("emergency")} type="checkbox" name="emergency" value="1" defaultChecked={emergency.checked} className="size-5" />
-            Emergency services listed
+            {t("directory.card.emergency")}
           </label>
         )}
         <button
           type="submit"
           className="min-h-11 rounded-lg bg-brand-700 px-5 text-sm font-semibold text-white hover:bg-brand-800"
         >
-          Apply filters
+          {t("facility.filter.apply")}
         </button>
         {clearHref && (
           <Link href={clearHref} className="inline-flex min-h-11 items-center text-sm text-brand-800 underline underline-offset-2">
-            Clear filters
+            {t("facility.filter.clear")}
           </Link>
         )}
       </div>

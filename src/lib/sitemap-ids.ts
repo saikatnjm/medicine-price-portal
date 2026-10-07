@@ -1,7 +1,7 @@
 import { services } from "@/data";
 
-/** Sitemap files stay well below the 50,000 URL limit. */
-export const SITEMAP_CHUNK_SIZE = 45_000;
+/** Each item produces one URL per language, so 22,000 items stay below the 50,000 URL limit. */
+export const SITEMAP_CHUNK_SIZE = 22_000;
 
 export const SITEMAP_GROUPS = ["core", "medicines", "facilities", "pharmacies", "doctors"] as const;
 export type SitemapGroup = (typeof SITEMAP_GROUPS)[number];

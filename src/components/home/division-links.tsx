@@ -1,5 +1,6 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 import type { DivisionWithDistricts, LocationListItem } from "@/domain/read-models";
+import { getT } from "@/i18n/server";
 import { routes } from "@/lib/routes";
 
 const MAX_LOCATIONS = 10;
@@ -14,12 +15,13 @@ export function popularLocations(divisions: readonly DivisionWithDistricts[], li
 }
 
 export function DivisionLinks({ divisions }: { divisions: readonly DivisionWithDistricts[] }) {
+  const t = getT();
   const items = popularLocations(divisions);
   if (items.length === 0) return null;
   return (
     <section aria-labelledby="popular-locations">
       <h2 id="popular-locations" className="text-xl font-semibold text-slate-900">
-        Popular locations
+        {t("home.popularLocations")}
       </h2>
       <ul className="mt-4 flex flex-wrap gap-2">
         {items.map(({ location }) => (
@@ -34,7 +36,7 @@ export function DivisionLinks({ divisions }: { divisions: readonly DivisionWithD
         ))}
         <li>
           <Link href={routes.locations()} className="inline-flex min-h-11 items-center px-3 text-sm font-medium text-brand-800 underline underline-offset-2">
-            All locations
+            {t("home.allLocations")}
           </Link>
         </li>
       </ul>

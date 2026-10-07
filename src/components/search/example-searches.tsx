@@ -1,4 +1,5 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
+import { getT } from "@/i18n/server";
 import { searchHref } from "@/lib/search-params";
 
 export const EXAMPLE_SEARCHES: readonly string[] = [
@@ -10,10 +11,11 @@ export const EXAMPLE_SEARCHES: readonly string[] = [
 ];
 
 /** Links to example queries; used on the homepage and in empty search states. */
-export function ExampleSearches({ label = "Try searching for" }: { label?: string }) {
+export function ExampleSearches({ label }: { label?: string }) {
+  const t = getT();
   return (
     <div className="text-sm text-slate-700">
-      <p className="font-medium">{label}</p>
+      <p className="font-medium">{label ?? t("search.example.label")}</p>
       <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
         {EXAMPLE_SEARCHES.map((example) => (
           <li key={example}>

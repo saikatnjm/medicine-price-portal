@@ -1,7 +1,8 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 import { PrescriptionTag } from "@/components/common/prescription-tag";
 import type { MedicineListItem } from "@/domain/read-models";
-import { formatMedicineName, formatPrice, pluralize } from "@/lib/format";
+import { getT } from "@/i18n/server";
+import { formatMedicineName, formatPrice } from "@/lib/format";
 import { routes } from "@/lib/routes";
 
 interface MedicineListProps {
@@ -13,6 +14,7 @@ interface MedicineListProps {
 /** Compact, scannable list of medicines used for search results, popular items and alternatives. */
 export function MedicineList({ items, headingLevel = "h3" }: MedicineListProps) {
   const Heading = headingLevel;
+  const t = getT();
   return (
     <ul className="divide-y divide-slate-200 border-y border-slate-200">
       {items.map(({ medicine, generic, manufacturer, priceStats }) => (
@@ -42,11 +44,11 @@ export function MedicineList({ items, headingLevel = "h3" }: MedicineListProps) 
           {priceStats && (
             <p className="shrink-0 text-sm text-slate-700 sm:text-right">
               <span className="text-slate-600">
-                {priceStats.hasSampleData ? "Sample price from " : "From "}
+                {t(priceStats.hasSampleData ? "medicine.list.sample_from" : "medicine.list.from")}
               </span>
               <span className="font-semibold text-slate-900">{formatPrice(priceStats.lowest)}</span>
               <span className="block text-xs text-slate-600">
-                at {pluralize(priceStats.count, "pharmacy", "pharmacies")}
+                {t(priceStats.count === 1 ? "medicine.list.at.one" : "medicine.list.at.other", { n: priceStats.count.toLocaleString("en-US") })}
               </span>
             </p>
           )}

@@ -1,15 +1,17 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
 import type { MedicineListItem } from "@/domain/read-models";
 import { formatMedicineName } from "@/lib/format";
+import { getT } from "@/i18n/server";
 import { routes } from "@/lib/routes";
 import { PillIcon } from "@/components/ui/icons";
 
 export function PopularMedicines({ items }: { items: readonly MedicineListItem[] }) {
+  const t = getT();
   if (items.length === 0) return null;
   return (
     <section aria-labelledby="popular-medicines">
       <h2 id="popular-medicines" className="text-xl font-semibold text-slate-900">
-        Popular medicines
+        {t("home.popularMedicines")}
       </h2>
       <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {items.map(({ medicine, generic }) => (

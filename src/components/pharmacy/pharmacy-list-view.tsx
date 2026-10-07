@@ -10,29 +10,32 @@ import { buildHref, Pagination } from "@/components/directory/pagination";
 import { PharmacyCard, ResultList } from "@/components/directory/result-cards";
 import { ResultsMap } from "@/components/directory/results-map";
 import { Container } from "@/components/ui/container";
+import type { Locale } from "@/i18n/config";
+import { getLocale, getT } from "@/i18n/server";
 import { pharmacyMarkers } from "@/lib/map-markers";
 import { routes } from "@/lib/routes";
 import { breadcrumbJsonLd } from "@/lib/seo";
 import {
-  directoryListBreadcrumbs,
-  directoryListJsonLd,
-  locationScopeName,
-  pharmacyListDescription,
-  pharmacyListHeading,
-  pharmacyListTitle,
-} from "@/lib/seo-facilities";
+  pharmacyListBreadcrumbs,
+  pharmacyListDescriptionFor,
+  pharmacyListJsonLd,
+  pharmacyListTitleFor,
+  pharmacyScope,
+} from "@/lib/seo-pharmacy";
 import type { PharmacyListData } from "./pharmacy-list-data";
 
-export function pharmacyScopeName(data: PharmacyListData): string | undefined {
-  return data.location ? locationScopeName(data.location.location, data.location.ancestors) : undefined;
+export function pharmacyScopeName(data: PharmacyListData, lang: Locale = getLocale()): string | undefined {
+  return data.location ? pharmacyScope(data.location.location, data.location.ancestors, lang) : undefined;
 }
 
-export function pharmacyListCopy(data: PharmacyListData) {
-  const scopeName = pharmacyScopeName(data);
+/** Title, heading and description for the list page, in the given language (default: the request language). */
+export function pharmacyListCopy(data: PharmacyListData, lang: Locale = getLocale()) {
+  const scopeName = pharmacyScopeName(data, lang);
+  const title = pharmacyListTitleFor(scopeName, lang);
   return {
-    title: pharmacyListTitle(scopeName),
-    heading: pharmacyListHeading(scopeName),
-    description: pharmacyListDescription(scopeName, data.list.results.total),
+    title,
+    heading: title,
+    description: pharmacyListDescriptionFor(scopeName, data.list.results.total, lang),
   };
 }
 
@@ -42,34 +45,38 @@ export function pharmacyListPath(data: PharmacyListData): string {
 
 /** Shared by /pharmacies and /pharmacies/[location]. */
 export function PharmacyListView({ data }: { data: PharmacyListData }) {
+  const t = getT();
+  const lang = getLocale();
   const { params, list, location } = data;
   const { results, filters } = list;
   const path = pharmacyListPath(data);
-  const { heading, description } = pharmacyListCopy(data);
-  const scopeName = pharmacyScopeName(data);
-  const breadcrumbs = directoryListBreadcrumbs("pharmacies", location?.location, location?.ancestors);
+  const { heading, description } = pharmacyListCopy(data, lang);
+  const scopeName = pharmacyScopeName(data, lang);
+  const breadcrumbs = pharmacyListBreadcrumbs(location?.location, location?.ancestors, lang);
   const hrefFor = (page: number) =>
     buildHref(path, { q: params.q, location: location ? undefined : params.location, near: params.near, page });
 
   return (
     <Container className="py-8 sm:py-10">
-      <JsonLd data={breadcrumbJsonLd(breadcrumbs, path)} />
+      <JsonLd data={breadcrumbJsonLd(breadcrumbs, path, lang)} />
       {results.items.length > 0 && data.indexable && (
         <JsonLd
-          data={directoryListJsonLd({
-            name: heading,
-            description,
-            path,
-            items: results.items.map(({ pharmacy }) => ({ name: pharmacy.name, path: routes.pharmacy(pharmacy.slug) })),
-          })}
+          data={pharmacyListJsonLd(
+            {
+              name: heading,
+              description,
+              path,
+              items: results.items.map(({ pharmacy }) => ({ name: pharmacy.name, path: routes.pharmacy(pharmacy.slug) })),
+            },
+            lang,
+          )}
         />
       )}
       <Breadcrumbs items={breadcrumbs} />
       <header className="mt-4 mb-6 max-w-3xl space-y-3">
         <h1 className="text-2xl font-semibold text-slate-900 sm:text-3xl">{heading}</h1>
         <p className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800">
-          Medicine prices and stock are not available for these pharmacies yet. This list shows where pharmacies are, not
-          what they sell or charge.
+          {t("pharmacy.list.notice")}
         </p>
       </header>
 
@@ -78,8 +85,8 @@ export function PharmacyListView({ data }: { data: PharmacyListData }) {
           action={path}
           idPrefix="pharmacies"
           query={params.q}
-          queryLabel="Pharmacy name"
-          queryPlaceholder="Search by pharmacy name"
+          queryLabel={t("pharmacy.list.name_label")}
+          queryPlaceholder={t("pharmacy.list.name_placeholder")}
           locations={
             location ? undefined : { tree: data.tree, selected: filters.location?.slug ?? "", selectedName: filters.location?.name, countOf: "pharmacyCount" }
           }
@@ -90,20 +97,20 @@ export function PharmacyListView({ data }: { data: PharmacyListData }) {
         </Suspense>
       </div>
 
-      <section aria-label="Results" className="mt-6 space-y-3">
+      <section aria-label={t("pharmacy.list.results")} className="mt-6 space-y-3">
         {results.total === 0 ? (
           <EmptyResults
             datasetEmpty={data.datasetEmpty}
             hasFilters={data.hasParams}
-            noun="pharmacies"
+            noun={t("pharmacy.list.noun")}
             scopeName={scopeName}
             clearHref={data.hasParams ? path : routes.pharmacies()}
           />
         ) : (
           <>
-            <ResultCount total={results.total} page={results.page} pageSize={results.pageSize} noun="pharmacies" singular="pharmacy" />
+            <ResultCount total={results.total} page={results.page} pageSize={results.pageSize} noun={t("pharmacy.list.noun")} singular={t("pharmacy.list.noun_one")} />
             <ResultsMap markers={pharmacyMarkers(results.items)}>
-              <ResultList label="Pharmacies">
+              <ResultList label={t("pharmacy.list.list_label")}>
                 {results.items.map((item) => (
                   <PharmacyCard key={item.pharmacy.id} item={item} headingLevel="h2" />
                 ))}

@@ -1,4 +1,5 @@
 import type { ChamberView } from "@/domain/read-models";
+import { getT } from "@/i18n/server";
 import { mapLinksFor } from "@/lib/maps";
 
 const primary =
@@ -33,6 +34,7 @@ export function DoctorActions({
   chambers: readonly ChamberView[];
   doctorPhone?: string;
 }) {
+  const t = getT();
   const phone = callNumber(chambers, doctorPhone);
   const located = chambers.find((c) =>
     mapLinksFor({ name: c.name, address: c.chamber.address, coordinates: c.coordinates ?? undefined }),
@@ -44,20 +46,22 @@ export function DoctorActions({
   if (!phone && !directions && !appointmentUrl) return null;
 
   return (
-    <div className="flex flex-wrap gap-2" role="group" aria-label={`Contact ${name}`}>
+    <div className="flex flex-wrap gap-2" role="group" aria-label={t("doctor.actions.contact", { name })}>
       {phone && (
         <a href={telHref(phone)} className={primary}>
-          Call<span className="sr-only"> {phone}</span>
+          {t("doctor.actions.call")}<span className="sr-only"> {phone}</span>
         </a>
       )}
       {directions && (
         <a href={directions.directionsUrl} target="_blank" rel="noopener noreferrer" className={secondary}>
-          Directions<span className="sr-only"> to {located?.name} (opens Google Maps)</span>
+          {t("doctor.actions.directions")}
+          <span className="sr-only"> {t("doctor.actions.directionsSr", { name: located?.name ?? "" })}</span>
         </a>
       )}
       {appointmentUrl && (
         <a href={appointmentUrl} target="_blank" rel="noopener noreferrer" className={secondary}>
-          Appointment<span className="sr-only"> with {name} (opens the booking page)</span>
+          {t("doctor.actions.appointment")}
+          <span className="sr-only"> {t("doctor.actions.appointmentSr", { name })}</span>
         </a>
       )}
     </div>

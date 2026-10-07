@@ -1,4 +1,5 @@
-import Link from "next/link";
+import Link from "@/i18n/link";
+import { getT } from "@/i18n/server";
 import { searchHref } from "@/lib/search-params";
 
 const POPULAR_SEARCHES: readonly string[] = [
@@ -10,10 +11,11 @@ const POPULAR_SEARCHES: readonly string[] = [
 
 /** Homepage "Popular searches": quick chips that run a normal search. */
 export function ExampleQueries() {
+  const t = getT();
   return (
     <section aria-labelledby="popular-searches">
       <h2 id="popular-searches" className="text-sm font-semibold text-slate-700">
-        Popular searches
+        {t("home.popularSearches")}
       </h2>
       <ul className="mt-2 flex flex-wrap gap-2">
         {POPULAR_SEARCHES.map((example) => (
