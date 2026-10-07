@@ -10,7 +10,7 @@
     "build": "NODE_ENV=production next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "next typegen && tsc --noEmit",
+    "typecheck": "node -e \"for (const d of ['.next/types', '.next/dev/types']) require('fs').rmSync(d, { recursive: true, force: true })\" && next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "format": "prettier --write .",
