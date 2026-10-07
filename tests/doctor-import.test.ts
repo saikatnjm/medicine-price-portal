@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { buildDoctors, COLUMNS, isValidPhone, mergeSources, parseCsv } from "../scripts/data/import-doctors.mjs";
 import { validateDataset } from "../scripts/data/validate-data.mjs";
+import type { DatasetFiles } from "../scripts/data/validate-data.mjs";
 import { fixtureDataset } from "./fixtures";
 
 const NOW = "2026-10-05T00:00:00.000Z";
@@ -50,14 +51,14 @@ describe("doctor import", () => {
     ]);
     expect(r.errors).toEqual([]);
     expect(r.doctors).toHaveLength(1);
-    const d = r.doctors[0]!;
+    const d = r.doctors[0]! as Record<string, unknown> & { chambers: Record<string, unknown>[] };
     expect(d.slug).toBe("dr-fiction-name-dhaka");
     expect(d.id).toMatch(/^doc_[0-9a-f]{16}$/);
     expect(d.specialtyIds).toEqual(["spec_cardiology"]);
     expect(d.chambers).toHaveLength(2);
-    expect(d.chambers[0].facilityId).toBe("fac_1");
-    expect(d.chambers[0].appointmentPhone).toBe("+880 1700-000000");
-    expect(d.chambers[1]).toEqual({
+    expect(d.chambers[0]!.facilityId).toBe("fac_1");
+    expect(d.chambers[0]!.appointmentPhone).toBe("+880 1700-000000");
+    expect(d.chambers[1]!).toEqual({
       facilityName: "Second Chamber",
       districtId: "loc_dis_dhaka",
       areaId: "loc_area_gulshan",
@@ -84,7 +85,7 @@ describe("doctor import", () => {
   it("produces data that passes dataset validation", () => {
     const r = run([valid]);
     const { errors } = validateDataset({
-      ...(fixtureDataset as never),
+      ...(fixtureDataset as unknown as DatasetFiles),
       popular: [],
       doctors: r.doctors,
       directorySources: r.sources,

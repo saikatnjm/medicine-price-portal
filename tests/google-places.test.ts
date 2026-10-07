@@ -84,11 +84,11 @@ describe("live details", () => {
     setEnv("test-key", "true");
     const calls = mockFetch(good);
     expect(await fetchGooglePlaceDetails("ChIJ123")).toEqual(good);
-    expect(calls[0].url).toBe("https://places.googleapis.com/v1/places/ChIJ123");
-    const headers = calls[0].init?.headers as Record<string, string>;
+    expect(calls[0]!.url).toBe("https://places.googleapis.com/v1/places/ChIJ123");
+    const headers = calls[0]!.init?.headers as Record<string, string>;
     expect(headers["X-Goog-Api-Key"]).toBe("test-key");
     expect(headers["X-Goog-FieldMask"]).toBe("rating,userRatingCount,googleMapsUri");
-    expect(calls[0].init?.cache).toBe("no-store");
+    expect(calls[0]!.init?.cache).toBe("no-store");
   });
 });
 

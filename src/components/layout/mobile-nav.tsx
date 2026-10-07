@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { NavItem } from "./nav-items";
 
 /** Disclosure menu for small screens. Hidden from md upwards, where the inline nav shows. */
@@ -12,11 +12,14 @@ export function MobileNav({ items }: { items: readonly NavItem[] }) {
   // without an effect: it is open only while the path is unchanged.
   const [openOn, setOpenOn] = useState<string | null>(null);
   const open = openOn === pathname;
-  const setOpen = (value: boolean | ((current: boolean) => boolean)) =>
-    setOpenOn((current) => {
-      const next = typeof value === "function" ? value(current === pathname) : value;
-      return next ? pathname : null;
-    });
+  const setOpen = useCallback(
+    (value: boolean | ((current: boolean) => boolean)) =>
+      setOpenOn((current) => {
+        const next = typeof value === "function" ? value(current === pathname) : value;
+        return next ? pathname : null;
+      }),
+    [pathname],
+  );
 
   // Escape closes the menu.
   useEffect(() => {
@@ -26,7 +29,7 @@ export function MobileNav({ items }: { items: readonly NavItem[] }) {
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [open]);
+  }, [open, setOpen]);
 
   return (
     <div className="md:hidden">
