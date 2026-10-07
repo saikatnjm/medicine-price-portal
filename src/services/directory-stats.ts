@@ -8,9 +8,10 @@ import type { LocationCounts } from "../domain/read-models";
 import type { ID, Pharmacy } from "../domain/types";
 import type { Repositories } from "../repositories";
 import type { PlaceResolver } from "./places";
+import { SEO_THRESHOLDS } from "../lib/seo-config";
 
 /** Combination pages (e.g. /hospitals/dhaka/cardiology) need at least this many records to be indexed. */
-export const MIN_COMBINATION_RESULTS = 3;
+export const MIN_COMBINATION_RESULTS = SEO_THRESHOLDS.minCombinationResults;
 
 const emptyCounts = (): LocationCounts => ({ facilityCount: 0, hospitalCount: 0, pharmacyCount: 0, doctorCount: 0 });
 

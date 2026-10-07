@@ -2,6 +2,7 @@ import type { Location, PostalLocation } from "../domain/healthcare";
 import type { Place } from "../domain/read-models";
 import type { ID } from "../domain/types";
 import { formatPlace } from "../lib/format";
+import { aliasTargetsForPrefix, canonicalPlaceName } from "../lib/aliases";
 import { normalizeSearchText } from "../lib/text";
 import type { Repositories } from "../repositories";
 
@@ -87,12 +88,18 @@ export class PlaceResolver {
 
   /** Locations whose name (or a word of it) starts with the query; areas and districts before divisions. */
   search(query: string): Location[] {
-    const q = normalizeSearchText(query);
-    if (!q) return [];
+    const typed = normalizeSearchText(query);
+    if (!typed) return [];
+    const q = canonicalPlaceName(typed);
+    const aliased = aliasTargetsForPrefix(typed);
     return this.all
       .filter((l) => {
         const name = normalizeSearchText(`${l.name} ${l.nameBn ?? ""}`);
-        return name.startsWith(q) || name.split(" ").some((w) => w.startsWith(q));
+        return (
+          name.startsWith(q) ||
+          name.split(" ").some((w) => w.startsWith(q)) ||
+          aliased.some((alias) => name.startsWith(alias))
+        );
       })
       .sort(
         (a, b) =>
@@ -103,7 +110,7 @@ export class PlaceResolver {
 
   /** Exact name match (used to recognise "in Dhanmondi" in queries); districts win over same-name areas/divisions. */
   findByName(name: string): Location | null {
-    const q = normalizeSearchText(name);
+    const q = canonicalPlaceName(normalizeSearchText(name));
     if (!q) return null;
     const matches = this.all.filter((l) => normalizeSearchText(l.name) === q || l.slug === q.replace(/ /g, "-"));
     const rank = { district: 0, area: 1, division: 2 } as const;

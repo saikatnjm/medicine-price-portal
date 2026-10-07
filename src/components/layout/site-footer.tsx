@@ -29,6 +29,11 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link href={routes.saved()} className="inline-flex min-h-8 items-center underline-offset-2 hover:underline">
+                Saved
+              </Link>
+            </li>
+            <li>
               <Link href={routes.about()} className="inline-flex min-h-8 items-center underline-offset-2 hover:underline">
                 About the data
               </Link>

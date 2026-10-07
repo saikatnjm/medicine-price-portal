@@ -3,6 +3,7 @@ import { CategoryLinks } from "@/components/home/category-links";
 import { ExampleQueries } from "@/components/home/example-queries";
 import { DataSourcesNote } from "@/components/home/data-sources-note";
 import { DivisionLinks } from "@/components/home/division-links";
+import { ContinueSection } from "@/components/retention/continue-section";
 import { HomeNearMe } from "@/components/home/home-near-me";
 import { PopularMedicines } from "@/components/home/popular-medicines";
 
@@ -49,6 +50,7 @@ export default async function HomePage() {
         </Container>
       </div>
       <Container className="space-y-12 py-10">
+        <ContinueSection />
         <CategoryLinks summary={summary} />
         <section aria-labelledby="near-you" className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
           <h2 id="near-you" className="text-xl font-semibold text-slate-900">

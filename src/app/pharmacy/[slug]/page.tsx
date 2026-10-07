@@ -14,6 +14,8 @@ import { QuickActions } from "@/components/facility/quick-actions";
 import { PharmacyOverview } from "@/components/pharmacy/pharmacy-overview";
 import { PharmacyPricesSection } from "@/components/pharmacy/pharmacy-prices-section";
 import { Faq } from "@/components/common/faq";
+import { NextSteps } from "@/components/common/next-steps";
+import { EntityToolbar } from "@/components/retention/entity-toolbar";
 import { Container } from "@/components/ui/container";
 import { HeroCard } from "@/components/ui/hero-card";
 import { trustLabelOf } from "@/domain/healthcare";
@@ -52,6 +54,7 @@ export default async function PharmacyPage({ params }: PharmacyPageProps) {
   const { pharmacy, place } = detail;
   const path = routes.pharmacy(pharmacy.slug);
   const breadcrumbs = pharmacyBreadcrumbs(detail);
+  const placeSlug = place.area?.slug ?? place.district?.slug;
 
   return (
     <Container className="py-8 sm:py-10">
@@ -67,6 +70,13 @@ export default async function PharmacyPage({ params }: PharmacyPageProps) {
             coordinates={pharmacy.coordinates}
             google={pharmacy.google}
             showMapLink
+          />
+          <EntityToolbar
+            type="pharmacy"
+            slug={pharmacy.slug}
+            name={pharmacy.name}
+            subtitle={place.label || undefined}
+            path={path}
           />
         </HeroCard>
         <LocationBlock
@@ -113,6 +123,13 @@ export default async function PharmacyPage({ params }: PharmacyPageProps) {
           ]}
         />
         <MoreInArea place={place} type="pharmacies" />
+        <NextSteps
+          links={[
+            { label: "Find nearby pharmacies", href: routes.pharmacies(placeSlug) },
+            { label: "Find a hospital nearby", href: routes.hospitals(placeSlug) },
+            { label: "Search a medicine", href: routes.search() },
+          ]}
+        />
         <div className="space-y-6 border-t border-slate-200 pt-6">
           <SourceSection source={detail.source} provenance={pharmacy.provenance} sourceName={pharmacy.sourceName} />
           <ReportIssue name={pharmacy.name} path={path} provenance={pharmacy.provenance} />

@@ -9,7 +9,10 @@ import { MedicineAlternatives } from "@/components/medicine/medicine-alternative
 import { MedicineFacts } from "@/components/medicine/medicine-facts";
 import { MedicineOverview } from "@/components/medicine/medicine-overview";
 import { PriceComparison } from "@/components/medicine/price-comparison";
+import { RelatedSearches } from "@/components/common/related-searches";
+import { EntityToolbar } from "@/components/retention/entity-toolbar";
 import { Container } from "@/components/ui/container";
+import type { RelatedSearch } from "@/lib/related-searches";
 import { services } from "@/data";
 import { formatMedicineName } from "@/lib/format";
 import { routes } from "@/lib/routes";
@@ -48,12 +51,7 @@ export async function generateMetadata({ params }: MedicinePageProps): Promise<M
   const title = medicineTitle(detail);
   const description = medicineDescription(detail);
   const path = routes.medicine(detail.medicine.slug);
-  return {
-    title,
-    description,
-    alternates: { canonical: path },
-    openGraph: openGraph(path, title, description),
-  };
+  return pageMetadata({ title, description, path });
 }
 
 export default async function MedicinePage({ params }: MedicinePageProps) {
@@ -66,6 +64,12 @@ export default async function MedicinePage({ params }: MedicinePageProps) {
     { name: "Home", href: routes.home() },
     { name: generic.name, href: searchHref(generic.name) },
     { name: formatMedicineName(medicine) },
+  ];
+
+  const related: RelatedSearch[] = [
+    { label: `${generic.name} medicines`, href: searchHref(generic.name) },
+    ...(detail.alternativesTotal > 0 ? [{ label: `${medicine.brandName} alternatives`, href: `${path}#alternatives` }] : []),
+    { label: `${detail.manufacturer.name.replace(/\.$/, "")} medicines`, href: searchHref(detail.manufacturer.name.replace(/\.$/, "")) },
   ];
 
   return (
@@ -81,10 +85,19 @@ export default async function MedicinePage({ params }: MedicinePageProps) {
 
       <div className="mt-4 space-y-10">
         <MedicineOverview detail={detail} />
+        <EntityToolbar
+          type="medicine"
+          slug={medicine.slug}
+          name={formatMedicineName(medicine)}
+          subtitle={generic.name}
+          path={path}
+          compare
+        />
         {detail.hasSampleData && <SampleDataNotice />}
         <PriceComparison detail={detail} />
         <MedicineAlternatives detail={detail} />
         <MedicineFacts detail={detail} />
+        <RelatedSearches items={related} />
         <nav
           aria-label="Next steps"
           className="flex flex-wrap gap-x-6 gap-y-2 border-t border-slate-200 pt-6"

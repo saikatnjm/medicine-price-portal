@@ -3,6 +3,7 @@ import type { CombinationIndexEntry, DirectorySummary } from "../domain/read-mod
 import type { Repositories } from "../repositories";
 import { loadDirectoryStats, MIN_COMBINATION_RESULTS } from "./directory-stats";
 import { PlaceResolver } from "./places";
+import { relatedForLocation, relatedForSpecialty, type RelatedSearch } from "../lib/related-searches";
 
 /** Site-wide directory facts: homepage counts and indexable combination pages. */
 export class DirectoryService {
@@ -58,6 +59,34 @@ export class DirectoryService {
       }
     }
     return entries;
+  }
+
+  /** "People also search for" links for a specialty page (only existing, indexable pages). */
+  async relatedForSpecialty(specialtySlug: string, limit?: number): Promise<RelatedSearch[]> {
+    const [places, specialty, combinations] = await Promise.all([
+      PlaceResolver.create(this.repos),
+      this.repos.specialties.findBySlug(specialtySlug),
+      this.listCombinations(),
+    ]);
+    if (!specialty) return [];
+    // Areas share names across districts ("Sadar"), so only divisions and districts are named here.
+    const placeName = (slug: string) => {
+      const location = places.all.find((l) => l.slug === slug);
+      return location && location.level !== "area" ? location.name : undefined;
+    };
+    return relatedForSpecialty({ specialty, combinations, placeName, limit });
+  }
+
+  /** "People also search for" links for a location page. */
+  async relatedForLocation(locationSlug: string, placeName: string, limit?: number): Promise<RelatedSearch[]> {
+    const [specialties, combinations] = await Promise.all([this.repos.specialties.listAll(), this.listCombinations()]);
+    return relatedForLocation({
+      locationSlug,
+      placeName,
+      combinations,
+      specialtyOf: (slug) => specialties.find((s) => s.slug === slug),
+      limit,
+    });
   }
 
   /** Whether a combination page has enough records to be indexed. */

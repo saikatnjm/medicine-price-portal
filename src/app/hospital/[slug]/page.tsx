@@ -15,6 +15,8 @@ import { MoreInArea } from "@/components/facility/more-in-area";
 import { FacilityNearbySections } from "@/components/facility/nearby-sections";
 import { QuickActions } from "@/components/facility/quick-actions";
 import { Faq } from "@/components/common/faq";
+import { NextSteps } from "@/components/common/next-steps";
+import { EntityToolbar } from "@/components/retention/entity-toolbar";
 import { Container } from "@/components/ui/container";
 import { HeroCard } from "@/components/ui/hero-card";
 import { trustLabelOf } from "@/domain/healthcare";
@@ -58,6 +60,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
   const { facility, place } = detail;
   const path = routes.hospital(facility.slug);
   const breadcrumbs = facilityBreadcrumbs(detail);
+  const placeSlug = place.area?.slug ?? place.district?.slug;
 
   return (
     <Container className="py-8 sm:py-10">
@@ -73,6 +76,13 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
             address={facility.address}
             coordinates={facility.coordinates}
             google={facility.google}
+          />
+          <EntityToolbar
+            type="hospital"
+            slug={facility.slug}
+            name={facility.name}
+            subtitle={place.label || undefined}
+            path={path}
           />
         </HeroCard>
         <LocationBlock
@@ -96,6 +106,13 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
         <FacilityDoctors doctors={detail.doctors} facilityName={facility.name} />
         <FacilityNearbySections nearby={detail.nearby} />
         <MoreInArea place={place} type="hospitals" />
+        <NextSteps
+          links={[
+            { label: "Find another hospital", href: routes.hospitals(placeSlug) },
+            { label: "Find nearby pharmacies", href: routes.pharmacies(placeSlug) },
+            { label: "Explore another location", href: routes.locations() },
+          ]}
+        />
         <Faq
           items={[
             ...(facility.coordinates || facility.address

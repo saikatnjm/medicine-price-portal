@@ -24,5 +24,9 @@ export const routes = {
   specialty: (slug: string) => `/specialties/${enc(slug)}`,
   locations: () => "/locations",
   location: (slug: string) => `/locations/${enc(slug)}`,
+  saved: () => "/saved",
+  /** Medicine comparison; slugs go in the "m" parameter (noindex). */
+  compare: (slugs: readonly string[] = []) =>
+    slugs.length > 0 ? `/compare?m=${slugs.map(enc).join(",")}` : "/compare",
   suggestApi: () => "/api/suggest",
 } as const;

@@ -4,6 +4,7 @@ import { SearchForm } from "@/components/search/search-form";
 import { MedicineFilters } from "@/components/search/medicine-filters";
 import { SearchResults } from "@/components/search/search-results";
 import { searchViewHref, SearchTabs, type SearchView } from "@/components/search/search-tabs";
+import { SearchRecorder } from "@/components/retention/search-recorder";
 import { Container } from "@/components/ui/container";
 import { services } from "@/data";
 import { routes } from "@/lib/routes";
@@ -53,8 +54,17 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     : globalResult !== null && (globalResult.status === "empty_query" || globalResult.total === 0);
   const suggestions = needsSuggestions ? await services.medicines.listPopularMedicines() : [];
 
+  const resultCount = needsSuggestions
+    ? 0
+    : medicineResult
+      ? medicineResult.status === "ok"
+        ? medicineResult.total
+        : 0
+      : (globalResult?.total ?? 0);
+
   return (
     <Container className="py-8 sm:py-10">
+      <SearchRecorder query={query} results={resultCount} />
       <h1 className="text-2xl font-semibold text-slate-900 sm:text-3xl">
         {query ? `Results for “${query}”` : "Search"}
       </h1>
