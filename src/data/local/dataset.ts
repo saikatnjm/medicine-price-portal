@@ -1,3 +1,4 @@
+import type { MedicineSafetyInfo } from "../../domain/medicine-safety";
 import type { Doctor, Facility, Location, Specialty } from "../../domain/healthcare";
 import type {
   DataSource,
@@ -15,6 +16,7 @@ import genericsJson from "./seed/generics.json";
 import locationsJson from "./seed/locations.json";
 import manufacturersJson from "./seed/manufacturers.json";
 import medicinesJson from "./seed/medicines.json";
+import medicineSafetyJson from "./seed/medicine-safety.json";
 import pharmaciesJson from "./seed/pharmacies.json";
 import popularJson from "./seed/popular.json";
 import pricesJson from "./seed/prices.json";
@@ -35,6 +37,8 @@ export interface LocalDataset {
   locations: Location[];
   specialties: Specialty[];
   doctors: Doctor[];
+  /** Source-cited medicine safety information, by generic. Optional: empty until a licensed source is added. */
+  safety?: MedicineSafetyInfo[];
 }
 
 /**
@@ -59,4 +63,5 @@ export const seedDataset: LocalDataset = {
   locations: locationsJson as Location[],
   specialties: specialtiesJson as Specialty[],
   doctors: doctorsJson as Doctor[],
+  safety: medicineSafetyJson as MedicineSafetyInfo[],
 };

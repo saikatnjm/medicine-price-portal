@@ -16,6 +16,7 @@ import type {
   Location,
   Specialty,
 } from "../domain/healthcare";
+import type { MedicineSafetyInfo } from "../domain/medicine-safety";
 import type { MedicineIndexEntry, MedicineSearchFacets } from "../domain/read-models";
 import type {
   DataSource,
@@ -87,7 +88,15 @@ export interface SourceRepository {
   listAll(): Promise<DataSource[]>;
 }
 
+/** Structured, source-cited medicine safety information (future: API or reviewed database). */
+export interface MedicineSafetyRepository {
+  /** Reviewed record for a generic, or null when none exists (the common case). */
+  findByGenericSlug(slug: string): Promise<MedicineSafetyInfo | null>;
+  count(): Promise<number>;
+}
+
 export interface Repositories extends DirectoryRepositories {
+  safety: MedicineSafetyRepository;
   medicines: MedicineRepository;
   generics: GenericRepository;
   manufacturers: ManufacturerRepository;

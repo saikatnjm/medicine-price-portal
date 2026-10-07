@@ -2,6 +2,7 @@
  * Read models returned by application services to the UI.
  * They combine domain entities for a specific use case and are never stored.
  */
+import type { MedicineSafetyInfo } from "./medicine-safety";
 import type {
   Coordinates,
   Doctor,
@@ -50,6 +51,8 @@ export interface PriceWithPharmacy {
 }
 
 export interface MedicineDetail extends MedicineSummary {
+  /** Source-cited safety information for the generic; null when no reviewed record exists. */
+  safety: MedicineSafetyInfo | null;
   /** Sorted by amount ascending, then pharmacy name. */
   prices: PriceWithPharmacy[];
   priceStats: PriceStats | null;

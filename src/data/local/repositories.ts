@@ -1,9 +1,11 @@
+import { hasSafetyContent } from "../../domain/medicine-safety";
 import type { MedicineSearchFacets } from "../../domain/read-models";
 import type { ID, Medicine, Page } from "../../domain/types";
 import type {
   GenericRepository,
   ManufacturerRepository,
   MedicineRepository,
+  MedicineSafetyRepository,
   MedicineSearchParams,
   PharmacyRepository,
   PriceRepository,
@@ -160,7 +162,23 @@ export function createLocalRepositories(source: LocalDataset): Repositories {
     },
   };
 
+  // Only reviewed records with something to show are served.
+  const safetyBySlug = new Map(
+    (dataset.safety ?? [])
+      .filter((info) => info.verificationStatus === "source_cited" && hasSafetyContent(info) && info.licenceNote)
+      .map((info) => [info.genericSlug, info]),
+  );
+  const safety: MedicineSafetyRepository = {
+    async findByGenericSlug(slug) {
+      return safetyBySlug.get(slug) ?? null;
+    },
+    async count() {
+      return safetyBySlug.size;
+    },
+  };
+
   return {
+    safety,
     medicines,
     generics,
     manufacturers,

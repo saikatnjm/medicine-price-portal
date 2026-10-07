@@ -25,11 +25,12 @@ export class MedicineService {
     const medicine = await this.repos.medicines.findBySlug(slug);
     if (!medicine) return null;
 
-    const [summaries, rawPrices, sameGeneric, sources] = await Promise.all([
+    const [summaries, rawPrices, sameGeneric, sources, safety] = await Promise.all([
       toMedicineSummaries([medicine], this.repos),
       this.repos.prices.listByMedicine(medicine.id),
       this.repos.medicines.findByGeneric(medicine.genericId),
       this.repos.sources.findByIds([medicine.provenance.sourceId]),
+      this.safetyFor(medicine.genericId),
     ]);
     const summary = summaries[0];
     if (!summary) return null;
@@ -45,6 +46,7 @@ export class MedicineService {
 
     return {
       ...summary,
+      safety,
       prices,
       priceStats: computePriceStats(prices.map((p) => p.price)),
       alternatives,
@@ -73,6 +75,12 @@ export class MedicineService {
 
   async listMedicineIndex(): Promise<MedicineIndexEntry[]> {
     return this.repos.medicines.listIndex();
+  }
+
+  private async safetyFor(genericId: string) {
+    const generic = await this.repos.generics.findByIds([genericId]);
+    const slug = generic[0]?.slug;
+    return slug ? this.repos.safety.findByGenericSlug(slug) : null;
   }
 
   private async attachPharmacies(prices: readonly MedicinePrice[]): Promise<PriceWithPharmacy[]> {
