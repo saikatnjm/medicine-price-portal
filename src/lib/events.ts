@@ -1,16 +1,26 @@
 /**
  * Provider-agnostic product events. Pages and components call `track()`; adapters decide where an event
  * goes. The only built-in adapter forwards to GA4 when it is configured (see components/analytics).
+ * Click events (maps/phone/website/appointment/compare) carry the entity kind and slug only, never the phone number or URL.
  * Events never contain the visitor's location, saved items or history; search events carry the query text only,
  * so "most searched" and "zero-result searches" can be answered later.
  */
+export type EntityKind = "medicine" | "hospital" | "pharmacy" | "doctor" | "specialty" | "location";
+
 export type AppEvent =
   | { name: "search"; query: string; results: number }
   | { name: "search_no_results"; query: string }
-  | { name: "view_entity"; entity: "medicine" | "hospital" | "pharmacy" | "doctor" | "specialty" | "location"; slug: string }
+  | { name: "view_entity"; entity: EntityKind; slug: string }
   | { name: "save_toggle"; entity: string; saved: boolean }
   | { name: "share"; method: "native" | "copy" }
-  | { name: "use_my_location"; outcome: "granted" | "denied" | "unavailable" };
+  | { name: "use_my_location"; outcome: "granted" | "denied" | "unavailable" }
+  | { name: "maps_click"; entity: EntityKind; slug?: string }
+  | { name: "phone_click"; entity: EntityKind; slug?: string }
+  | { name: "website_click"; entity: EntityKind; slug?: string }
+  | { name: "appointment_click"; entity: EntityKind; slug?: string }
+  | { name: "compare_click"; entity: EntityKind; slug?: string }
+  /** The reason id only: never the note, the record name or any contact detail. */
+  | { name: "report_issue"; reason: string; entity: EntityKind; slug?: string };
 
 type Adapter = (event: AppEvent) => void;
 const adapters: Adapter[] = [];

@@ -3,7 +3,7 @@ import { defineMessages } from "../define";
 /** Saved items, history, share and compare strings. Keys are prefixed "retention.". */
 export const retention = defineMessages({
   en: {
-    "retention.compare.choose": "Choose medicines to compare.",
+    "retention.compare.choose": "Choose medicines to compare product information.",
     "retention.compare.help": "Open a medicine page and press Compare, then come back here. You can compare up to four.",
     "retention.compare.button": "Compare",
     "retention.compare.selected.one": "Compare {n} selected medicine",
@@ -44,7 +44,7 @@ export const retention = defineMessages({
     "retention.saved.compare": "Compare saved medicines",
   },
   bn: {
-    "retention.compare.choose": "তুলনার জন্য ওষুধ বেছে নিন।",
+    "retention.compare.choose": "পণ্যের তথ্য তুলনার জন্য ওষুধ বেছে নিন।",
     "retention.compare.help":
       "কোনো ওষুধের পাতা খুলে “তুলনা করুন” চাপুন, তারপর এখানে ফিরে আসুন। সর্বোচ্চ চারটি ওষুধ তুলনা করা যায়।",
     "retention.compare.button": "তুলনা করুন",

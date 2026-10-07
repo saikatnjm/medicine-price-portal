@@ -6,8 +6,10 @@ import { CompareLanding } from "@/components/retention/compare-landing";
 import { Container } from "@/components/ui/container";
 import { services } from "@/data";
 import type { MedicineDetail } from "@/domain/read-models";
+import type { AvailabilityStatus } from "@/domain/types";
 import type { Locale } from "@/i18n/config";
 import { getT, initLocale } from "@/i18n/server";
+import type { MessageKey } from "@/i18n/messages";
 import type { Translator } from "@/i18n/translate";
 import { formatMedicineName, formatPackSize, formatPriceRange } from "@/lib/format";
 import { routes } from "@/lib/routes";
@@ -41,17 +43,34 @@ function priceText(detail: MedicineDetail, t: Translator): string {
     : t("medicine.compare.not_available");
 }
 
+function availabilityText(detail: MedicineDetail, t: Translator): string {
+  if (detail.prices.length === 0) return t("medicine.compare.not_available");
+  const labels: Record<AvailabilityStatus, MessageKey> = {
+    in_stock: "common.availability.in_stock",
+    limited: "common.availability.limited",
+    out_of_stock: "common.availability.out_of_stock",
+    unknown: "common.availability.unknown",
+  };
+  const statuses = [...new Set(detail.prices.map(({ price }) => price.availability))];
+  const text = statuses.map((status) => t(labels[status])).join(", ");
+  return detail.prices.some(({ price }) => price.source === "sample")
+    ? t("medicine.compare.availability_text", { status: text, label: t("medicine.compare.sample_data") })
+    : text;
+}
+
 function compareRows(t: Translator): ReadonlyArray<{ label: string; value: (d: MedicineDetail) => string }> {
   return [
+    { label: t("medicine.compare.row_brand"), value: (d) => d.medicine.brandName },
     { label: t("medicine.compare.row_generic"), value: (d) => d.generic.name },
-    { label: t("medicine.compare.row_manufacturer"), value: (d) => d.manufacturer.name },
     { label: t("medicine.compare.row_strength"), value: (d) => d.medicine.strength || t("medicine.compare.not_published") },
     { label: t("medicine.compare.row_form"), value: (d) => d.medicine.dosageFormLabel },
+    { label: t("medicine.compare.row_manufacturer"), value: (d) => d.manufacturer.name },
     {
       label: t("medicine.compare.row_pack"),
       value: (d) => (d.medicine.packSize ? formatPackSize(d.medicine.packSize) : t("medicine.compare.not_published")),
     },
     { label: t("medicine.compare.row_price"), value: (d) => priceText(d, t) },
+    { label: t("medicine.compare.row_availability"), value: (d) => availabilityText(d, t) },
   ];
 }
 

@@ -23,3 +23,6 @@ coverage/
 
 # OSM area fetch resume cache (temporary)
 data/raw/.osm-areas-cache/
+
+# generated data-quality reports
+/reports/

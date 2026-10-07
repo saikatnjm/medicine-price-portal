@@ -8,7 +8,8 @@ import { formatPackSize, formatPlace, formatPrice, formatPriceRange } from "@/li
 import { formatDateIn } from "@/lib/format-locale";
 import { routes } from "@/lib/routes";
 
-const HEADING_ID = "price-comparison";
+export const PRICE_SECTION_ID = "price-comparison";
+const HEADING_ID = PRICE_SECTION_ID;
 
 /**
  * Pharmacy prices, lowest first. Shows a clear "not available yet" state when no

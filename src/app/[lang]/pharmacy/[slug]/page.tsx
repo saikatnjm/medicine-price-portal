@@ -83,6 +83,8 @@ export default async function PharmacyPage({ params }: PharmacyPageProps) {
         <HeroCard>
           <PharmacyOverview detail={detail} />
           <QuickActions
+            entity="pharmacy"
+            slug={pharmacy.slug}
             name={pharmacy.name}
             phone={pharmacy.phone}
             address={pharmacy.address}
@@ -108,6 +110,8 @@ export default async function PharmacyPage({ params }: PharmacyPageProps) {
         />
         <GooglePlaceInfo google={pharmacy.google} name={pharmacy.name} />
         <ContactDetails
+          entity="pharmacy"
+          slug={pharmacy.slug}
           phone={pharmacy.phone}
           website={pharmacy.website}
           openingHours={pharmacy.openingHours}
@@ -148,7 +152,7 @@ export default async function PharmacyPage({ params }: PharmacyPageProps) {
         />
         <div className="space-y-6 border-t border-slate-200 pt-6">
           <SourceSection source={detail.source} provenance={pharmacy.provenance} sourceName={pharmacy.sourceName} />
-          <ReportIssue name={pharmacy.name} path={path} provenance={pharmacy.provenance} />
+          <ReportIssue entity="pharmacy" slug={pharmacy.slug} name={pharmacy.name} path={path} provenance={pharmacy.provenance} />
         </div>
       </div>
     </Container>

@@ -57,7 +57,7 @@ export function DoctorSource({ doctor, source }: { doctor: Doctor; source: DataS
         {(provenance.verifiedAt || method) && t("doctor.dot")}
       </p>
       <p>{t("doctor.source.note")}</p>
-      <ReportIssue name={doctor.name} path={routes.doctor(doctor.slug)} provenance={provenance} />
+      <ReportIssue entity="doctor" slug={doctor.slug} name={doctor.name} path={routes.doctor(doctor.slug)} provenance={provenance} />
     </section>
   );
 }

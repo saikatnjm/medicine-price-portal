@@ -4,11 +4,11 @@ import { defineMessages } from "../define";
 export const medicine = defineMessages({
   en: {
     // Same-generic brands / other forms
-    "medicine.alt.heading": "Same-generic brands",
+    "medicine.alt.heading": "Other products containing the same generic",
     "medicine.alt.intro.one": "{n} other registered brand with the same generic, strength and form ({product}).",
     "medicine.alt.intro.other": "{n} other registered brands with the same generic, strength and form ({product}).",
     "medicine.alt.disclaimer":
-      "Shown for information only, not as a recommendation. Ask your doctor or pharmacist before changing any medicine.",
+      "Products with the same generic may differ in inactive ingredients, manufacturer and registration. This list is for information only and is not a recommendation to substitute one product for another.",
     "medicine.alt.none": "No other brands of {product} are listed.",
     "medicine.alt.other_heading": "Other strengths and forms",
     "medicine.alt.other_desc":
@@ -17,7 +17,7 @@ export const medicine = defineMessages({
     "medicine.alt.see_all": "See all {query} medicines",
 
     // Medicine information (facts list)
-    "medicine.facts.heading": "Medicine information",
+    "medicine.facts.heading": "Product details",
     "medicine.facts.brand": "Brand name",
     "medicine.facts.registered": "Registered name",
     "medicine.facts.generic": "Generic name",
@@ -42,6 +42,12 @@ export const medicine = defineMessages({
 
     // Page header
     "medicine.overview.generic_sr": "Generic name: ",
+    "medicine.overview.brand_chip": "Brand",
+    "medicine.overview.generic_chip": "Generic (active ingredient)",
+    "medicine.overview.maker": "Manufacturer",
+    "medicine.overview.pack": "Pack size",
+    "medicine.overview.to_prices": "Go to prices",
+    "medicine.overview.generic_hint": "The medicine's active ingredient, shared by many brands.",
 
     // Price comparison
     "medicine.price.heading": "Price comparison",
@@ -66,7 +72,7 @@ export const medicine = defineMessages({
     "medicine.page.home": "Home",
     "medicine.page.not_found_title": "Medicine not found",
     "medicine.page.related_generic": "{name} medicines",
-    "medicine.page.related_alts": "{name} alternatives",
+    "medicine.page.related_alts": "Products with the same generic as {name}",
     "medicine.page.related_maker": "{name} medicines",
     "medicine.page.next_steps": "Next steps",
     "medicine.page.all_results": "All results for “{name}”",
@@ -77,19 +83,23 @@ export const medicine = defineMessages({
     "medicine.notfound.home": "Go to the homepage",
 
     // Compare page
-    "medicine.compare.title": "Compare medicines",
+    "medicine.compare.title": "Compare product information",
     "medicine.compare.description":
-      "Compare medicine products side by side: generic name, manufacturer, strength, form, pack and price information.",
-    "medicine.compare.caption": "Side-by-side comparison of {n} medicines",
+      "Compare medicine product information side by side: brand, generic, strength, dosage form, manufacturer, pack size, price and availability.",
+    "medicine.compare.caption": "Side-by-side product information for {n} medicines",
     "medicine.compare.detail_sr": "Detail",
-    "medicine.compare.row_generic": "Generic name",
+    "medicine.compare.row_brand": "Brand",
+    "medicine.compare.row_generic": "Generic",
     "medicine.compare.row_manufacturer": "Manufacturer",
     "medicine.compare.row_strength": "Strength",
     "medicine.compare.row_form": "Dosage form",
     "medicine.compare.row_pack": "Pack size",
     "medicine.compare.row_price": "Price",
-    "medicine.compare.not_available": "Not available",
-    "medicine.compare.not_published": "Not published",
+    "medicine.compare.row_availability": "Availability",
+    "medicine.compare.availability_text": "{status} ({label})",
+    "medicine.compare.sample_data": "sample data",
+    "medicine.compare.not_available": "Not listed",
+    "medicine.compare.not_published": "Not listed",
     "medicine.compare.price_text": "{range} ({label})",
     "medicine.compare.missing.one": "One medicine could not be found and was left out.",
     "medicine.compare.missing.other": "{n} medicines could not be found and were left out.",
@@ -98,6 +108,9 @@ export const medicine = defineMessages({
 
     // SEO templates
     "medicine.seo.title": "{name} {form} — Medicine Information",
+    "medicine.seo.title_uses": "{name} {form} — Uses, Side Effects & Medicine Information",
+    "medicine.seo.title_safety": "{name} {form} — Medicine Information & Safety",
+    "medicine.seo.desc_safety": "Includes general medicine information from {source}.",
     "medicine.seo.title_price": "{name} {form} — Medicine Information & Price",
     "medicine.seo.desc_intro": "{name} {form} by {maker}, registered with DGDA Bangladesh. Generic: {generic}.",
     "medicine.seo.label_sample": "sample prices",
@@ -107,13 +120,52 @@ export const medicine = defineMessages({
     "medicine.seo.desc_alts.one": "See {n} other brand of the same generic, strength and form.",
     "medicine.seo.desc_alts.other": "See {n} other brands of the same generic, strength and form.",
     "medicine.seo.desc_forms": "See other strengths and forms of the same generic.",
+
+    // Medicine information & safety
+    "medicine.safety.heading": "Medicine information & safety",
+    "medicine.safety.about_generic": "General information about the active ingredient {generic}, not about a specific brand.",
+    "medicine.safety.what": "What is it?",
+    "medicine.safety.uses": "What it is used for",
+    "medicine.safety.how": "How it works",
+    "medicine.safety.common": "Common side effects",
+    "medicine.safety.serious": "Serious reactions",
+    "medicine.safety.urgent": "Seek urgent medical help if…",
+    "medicine.safety.warnings": "Warnings",
+    "medicine.safety.contraindications": "Contraindications",
+    "medicine.safety.interactions": "Interactions",
+    "medicine.safety.pregnancy": "Pregnancy",
+    "medicine.safety.breastfeeding": "Breastfeeding",
+    "medicine.safety.storage": "Storage",
+    "medicine.safety.read_more": "Read more ({n} more)",
+    "medicine.safety.source": "Source: {source} · last checked {date}",
+    "medicine.safety.view_source": "View the source",
+    "medicine.safety.licence": "Licence: {note}",
+    "medicine.safety.not_reviewed": "Reproduced from the cited source and not independently reviewed by this site.",
+    "medicine.safety.disclaimer":
+      "This information is for general education and does not replace advice from a qualified healthcare professional.",
+    "medicine.safety.unavailable_title": "Detailed side-effect and safety information isn't available for this medicine yet",
+    "medicine.safety.unavailable_body":
+      "We only publish this information when it comes from a cited source we are allowed to use. The reference below is run by someone else and does not depend on us.",
+    "medicine.safety.external_heading": "External references",
+    "medicine.safety.dailymed": "Search US drug labels (DailyMed)",
+    "medicine.safety.external_note": "Opens an external site. US labels can differ from products registered in Bangladesh.",
+    "medicine.safety.new_tab": "(opens in a new tab)",
+
+    // Medicine FAQ
+    "medicine.faq.generic.q": "What is the generic name of {name}?",
+    "medicine.faq.generic.a": "The generic (active ingredient) listed for {name} is {generic}.",
+    "medicine.faq.maker.q": "Who makes {name}?",
+    "medicine.faq.maker.a": "The manufacturer listed for {name} is {maker}.",
+    "medicine.faq.uses.q": "What is {name} used for?",
+    "medicine.faq.common.q": "What are the common side effects of {name}?",
+    "medicine.faq.source": "Source: {source}.",
   },
   bn: {
-    "medicine.alt.heading": "একই জেনেরিকের ব্র্যান্ড",
+    "medicine.alt.heading": "একই জেনেরিকযুক্ত অন্যান্য পণ্য",
     "medicine.alt.intro.one": "একই জেনেরিক, মাত্রা ও ডোজের ধরনের আরও {n}টি নিবন্ধিত ব্র্যান্ড আছে ({product})।",
     "medicine.alt.intro.other": "একই জেনেরিক, মাত্রা ও ডোজের ধরনের আরও {n}টি নিবন্ধিত ব্র্যান্ড আছে ({product})।",
     "medicine.alt.disclaimer":
-      "এটি শুধু তথ্যের জন্য দেখানো হয়েছে, কোনো সুপারিশ নয়। কোনো ওষুধ বদলানোর আগে আপনার ডাক্তার বা ফার্মাসিস্টের সঙ্গে কথা বলুন।",
+      "একই জেনেরিকযুক্ত পণ্যগুলোর নিষ্ক্রিয় উপাদান, প্রস্তুতকারক ও নিবন্ধন আলাদা হতে পারে। এই তালিকা শুধু তথ্যের জন্য; একটি পণ্যের বদলে আরেকটি ব্যবহারের সুপারিশ নয়।",
     "medicine.alt.none": "{product}-এর অন্য কোনো ব্র্যান্ড তালিকায় নেই।",
     "medicine.alt.other_heading": "অন্যান্য মাত্রা ও ধরন",
     "medicine.alt.other_desc":
@@ -121,7 +173,7 @@ export const medicine = defineMessages({
     "medicine.alt.showing": "{total}টির মধ্যে {shown}টি দেখানো হচ্ছে।",
     "medicine.alt.see_all": "সব {query} ওষুধ দেখুন",
 
-    "medicine.facts.heading": "ওষুধের তথ্য",
+    "medicine.facts.heading": "পণ্যের বিবরণ",
     "medicine.facts.brand": "ব্র্যান্ডের নাম",
     "medicine.facts.registered": "নিবন্ধিত নাম",
     "medicine.facts.generic": "জেনেরিক নাম",
@@ -144,6 +196,12 @@ export const medicine = defineMessages({
     "medicine.list.at.other": "{n}টি ফার্মেসিতে",
 
     "medicine.overview.generic_sr": "জেনেরিক নাম: ",
+    "medicine.overview.brand_chip": "ব্র্যান্ড",
+    "medicine.overview.generic_chip": "জেনেরিক (সক্রিয় উপাদান)",
+    "medicine.overview.maker": "প্রস্তুতকারক",
+    "medicine.overview.pack": "প্যাকের আকার",
+    "medicine.overview.to_prices": "মূল্যের তথ্যে যান",
+    "medicine.overview.generic_hint": "ওষুধের সক্রিয় উপাদান, যা অনেক ব্র্যান্ডে একই থাকে।",
 
     "medicine.price.heading": "মূল্যের তুলনা",
     "medicine.price.label_sample": "নমুনা মূল্য",
@@ -166,7 +224,7 @@ export const medicine = defineMessages({
     "medicine.page.home": "হোম",
     "medicine.page.not_found_title": "ওষুধ পাওয়া যায়নি",
     "medicine.page.related_generic": "{name} ওষুধ",
-    "medicine.page.related_alts": "{name}-এর বিকল্প ব্র্যান্ড",
+    "medicine.page.related_alts": "{name}-এর মতো একই জেনেরিকযুক্ত পণ্য",
     "medicine.page.related_maker": "{name}-এর ওষুধ",
     "medicine.page.next_steps": "পরবর্তী ধাপ",
     "medicine.page.all_results": "“{name}”-এর সব ফলাফল",
@@ -176,19 +234,23 @@ export const medicine = defineMessages({
     "medicine.notfound.body": "আমরা ওষুধটি খুঁজে পাইনি। এটি হয়তো এখনো পাইলটে নেই, অথবা লিংকটি ভুল।",
     "medicine.notfound.home": "হোমপেজে যান",
 
-    "medicine.compare.title": "ওষুধের তুলনা",
+    "medicine.compare.title": "পণ্যের তথ্য তুলনা",
     "medicine.compare.description":
-      "ওষুধগুলো পাশাপাশি তুলনা করুন: জেনেরিক নাম, প্রস্তুতকারক, মাত্রা, ডোজের ধরন, প্যাক ও মূল্যের তথ্য।",
-    "medicine.compare.caption": "{n}টি ওষুধের পাশাপাশি তুলনা",
+      "ওষুধের পণ্যের তথ্য পাশাপাশি তুলনা করুন: ব্র্যান্ড, জেনেরিক, মাত্রা, ডোজের ধরন, প্রস্তুতকারক, প্যাকের আকার, মূল্য ও প্রাপ্যতা।",
+    "medicine.compare.caption": "{n}টি ওষুধের পণ্যের তথ্য পাশাপাশি",
     "medicine.compare.detail_sr": "বিষয়",
-    "medicine.compare.row_generic": "জেনেরিক নাম",
+    "medicine.compare.row_brand": "ব্র্যান্ড",
+    "medicine.compare.row_generic": "জেনেরিক",
     "medicine.compare.row_manufacturer": "প্রস্তুতকারক",
     "medicine.compare.row_strength": "মাত্রা",
     "medicine.compare.row_form": "ডোজের ধরন",
     "medicine.compare.row_pack": "প্যাকের আকার",
     "medicine.compare.row_price": "মূল্য",
-    "medicine.compare.not_available": "পাওয়া যায়নি",
-    "medicine.compare.not_published": "প্রকাশিত নয়",
+    "medicine.compare.row_availability": "প্রাপ্যতা",
+    "medicine.compare.availability_text": "{status} ({label})",
+    "medicine.compare.sample_data": "নমুনা তথ্য",
+    "medicine.compare.not_available": "তালিকাভুক্ত নয়",
+    "medicine.compare.not_published": "তালিকাভুক্ত নয়",
     "medicine.compare.price_text": "{range} ({label})",
     "medicine.compare.missing.one": "একটি ওষুধ খুঁজে পাওয়া যায়নি, তাই বাদ দেওয়া হয়েছে।",
     "medicine.compare.missing.other": "{n}টি ওষুধ খুঁজে পাওয়া যায়নি, তাই বাদ দেওয়া হয়েছে।",
@@ -196,6 +258,9 @@ export const medicine = defineMessages({
     "medicine.compare.search_another": "অন্য ওষুধ খুঁজুন",
 
     "medicine.seo.title": "{name} {form} — ওষুধের তথ্য",
+    "medicine.seo.title_uses": "{name} {form} — ব্যবহার, পার্শ্বপ্রতিক্রিয়া ও ওষুধের তথ্য",
+    "medicine.seo.title_safety": "{name} {form} — ওষুধের তথ্য ও নিরাপত্তা",
+    "medicine.seo.desc_safety": "{source} থেকে ওষুধের সাধারণ তথ্য রয়েছে।",
     "medicine.seo.title_price": "{name} {form} — ওষুধের তথ্য ও মূল্য",
     "medicine.seo.desc_intro": "{name} {form}, প্রস্তুতকারক {maker}। ডিজিডিএ (DGDA) বাংলাদেশে নিবন্ধিত। জেনেরিক: {generic}।",
     "medicine.seo.label_sample": "নমুনা মূল্য",
@@ -205,5 +270,44 @@ export const medicine = defineMessages({
     "medicine.seo.desc_alts.one": "একই জেনেরিক, মাত্রা ও ডোজের ধরনের আরও {n}টি ব্র্যান্ড দেখুন।",
     "medicine.seo.desc_alts.other": "একই জেনেরিক, মাত্রা ও ডোজের ধরনের আরও {n}টি ব্র্যান্ড দেখুন।",
     "medicine.seo.desc_forms": "একই জেনেরিকের অন্যান্য মাত্রা ও ডোজের ধরন দেখুন।",
+
+    // ওষুধের তথ্য ও নিরাপত্তা
+    "medicine.safety.heading": "ওষুধের তথ্য ও নিরাপত্তা",
+    "medicine.safety.about_generic": "সক্রিয় উপাদান {generic} সম্পর্কে সাধারণ তথ্য; কোনো নির্দিষ্ট ব্র্যান্ড সম্পর্কে নয়।",
+    "medicine.safety.what": "এটি কী?",
+    "medicine.safety.uses": "কী কাজে ব্যবহৃত হয়",
+    "medicine.safety.how": "কীভাবে কাজ করে",
+    "medicine.safety.common": "সাধারণ পার্শ্বপ্রতিক্রিয়া",
+    "medicine.safety.serious": "গুরুতর প্রতিক্রিয়া",
+    "medicine.safety.urgent": "যেসব ক্ষেত্রে জরুরি চিকিৎসা সহায়তা নিন…",
+    "medicine.safety.warnings": "সতর্কতা",
+    "medicine.safety.contraindications": "যাদের জন্য নিষিদ্ধ (প্রতিনির্দেশ)",
+    "medicine.safety.interactions": "অন্য ওষুধের সঙ্গে প্রতিক্রিয়া",
+    "medicine.safety.pregnancy": "গর্ভাবস্থা",
+    "medicine.safety.breastfeeding": "বুকের দুধ খাওয়ানো",
+    "medicine.safety.storage": "সংরক্ষণ",
+    "medicine.safety.read_more": "আরও পড়ুন (আরও {n}টি)",
+    "medicine.safety.source": "উৎস: {source} · সর্বশেষ যাচাই {date}",
+    "medicine.safety.view_source": "উৎস দেখুন",
+    "medicine.safety.licence": "লাইসেন্স: {note}",
+    "medicine.safety.not_reviewed": "উল্লিখিত উৎস থেকে হুবহু নেওয়া; এই সাইট আলাদাভাবে যাচাই করেনি।",
+    "medicine.safety.disclaimer":
+      "এই তথ্য সাধারণ শিক্ষার জন্য; এটি যোগ্য স্বাস্থ্যসেবা পেশাজীবীর পরামর্শের বিকল্প নয়।",
+    "medicine.safety.unavailable_title": "এই ওষুধের বিস্তারিত পার্শ্বপ্রতিক্রিয়া ও নিরাপত্তার তথ্য এখনো পাওয়া যায়নি",
+    "medicine.safety.unavailable_body":
+      "ব্যবহারের অনুমতি আছে এমন উল্লিখিত উৎস থেকে পেলেই আমরা এই তথ্য প্রকাশ করি। নিচের রেফারেন্সটি অন্য কারও পরিচালিত এবং আমাদের ওপর নির্ভর করে না।",
+    "medicine.safety.external_heading": "বাইরের রেফারেন্স",
+    "medicine.safety.dailymed": "মার্কিন ওষুধের লেবেল খুঁজুন (DailyMed)",
+    "medicine.safety.external_note": "একটি বাইরের সাইট খুলবে। মার্কিন লেবেল বাংলাদেশে নিবন্ধিত পণ্য থেকে আলাদা হতে পারে।",
+    "medicine.safety.new_tab": "(নতুন ট্যাবে খুলবে)",
+
+    // ওষুধের সচরাচর জিজ্ঞাসা
+    "medicine.faq.generic.q": "{name}-এর জেনেরিক নাম কী?",
+    "medicine.faq.generic.a": "{name}-এর জন্য তালিকাভুক্ত জেনেরিক (সক্রিয় উপাদান) হলো {generic}।",
+    "medicine.faq.maker.q": "{name} কে তৈরি করে?",
+    "medicine.faq.maker.a": "{name}-এর জন্য তালিকাভুক্ত প্রস্তুতকারক {maker}।",
+    "medicine.faq.uses.q": "{name} কী কাজে ব্যবহৃত হয়?",
+    "medicine.faq.common.q": "{name}-এর সাধারণ পার্শ্বপ্রতিক্রিয়া কী কী?",
+    "medicine.faq.source": "উৎস: {source}।",
   },
 });

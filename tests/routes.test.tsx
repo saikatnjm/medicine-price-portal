@@ -63,7 +63,7 @@ describe("routes (real seed data)", () => {
     render(await MedicinePage(params("napa-500mg")));
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Napa 500 mg");
     expect(screen.getByText("Price information coming soon.")).toBeTruthy();
-    expect(screen.getByRole("heading", { name: "Same-generic brands" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Other products containing the same generic" })).toBeTruthy();
     expect(screen.getByText("186-0030-006")).toBeTruthy();
     expect(screen.queryByText(/Unknown/)).toBeNull();
   });

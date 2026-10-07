@@ -1,6 +1,8 @@
 import type { Coordinates, GooglePlaceRef } from "@/domain/healthcare";
+import { TrackedLink } from "@/components/common/tracked-link";
 import { NavigateIcon } from "@/components/ui/icons";
 import { getT } from "@/i18n/server";
+import type { EntityKind } from "@/lib/events";
 import { mapLinksFor } from "@/lib/maps";
 
 /** Compact "Directions" link for result cards; renders nothing without a location. */
@@ -9,17 +11,23 @@ export function DirectionsLink({
   address,
   coordinates,
   google,
+  entity,
+  slug,
 }: {
   name: string;
   address?: string;
   coordinates?: Coordinates | null;
   google?: GooglePlaceRef;
+  /** Record kind and slug for the maps_click event; no event without an entity. */
+  entity?: EntityKind;
+  slug?: string;
 }) {
   const links = mapLinksFor({ name, address, coordinates: coordinates ?? undefined, google });
   if (!links) return null;
   const t = getT();
   return (
-    <a
+    <TrackedLink
+      event={entity ? { name: "maps_click", entity, slug } : undefined}
       href={links.directionsUrl}
       target="_blank"
       rel="noopener noreferrer"
@@ -28,6 +36,6 @@ export function DirectionsLink({
       <NavigateIcon className="size-4" />
       {t("directory.directions")}
       <span className="sr-only">{t("directory.directionsSr", { name })}</span>
-    </a>
+    </TrackedLink>
   );
 }

@@ -6,10 +6,13 @@ import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { JsonLd } from "@/components/common/json-ld";
 import { SampleDataNotice } from "@/components/common/sample-data-notice";
 import { MedicineAlternatives } from "@/components/medicine/medicine-alternatives";
+import { MedicineFaq } from "@/components/medicine/medicine-faq";
 import { MedicineFacts } from "@/components/medicine/medicine-facts";
 import { MedicineOverview } from "@/components/medicine/medicine-overview";
+import { MedicineSafety } from "@/components/medicine/medicine-safety";
 import { PriceComparison } from "@/components/medicine/price-comparison";
 import { RelatedSearches } from "@/components/common/related-searches";
+import { ReportIssue } from "@/components/directory/report-issue";
 import { EntityToolbar } from "@/components/retention/entity-toolbar";
 import { Container } from "@/components/ui/container";
 import type { RelatedSearch } from "@/lib/related-searches";
@@ -87,7 +90,7 @@ export default async function MedicinePage({ params }: MedicinePageProps) {
       />
       <Breadcrumbs items={breadcrumbs} />
 
-      <div className="mt-4 space-y-10">
+      <div className="mt-4 space-y-12">
         <MedicineOverview detail={detail} />
         <EntityToolbar
           type="medicine"
@@ -99,12 +102,15 @@ export default async function MedicinePage({ params }: MedicinePageProps) {
         />
         {detail.hasSampleData && <SampleDataNotice />}
         <PriceComparison detail={detail} />
+        <MedicineSafety detail={detail} />
         <MedicineAlternatives detail={detail} />
         <MedicineFacts detail={detail} />
+        <MedicineFaq detail={detail} />
+        <ReportIssue entity="medicine" slug={medicine.slug} name={formatMedicineName(medicine)} path={path} provenance={medicine.provenance} />
         <RelatedSearches items={related} />
         <nav
           aria-label={t("medicine.page.next_steps")}
-          className="flex flex-wrap gap-x-6 gap-y-2 border-t border-slate-200 pt-6"
+          className="flex flex-wrap gap-x-6 gap-y-2 pt-2"
         >
           <Link
             href={searchHref(medicine.brandName)}

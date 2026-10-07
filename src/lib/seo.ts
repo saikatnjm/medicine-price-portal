@@ -78,19 +78,26 @@ export function pageMetadata({ title, description, path, indexable = true, lang 
   };
 }
 
-/** "Napa 500 mg — Medicine Information", with " & Price" only when price records exist. */
+/**
+ * "Napa 500 mg Tablet — Medicine Information", with " & Price" only when price records exist.
+ * When a cited safety record exists the title says what the page really contains
+ * ("Uses, Side Effects" only when the record has both uses and side effects).
+ */
 export function medicineTitle(detail: MedicineDetail, lang: Locale = DEFAULT_LOCALE): string {
-  const { medicine, priceStats } = detail;
+  const { medicine, priceStats, safety } = detail;
   const t = createT(lang);
+  const vars = { name: formatMedicineName(medicine), form: medicine.dosageFormLabel };
+  if (safety) {
+    const hasUses = Boolean(safety.uses?.length);
+    const hasEffects = Boolean(safety.commonSideEffects?.length || safety.seriousSideEffects?.length);
+    return t(hasUses && hasEffects ? "medicine.seo.title_uses" : "medicine.seo.title_safety", vars);
+  }
   // The dosage form keeps titles unique across forms of the same brand and strength.
-  return t(priceStats ? "medicine.seo.title_price" : "medicine.seo.title", {
-    name: formatMedicineName(medicine),
-    form: medicine.dosageFormLabel,
-  });
+  return t(priceStats ? "medicine.seo.title_price" : "medicine.seo.title", vars);
 }
 
 export function medicineDescription(detail: MedicineDetail, lang: Locale = DEFAULT_LOCALE): string {
-  const { medicine, generic, manufacturer, priceStats } = detail;
+  const { medicine, generic, manufacturer, priceStats, safety } = detail;
   const t = createT(lang);
   const maker = manufacturer.name.replace(/\.$/, "");
   const intro = t("medicine.seo.desc_intro", {
@@ -114,7 +121,7 @@ export function medicineDescription(detail: MedicineDetail, lang: Locale = DEFAU
   } else {
     rest = t("medicine.seo.desc_forms");
   }
-  return `${intro} ${rest}`;
+  return safety ? `${intro} ${rest} ${t("medicine.seo.desc_safety", { source: safety.source })}` : `${intro} ${rest}`;
 }
 
 // ------------------------------------------------------------ structured data
@@ -169,11 +176,13 @@ export function webPageJsonLd(input: { name: string; description: string; path: 
 }
 
 /**
- * schema.org Drug. Deliberately contains no offers/prices. Prescription status
- * is included only when a source publishes it.
+ * schema.org Drug. Deliberately contains no offers/prices or ratings. Prescription status
+ * is included only when a source publishes it. warning, mechanismOfAction, pregnancyWarning and
+ * breastfeedingWarning come only from the cited safety record and are omitted when it has none.
  */
 export function medicineJsonLd(detail: MedicineDetail, lang: Locale = DEFAULT_LOCALE): JsonLd {
-  const { medicine, generic, manufacturer } = detail;
+  const { medicine, generic, manufacturer, safety } = detail;
+  const warning = safety?.warnings?.join(" ");
   return {
     "@context": "https://schema.org",
     "@type": "Drug",
@@ -192,6 +201,10 @@ export function medicineJsonLd(detail: MedicineDetail, lang: Locale = DEFAULT_LO
             ? "https://schema.org/PrescriptionOnly"
             : "https://schema.org/OTC",
         }),
+    ...(warning ? { warning } : {}),
+    ...(safety?.mechanism ? { mechanismOfAction: safety.mechanism } : {}),
+    ...(safety?.pregnancyInfo ? { pregnancyWarning: safety.pregnancyInfo } : {}),
+    ...(safety?.breastfeedingInfo ? { breastfeedingWarning: safety.breastfeedingInfo } : {}),
   };
 }
 

@@ -75,6 +75,8 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
         <HeroCard>
           <FacilityOverview detail={detail} />
           <QuickActions
+            entity="hospital"
+            slug={facility.slug}
             name={facility.name}
             phone={facility.phone}
             website={facility.website}
@@ -100,6 +102,8 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
         />
         <GooglePlaceInfo google={facility.google} name={facility.name} />
         <ContactDetails
+          entity="hospital"
+          slug={facility.slug}
           phone={facility.phone}
           website={facility.website}
           email={facility.email}
@@ -139,7 +143,7 @@ export default async function FacilityPage({ params }: FacilityPageProps) {
         />
         <div className="space-y-6 border-t border-slate-200 pt-6">
           <SourceSection source={detail.source} provenance={facility.provenance} sourceName={facility.sourceName} />
-          <ReportIssue name={facility.name} path={path} provenance={facility.provenance} />
+          <ReportIssue entity="hospital" slug={facility.slug} name={facility.name} path={path} provenance={facility.provenance} />
           <p className="text-sm text-slate-600">{t("facility.disclaimer")}</p>
         </div>
       </div>
