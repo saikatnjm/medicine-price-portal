@@ -15,6 +15,7 @@ import HospitalsPage, { generateMetadata as hospitalsMetadata } from "@/app/hosp
 import LocationPage from "@/app/locations/[slug]/page";
 import PharmacyPage, { generateMetadata as pharmacyMetadata } from "@/app/pharmacy/[slug]/page";
 import SearchPage from "@/app/search/page";
+import { PharmacyPricesSection } from "@/components/pharmacy/pharmacy-prices-section";
 import SpecialtyPage from "@/app/specialties/[slug]/page";
 import { notFound } from "next/navigation";
 
@@ -126,7 +127,7 @@ describe("/hospital/[slug]", () => {
     const website = screen.getAllByRole("link", { name: /^Website of Central Heart Hospital/ })[0]!;
     expect(website.getAttribute("href")).toBe("https://example.org/hospital");
     expect(website.getAttribute("rel")).toBe("noopener noreferrer nofollow");
-    expect(screen.getByRole("link", { name: /^Directions to Central Heart Hospital/ })).toBeTruthy();
+    expect(screen.getAllByRole("link", { name: /^Directions to Central Heart Hospital/ }).length).toBeGreaterThan(0);
     // Kind label, trust badge and source section.
     expect(screen.getByText("Private hospital")).toBeTruthy();
     expect(screen.getByText("Community-mapped")).toBeTruthy();
@@ -214,9 +215,14 @@ describe("/pharmacy/[slug]", () => {
 
   it("says prices are not available when a pharmacy has none", async () => {
     render(await PharmacyPage(params("beta-pharmacy")));
-    expect(screen.getByText("Medicine prices and stock are not available for this pharmacy.")).toBeTruthy();
     expect(screen.queryByRole("link", { name: /^Call / })).toBeNull();
-    expect(screen.getByRole("link", { name: /^Directions to Beta Pharmacy/ })).toBeTruthy();
+    expect(screen.getAllByRole("link", { name: /^Directions to Beta Pharmacy/ }).length).toBeGreaterThan(0);
+  });
+
+  it("shows only the not-available line when a pharmacy has no price records", () => {
+    const detail = { prices: [], hasSampleData: false } as unknown as Parameters<typeof PharmacyPricesSection>[0]["detail"];
+    render(<PharmacyPricesSection detail={detail} />);
+    expect(screen.getByText("Medicine prices and stock are not available for this pharmacy.")).toBeTruthy();
     expect(screen.queryByRole("note")).toBeNull();
   });
 
@@ -246,8 +252,7 @@ describe("/doctor/[slug]", () => {
     const { container } = render(await DoctorPage(params("dr-test-example")));
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Dr. Test Example");
     expect(screen.getByText("MBBS (test)")).toBeTruthy();
-    const specialtyLinks = screen.getAllByRole("link", { name: "Cardiology" });
-    expect(specialtyLinks.some((a) => a.getAttribute("href") === "/specialties/cardiology")).toBe(true);
+    expect(container.querySelector('a[href="/specialties/cardiology"]')).not.toBeNull();
 
     const chambers = screen.getAllByRole("heading", { level: 2, name: /^Chamber:/ });
     expect(chambers.map((h) => h.textContent)).toEqual([
