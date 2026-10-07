@@ -254,10 +254,10 @@ describe("/doctor/[slug]", () => {
     expect(screen.getByText("MBBS (test)")).toBeTruthy();
     expect(container.querySelector('a[href="/specialties/cardiology"]')).not.toBeNull();
 
-    const chambers = screen.getAllByRole("heading", { level: 2, name: /^Chamber:/ });
+    const chambers = screen.getAllByRole("heading", { level: 2, name: /^Chamber \d+:/ });
     expect(chambers.map((h) => h.textContent)).toEqual([
-      "Chamber: Central Heart Hospital",
-      "Chamber: Test Chamber",
+      "Chamber 1: Central Heart Hospital",
+      "Chamber 2: Test Chamber",
     ]);
     expect(screen.getByText("Consultation hours")).toBeTruthy();
     expect(screen.getByText("5 pm – 9 pm")).toBeTruthy();
