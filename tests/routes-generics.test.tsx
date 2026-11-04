@@ -86,7 +86,7 @@ describe("generic pages (real seed data)", { timeout: 30_000 }, () => {
 
   it("prerenders only the top generics", async () => {
     const slugs = (await generateStaticParams()).map((p) => p.slug);
-    expect(slugs.length).toBe(50);
+    expect(slugs.length).toBe(12);
     expect(slugs).toContain("paracetamol");
   });
 

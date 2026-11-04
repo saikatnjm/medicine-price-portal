@@ -37,7 +37,7 @@ interface GenericPageProps {
 const getGenericDetail = cache((slug: string) => services.generics.getGenericDetail(slug));
 
 /** Number of generic pages prerendered at build time; the rest render on first request and are cached. */
-const PRERENDERED_GENERICS = 50;
+const PRERENDERED_GENERICS = 12;
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const top = await services.generics.listTopGenerics(PRERENDERED_GENERICS);

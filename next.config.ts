@@ -16,6 +16,8 @@ const nextConfig: NextConfig = {
   // Singular forms are accepted and redirected to the canonical plural paths.
   async redirects() {
     return [
+      // Sitemap index (Next reserves /sitemap.xml for the generated app/sitemap.ts routes).
+      { source: "/sitemap.xml", destination: "/sitemap-index.xml", permanent: true },
       { source: "/specialty/:slug", destination: "/specialties/:slug", permanent: true },
       { source: "/location/:slug", destination: "/locations/:slug", permanent: true },
       { source: "/bn/specialty/:slug", destination: "/bn/specialties/:slug", permanent: true },

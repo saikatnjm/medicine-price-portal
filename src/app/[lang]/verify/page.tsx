@@ -76,7 +76,7 @@ function ResultRows({ items, date, label }: { items: readonly MedicineSummary[];
               t("browse.verify.row.noDar")
             )}
           </p>
-          <p className="text-emerald-800">{t("browse.verify.row.status", { date })}</p>
+          <p className="text-accent-700">{t("browse.verify.row.status", { date })}</p>
         </li>
       ))}
     </ul>
@@ -214,7 +214,7 @@ export default async function VerifyPage({ params: routeParams, searchParams }: 
           )}
           {darResult.status === "found" && (
             <>
-              <p role="status" className="font-medium text-emerald-800">
+              <p role="status" className="font-medium text-accent-700">
                 {t("browse.verify.found", { date })}
               </p>
               <ResultRows items={darResult.matches} date={date} label={t("browse.verify.row.label")} />
@@ -245,7 +245,7 @@ export default async function VerifyPage({ params: routeParams, searchParams }: 
               {nameResult.matchedQuery !== nameResult.query && (
                 <p className="text-sm text-slate-700">{t("browse.verify.nameFallback", { query: nameResult.matchedQuery })}</p>
               )}
-              <p role="status" className="font-medium text-emerald-800">
+              <p role="status" className="font-medium text-accent-700">
                 {t("browse.verify.found", { date })}
               </p>
               <p className="text-sm text-slate-600">

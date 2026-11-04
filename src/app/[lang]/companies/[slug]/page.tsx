@@ -13,7 +13,7 @@ const getCompany = cache((slug: string) => services.companies.getCompanyDetail(s
 
 /** Only the largest companies are prerendered; the rest render on first request and are cached. */
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
-  return (await services.companies.listRanked()).slice(0, 30).map(({ manufacturer }) => ({ slug: manufacturer.slug }));
+  return (await services.companies.listRanked()).slice(0, 12).map(({ manufacturer }) => ({ slug: manufacturer.slug }));
 }
 
 export const dynamicParams = true;
