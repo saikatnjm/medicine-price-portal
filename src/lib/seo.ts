@@ -47,6 +47,17 @@ export function twitterCard(title: string, description: string): Metadata["twitt
   return { card: "summary_large_image", title, description, images: [{ url: SOCIAL_IMAGE.url, alt: SOCIAL_IMAGE.alt }] };
 }
 
+/** Google shows about 155-160 characters; cut at a sentence or word boundary instead of mid-word. */
+export function fitDescription(text: string, max = 160): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (clean.length <= max) return clean;
+  const slice = clean.slice(0, max);
+  const sentence = Math.max(slice.lastIndexOf(". "), slice.lastIndexOf("। "));
+  if (sentence >= 80) return slice.slice(0, sentence + 1);
+  const word = slice.lastIndexOf(" ");
+  return `${slice.slice(0, word > 80 ? word : max - 1).replace(/[\s,;:–—-]+$/, "")}…`;
+}
+
 export interface PageMetadataInput {
   /** Page title without the site name (the layout template appends it). */
   title: string;
@@ -68,12 +79,13 @@ export function languageAlternates(path: string, lang: Locale = DEFAULT_LOCALE):
 
 /** Standard metadata for a page: title, description, canonical, OpenGraph and robots. */
 export function pageMetadata({ title, description, path, indexable = true, lang = DEFAULT_LOCALE }: PageMetadataInput): Metadata {
+  const fitted = fitDescription(description);
   return {
     title,
-    description,
+    description: fitted,
     alternates: languageAlternates(path, lang),
-    openGraph: openGraph(path, title, description, lang),
-    twitter: twitterCard(title, description),
+    openGraph: openGraph(path, title, fitted, lang),
+    twitter: twitterCard(title, fitted),
     robots: pageRobots(indexable),
   };
 }

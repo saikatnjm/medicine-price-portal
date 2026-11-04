@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { fitDescription } from "@/lib/seo";
 import { createLocalRepositories } from "@/data/local/repositories";
 import {
   absoluteUrl,
@@ -91,5 +92,15 @@ describe("SEO helpers", () => {
 
   it("derives absolute URLs from the configured site URL", () => {
     expect(absoluteUrl("/medicine/napa-500mg")).toBe(`${siteConfig.url}/medicine/napa-500mg`);
+  });
+});
+
+describe("fitDescription", () => {
+  it("keeps short text and trims long text at a sentence or word boundary", () => {
+    expect(fitDescription("Short text.")).toBe("Short text.");
+    const long = `${"Alpha beta gamma delta. ".repeat(4)}${"word ".repeat(40)}`;
+    const out = fitDescription(long);
+    expect(out.length).toBeLessThanOrEqual(160);
+    expect(out.endsWith("delta.") || out.endsWith("…")).toBe(true);
   });
 });
