@@ -1,12 +1,13 @@
 services:
-  # Development server with hot reload: `docker compose up --build`
+  # Development server with hot reload: `docker compose up --build` → http://localhost:3002
+  # (host port overridable: `APP_PORT=4010 docker compose up`).
   app:
     build:
       context: .
       target: dev
     image: bangladesh-healthcare-search:dev
     ports:
-      - "3000:3000"
+      - "${APP_PORT:-3002}:3000"
     # Values come from an optional .env file (see .env.example) via variable substitution,
     # which works with both `docker compose` (v2) and the legacy `docker-compose` (v1).
     # A missing .env is fine: every variable defaults to empty.
@@ -40,7 +41,7 @@ services:
         SITE_INDEXABLE: ${SITE_INDEXABLE:-false}
     image: bangladesh-healthcare-search:prod
     ports:
-      - "3001:3000"
+      - "${WEB_PORT:-3001}:3000"
 
 volumes:
   node_modules:

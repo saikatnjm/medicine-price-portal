@@ -22,7 +22,7 @@ Docker with Compose v2.24+ only. No Node.js/npm is needed on the host.
 
 ```bash
 cp .env.example .env              # optional; defaults work
-docker compose up --build         # http://localhost:3000
+docker compose up --build         # http://localhost:3002 (set APP_PORT to change)
 ```
 
 First-time setup (generates `package-lock.json` on the host — commit it):

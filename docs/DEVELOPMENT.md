@@ -8,7 +8,7 @@ Docker with Compose v2.24+. The host does not need Node.js or npm. All commands 
 
 ```bash
 docker compose run --rm app npm install   # creates package-lock.json on the host; commit it
-docker compose up --build                 # dev server on http://localhost:3000
+docker compose up --build                 # dev server on http://localhost:3002 (APP_PORT overrides)
 ```
 
 ## Stop
@@ -29,7 +29,7 @@ docker compose down -v         # also drop node_modules / .next volumes
 
 ```bash
 docker compose run --rm app npm run validate     # data + lint + typecheck + test + build
-docker compose --profile prod up --build web     # production image on http://localhost:3001
+docker compose --profile prod up --build web     # production image on http://localhost:3001 (WEB_PORT overrides)
 ```
 
 ## Data Management
