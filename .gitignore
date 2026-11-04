@@ -26,3 +26,6 @@ data/raw/.osm-areas-cache/
 
 # generated data-quality reports
 /reports/
+
+# Local agent worktrees
+.claude/worktrees/
