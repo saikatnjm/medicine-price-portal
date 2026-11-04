@@ -8,7 +8,6 @@ import type { MedicineDetail } from "@/domain/read-models";
 import { getT } from "@/i18n/server";
 import { formatMedicineName, formatPackSize } from "@/lib/format";
 import { routes } from "@/lib/routes";
-import { searchHref } from "@/lib/search-params";
 
 const chip = "inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold";
 
@@ -50,7 +49,7 @@ export function MedicineOverview({ detail }: { detail: MedicineDetail }) {
             </span>
           </dt>
           <dd className="mt-1 text-xl font-medium break-words text-slate-900">
-            <Link href={searchHref(generic.name)} className="text-brand-800 underline underline-offset-2">
+            <Link href={routes.generic(generic.slug)} className="text-brand-800 underline underline-offset-2">
               {generic.name}
             </Link>
             <span className="mt-0.5 block text-sm font-normal text-slate-600">

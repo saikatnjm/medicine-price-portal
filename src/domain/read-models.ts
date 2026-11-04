@@ -485,3 +485,50 @@ export interface DarCheckResult {
   status: "empty" | "invalid" | "found" | "not_found";
   matches: MedicineSummary[];
 }
+
+// ------------------------------------------------------------ generic (active ingredient) pages
+
+/** A generic with the number of registered products that contain it. */
+export interface GenericCount {
+  generic: Generic;
+  productCount: number;
+}
+
+/** One registered product on a generic page. */
+export interface GenericProductRow {
+  medicine: Medicine;
+  manufacturer: Manufacturer;
+}
+
+/** Products of a generic sharing strength and precise dosage form (e.g. "500 mg" + "Tablet"). */
+export interface GenericProductGroup {
+  strength: string;
+  dosageForm: DosageForm;
+  dosageFormLabel: string;
+  /** Sorted by brand name, then manufacturer. */
+  products: GenericProductRow[];
+}
+
+export interface GenericDetail {
+  generic: Generic;
+  productCount: number;
+  /** Distinct brand names. */
+  brandCount: number;
+  companyCount: number;
+  /** Ordered by dosage form, precise form label and strength. */
+  groups: GenericProductGroup[];
+  /** Dosage form categories with product counts, most products first. */
+  forms: { form: DosageForm; count: number }[];
+  /** Distinct registered strengths (non-empty), in natural order. */
+  strengths: string[];
+  /** Companies with the most products of this generic (capped), most products first. */
+  topCompanies: { manufacturer: Manufacturer; count: number }[];
+  /** Combination generics that include this generic, most products first (capped). */
+  combinations: GenericCount[];
+  /** Single-ingredient generics of a combination (empty for a single ingredient). */
+  ingredients: GenericCount[];
+  /** Sources of the listed products (e.g. the DGDA registry) with retrieval dates. */
+  sources: DataSource[];
+  /** False for thin pages (below the catalogue threshold): rendered, but noindex. */
+  indexable: boolean;
+}

@@ -69,25 +69,19 @@ export default async function MedicinePage({ params }: MedicinePageProps) {
   const path = routes.medicine(medicine.slug);
   const breadcrumbs: BreadcrumbItem[] = [
     { name: t("medicine.page.home"), href: routes.home() },
-    { name: generic.name, href: searchHref(generic.name) },
+    { name: generic.name, href: routes.generic(generic.slug) },
     { name: formatMedicineName(medicine) },
   ];
 
   const related: RelatedSearch[] = [
-    { label: t("medicine.page.related_generic", { name: generic.name }), href: searchHref(generic.name) },
+    { label: t("medicine.page.related_generic", { name: generic.name }), href: routes.generic(generic.slug) },
     ...(detail.alternativesTotal > 0 ? [{ label: t("medicine.page.related_alts", { name: medicine.brandName }), href: `${path}#alternatives` }] : []),
     { label: t("medicine.page.related_maker", { name: detail.manufacturer.name.replace(/\.$/, "") }), href: searchHref(detail.manufacturer.name.replace(/\.$/, "")) },
   ];
 
   return (
     <Container className="py-8 sm:py-10">
-      {/* Structured breadcrumbs omit the search crumb: search pages are noindex. */}
-      <JsonLd
-        data={[
-          medicineJsonLd(detail, lang),
-          breadcrumbJsonLd([breadcrumbs[0]!, breadcrumbs[breadcrumbs.length - 1]!], path, lang),
-        ]}
-      />
+      <JsonLd data={[medicineJsonLd(detail, lang), breadcrumbJsonLd(breadcrumbs, path, lang)]} />
       <Breadcrumbs items={breadcrumbs} />
 
       <div className="mt-4 space-y-12">
