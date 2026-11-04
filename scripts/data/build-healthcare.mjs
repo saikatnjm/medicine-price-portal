@@ -6,6 +6,7 @@
  *   geoBoundaries, else data/raw/osm-bd-areas.json from OpenStreetMap)
  *     + scripts/data/taxonomy/specialties.mjs
  *     → src/data/local/seed/{facilities,pharmacies,locations,specialties,directory-sources}.json
+ *       (facilities.json and pharmacies.json in the compact format of src/data/local/seed-format.mjs)
  *     → data/reports/osm-import-report.{md,json}
  *
  *   docker compose run --rm app npm run data:build-healthcare
@@ -16,6 +17,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { writeCompactSeedFile, writeReportJson } from "./lib/json-files.mjs";
 import { keyOf, slugify } from "./lib/normalize.mjs";
 import {
   addressOf,
@@ -40,6 +42,7 @@ import {
 } from "./lib/osm.mjs";
 import { INFO_FLAGS, qualityFlagsOf, refineKind, reviewStatusOf, stripCategorySuffix } from "./lib/quality.mjs";
 import { SPECIALTIES } from "./taxonomy/specialties.mjs";
+import { compactDirectory } from "../../src/data/local/seed-format.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../..");
 const RAW_FILE = join(ROOT, "data/raw/osm-bd-health.json");
@@ -51,6 +54,8 @@ const areaKey = (id) => String(id).toLowerCase().replace(/[^a-z0-9]+/g, "_");
 const SEED_DIR = join(ROOT, "src/data/local/seed");
 const REPORT_DIR = join(ROOT, "data/reports");
 const SOURCE_ID = "osm";
+/** Record URL = this prefix + OSM record id ("node/123"); the compact seed format relies on it. */
+const RECORD_URL_PREFIX = "https://www.openstreetmap.org/";
 /** Same name + kind + district within this distance = the same place mapped twice. */
 const DUPLICATE_DISTANCE_M = 300;
 
@@ -308,7 +313,7 @@ export function buildDirectory(raw, rawAreas) {
     const provenance = compact({
       sourceId: SOURCE_ID,
       recordId: c.recordId,
-      recordUrl: `https://www.openstreetmap.org/${c.recordId}`,
+      recordUrl: `${RECORD_URL_PREFIX}${c.recordId}`,
       status: "unverified",
       sourceUpdatedAt: raw.meta.osmTimestamp ?? undefined,
       lastCheckedAt: retrievedAt,
@@ -412,10 +417,11 @@ function writeQualityReport(result) {
     .filter((r) => r.qualityFlags?.some((f) => !INFO_FLAGS.has(f)) || r.sourceName)
     .map((r) => ({ id: r.id, name: r.name, sourceName: r.sourceName, kind: r.kind ?? "pharmacy", reviewStatus: r.reviewStatus ?? "active", flags: r.qualityFlags ?? [], source: r.provenance.recordUrl }))
     .sort((a, b) => byText(a.id, b.id));
-  writeFileSync(
-    join(REPORT_DIR, "directory-quality-report.json"),
-    `${JSON.stringify({ generatedFrom: result.report.retrievedAt, reclassified: result.reclassified, flagged }, null, 2)}\n`,
-  );
+  writeReportJson(join(REPORT_DIR, "directory-quality-report.json"), {
+    generatedFrom: result.report.retrievedAt,
+    reclassified: result.reclassified,
+    flagged,
+  });
   const r = result.report;
   const examples = (flag) =>
     flagged
@@ -559,8 +565,14 @@ function main() {
   const result = buildDirectory(raw, areasRaw);
   applyGooglePlaces(result);
   mkdirSync(REPORT_DIR, { recursive: true });
-  writeJsonLines(join(SEED_DIR, "facilities.json"), result.facilities);
-  writeJsonLines(join(SEED_DIR, "pharmacies.json"), result.pharmacies);
+  for (const [file, items, idPrefix] of [
+    ["facilities.json", result.facilities, "fac_"],
+    ["pharmacies.json", result.pharmacies, "pha_"],
+  ]) {
+    writeCompactSeedFile(join(SEED_DIR, file), items, (list) =>
+      compactDirectory(list, { idPrefix, recordUrlPrefix: RECORD_URL_PREFIX }),
+    );
+  }
   writeJsonLines(join(SEED_DIR, "locations.json"), result.locations);
   writeJsonLines(join(SEED_DIR, "specialties.json"), result.specialties);
   // Keep doctor sources written by data:import-doctors (ids "doctors-…").
@@ -570,10 +582,11 @@ function main() {
     : [];
   writeJsonLines(sourcesFile, [...result.sources, ...doctorSources]);
   if (!existsSync(join(SEED_DIR, "doctors.json"))) writeFileSync(join(SEED_DIR, "doctors.json"), "[]\n");
-  writeFileSync(
-    join(REPORT_DIR, "osm-import-report.json"),
-    `${JSON.stringify({ ...result.report, rejectedRecords: result.rejected, duplicateRecords: result.duplicates }, null, 2)}\n`,
-  );
+  writeReportJson(join(REPORT_DIR, "osm-import-report.json"), {
+    ...result.report,
+    rejectedRecords: result.rejected,
+    duplicateRecords: result.duplicates,
+  });
   writeFileSync(join(REPORT_DIR, "osm-import-report.md"), renderReport(result.report));
   writeQualityReport(result);
   const r = result.report;

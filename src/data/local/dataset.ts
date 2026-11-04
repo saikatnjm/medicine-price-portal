@@ -9,6 +9,7 @@ import type {
   MedicinePrice,
   Pharmacy,
 } from "../../domain/types";
+import { expandDirectory, expandMedicines } from "./seed-format.mjs";
 import directorySourcesJson from "./seed/directory-sources.json";
 import doctorsJson from "./seed/doctors.json";
 import facilitiesJson from "./seed/facilities.json";
@@ -48,18 +49,20 @@ export interface LocalDataset {
  * (OpenStreetMap + curated taxonomy). Prices and doctors are empty until a
  * sourced dataset exists. Data is imported (not read
  * with fs) so it is bundled into every server function, including on Vercel.
+ * medicines, facilities and pharmacies are stored in a compact format
+ * (./seed-format.mjs, D40) and expanded here into the same objects as before.
  * JSON widens string literals, so the casts are verified by
  * scripts/data/validate-data.mjs.
  */
 export const seedDataset: LocalDataset = {
   generics: genericsJson as Generic[],
   manufacturers: manufacturersJson as Manufacturer[],
-  medicines: medicinesJson as Medicine[],
-  pharmacies: pharmaciesJson as Pharmacy[],
+  medicines: expandMedicines(medicinesJson),
+  pharmacies: expandDirectory<Pharmacy>(pharmaciesJson),
   prices: pricesJson as MedicinePrice[],
   popularMedicineIds: popularJson as ID[],
   sources: [...(sourcesJson as DataSource[]), ...(directorySourcesJson as DataSource[])],
-  facilities: facilitiesJson as Facility[],
+  facilities: expandDirectory<Facility>(facilitiesJson),
   locations: locationsJson as Location[],
   specialties: specialtiesJson as Specialty[],
   doctors: doctorsJson as Doctor[],

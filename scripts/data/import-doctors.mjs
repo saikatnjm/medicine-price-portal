@@ -19,6 +19,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { cleanText, slugify } from "./lib/normalize.mjs";
+import { expandSeed } from "../../src/data/local/seed-format.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../..");
 const SEED_DIR = join(ROOT, "src/data/local/seed");
@@ -402,7 +403,7 @@ function main() {
     csvText: readFileSync(csvPath, "utf8"),
     sources: readJson(join(DATA_DIR, "sources.json"), []),
     specialties: readJson(join(SEED_DIR, "specialties.json"), []),
-    facilities: readJson(join(SEED_DIR, "facilities.json"), []),
+    facilities: expandSeed(readJson(join(SEED_DIR, "facilities.json"), [])),
     locations: readJson(join(SEED_DIR, "locations.json"), []),
     allowExamples,
   });

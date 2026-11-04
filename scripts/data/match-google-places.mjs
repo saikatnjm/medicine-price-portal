@@ -14,6 +14,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { MAX_DISTANCE_M, pickMatch } from "./lib/google-match.mjs";
+import { expandSeed } from "../../src/data/local/seed-format.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../..");
 const SEED_DIR = join(ROOT, "src/data/local/seed");
@@ -77,7 +78,7 @@ async function main() {
   }
   const limit = parseLimit(process.argv.slice(2));
   const records = ["facilities.json", "pharmacies.json"]
-    .flatMap((file) => readJson(join(SEED_DIR, file), []))
+    .flatMap((file) => expandSeed(readJson(join(SEED_DIR, file), [])))
     .filter((r) => (r.reviewStatus ?? "active") === "active" && r.coordinates && r.provenance?.recordId);
 
   const results = readJson(OUT_FILE, {});

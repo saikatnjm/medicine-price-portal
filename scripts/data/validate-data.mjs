@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Validates the application dataset in src/data/local/seed/.
+ * Validates the application dataset in src/data/local/seed/ (compact files are
+ * expanded first, so the checks see the same objects as the app).
  *
  *   docker compose run --rm app npm run validate:data
  *
@@ -11,6 +12,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { DOSAGE_FORM_CATEGORIES, keyOf } from "./lib/normalize.mjs";
+import { expandSeed } from "../../src/data/local/seed-format.mjs";
 
 const SEED_DIR = join(dirname(fileURLToPath(import.meta.url)), "../../src/data/local/seed");
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -271,7 +273,7 @@ export function validateDataset(data) {
 
 function load(name) {
   try {
-    return JSON.parse(readFileSync(join(SEED_DIR, `${name}.json`), "utf8"));
+    return expandSeed(JSON.parse(readFileSync(join(SEED_DIR, `${name}.json`), "utf8")));
   } catch (error) {
     console.error(`[invalid_json] ${name}.json: ${error.message}`);
     process.exit(1);
