@@ -374,3 +374,64 @@ export interface SuggestionGroup {
   label: string;
   items: SuggestionItem[];
 }
+
+// ------------------------------------------------------------ company and dosage-form pages
+
+/** Number of registered products per entity (generic, company, dosage form or registered label). */
+export interface CatalogCount<T> {
+  item: T;
+  count: number;
+}
+
+/** One page of a long product list, paginated by path segment (/companies/x, /companies/x/2, ...). */
+export interface CatalogPagination {
+  /** 1-based current page. */
+  page: number;
+  totalPages: number;
+  pageSize: number;
+  /** 0-based index of the first product on this page. */
+  offset: number;
+}
+
+/** Products of one generic on a company page (a generic can continue on the next page). */
+export interface CompanyProductGroup {
+  generic: Generic;
+  products: Medicine[];
+}
+
+export interface CompanyDetail {
+  manufacturer: Manufacturer;
+  /** All registered products of this company (across every page). */
+  productCount: number;
+  genericCount: number;
+  /** Dosage forms with product counts, most products first. */
+  forms: CatalogCount<DosageForm>[];
+  /** Generics with the most products of this company, most first. */
+  topGenerics: CatalogCount<Generic>[];
+  /** This page's products, sorted by generic then brand, grouped by generic. */
+  groups: CompanyProductGroup[];
+  pagination: CatalogPagination;
+  /** Enough products to be worth indexing (SEO_THRESHOLDS.minCatalogProducts). */
+  indexable: boolean;
+}
+
+export interface DosageFormProduct {
+  medicine: Medicine;
+  generic: Generic;
+  manufacturer: Manufacturer;
+}
+
+export interface DosageFormDetail {
+  form: DosageForm;
+  productCount: number;
+  genericCount: number;
+  companyCount: number;
+  /** Precise registered labels in this group ("Film Coated Tablet", "Eye Drops"), most first. */
+  labels: CatalogCount<string>[];
+  topGenerics: CatalogCount<Generic>[];
+  topCompanies: CatalogCount<Manufacturer>[];
+  /** This page's products, sorted by brand. */
+  products: DosageFormProduct[];
+  pagination: CatalogPagination;
+  indexable: boolean;
+}
