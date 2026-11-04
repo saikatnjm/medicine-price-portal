@@ -13,8 +13,12 @@ import { common } from "./common";
 import { ui } from "./ui";
 import { pages } from "./pages";
 import { seo } from "./seo";
+import { generic } from "./generic";
+import { company } from "./company";
+import { browse } from "./browse";
+import { guide } from "./guide";
 
-const DOMAINS = [layout, home, search, directory, facility, doctor, medicine, pharmacy, location, specialty, retention, common, ui, pages, seo] as const;
+const DOMAINS = [layout, home, search, directory, facility, doctor, medicine, pharmacy, location, specialty, retention, common, ui, pages, seo, generic, company, browse, guide] as const;
 
 type Domains = (typeof DOMAINS)[number];
 type UnionToIntersection<U> = (U extends unknown ? (x: U) => void : never) extends (x: infer I) => void ? I : never;

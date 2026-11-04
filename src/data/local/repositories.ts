@@ -1,6 +1,6 @@
 import { hasSafetyContent } from "../../domain/medicine-safety";
 import type { MedicineSearchFacets } from "../../domain/read-models";
-import type { ID, Medicine, Page } from "../../domain/types";
+import type { DosageForm, ID, Medicine, Page } from "../../domain/types";
 import type {
   GenericRepository,
   ManufacturerRepository,
@@ -44,6 +44,12 @@ function groupBy<T>(items: readonly T[], key: (item: T) => ID): Map<ID, T[]> {
   return groups;
 }
 
+/** "a"–"z" for brands starting with a Latin letter, otherwise "0-9". */
+export function brandInitial(brandName: string): string {
+  const first = brandName.trim().charAt(0).toLowerCase();
+  return first >= "a" && first <= "z" ? first : "0-9";
+}
+
 /** Builds repositories backed by an in-memory dataset (seed data or a test fixture). */
 export function createLocalRepositories(source: LocalDataset): Repositories {
   const dataset = withoutExcluded(source);
@@ -62,6 +68,12 @@ export function createLocalRepositories(source: LocalDataset): Repositories {
   // Built lazily: pages that never search do not pay for indexing the catalogue.
   let searchIdx: ReturnType<typeof buildSearchIndex> | null = null;
   let medicinesByGeneric: Map<ID, Medicine[]> | null = null;
+  let medicinesByManufacturer: Map<ID, Medicine[]> | null = null;
+  let medicinesByForm: Map<ID, Medicine[]> | null = null;
+  let medicinesByInitial: Map<string, Medicine[]> | null = null;
+  let medicinesByDar: Map<string, Medicine[]> | null = null;
+  const counts = new Map<string, Map<string, number>>();
+  const byName = (a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name, "en");
 
   const medicines: MedicineRepository = {
     async findBySlug(slug) {
@@ -93,6 +105,34 @@ export function createLocalRepositories(source: LocalDataset): Repositories {
       medicinesByGeneric ??= groupBy(dataset.medicines, (m) => m.genericId);
       return [...(medicinesByGeneric.get(genericId) ?? [])].sort(compareMedicines);
     },
+    async findByManufacturer(manufacturerId) {
+      medicinesByManufacturer ??= groupBy(dataset.medicines, (m) => m.manufacturerId);
+      return [...(medicinesByManufacturer.get(manufacturerId) ?? [])].sort(compareMedicines);
+    },
+    async findByDosageForm(dosageForm: DosageForm) {
+      medicinesByForm ??= groupBy(dataset.medicines, (m) => m.dosageForm);
+      return [...(medicinesByForm.get(dosageForm) ?? [])].sort(compareMedicines);
+    },
+    async findByBrandInitial(initial) {
+      medicinesByInitial ??= groupBy(dataset.medicines, (m) => brandInitial(m.brandName));
+      return [...(medicinesByInitial.get(initial.toLowerCase()) ?? [])].sort(compareMedicines);
+    },
+    async findByDarNumber(darNumber) {
+      medicinesByDar ??= groupBy(
+        dataset.medicines.filter((m) => m.provenance.darNumber),
+        (m) => m.provenance.darNumber ?? "",
+      );
+      return [...(medicinesByDar.get(darNumber.trim()) ?? [])].sort(compareMedicines);
+    },
+    async countBy(key) {
+      let map = counts.get(key);
+      if (!map) {
+        map = new Map();
+        for (const m of dataset.medicines) map.set(m[key], (map.get(m[key]) ?? 0) + 1);
+        counts.set(key, map);
+      }
+      return new Map(map);
+    },
     async listPopular() {
       return pickByIds(medicinesById, dataset.popularMedicineIds);
     },
@@ -115,6 +155,9 @@ export function createLocalRepositories(source: LocalDataset): Repositories {
     async findByIds(ids) {
       return pickByIds(genericsById, ids);
     },
+    async listAll() {
+      return [...dataset.generics].sort(byName);
+    },
   };
 
   const manufacturers: ManufacturerRepository = {
@@ -123,6 +166,9 @@ export function createLocalRepositories(source: LocalDataset): Repositories {
     },
     async findByIds(ids) {
       return pickByIds(manufacturersById, ids);
+    },
+    async listAll() {
+      return [...dataset.manufacturers].sort(byName);
     },
   };
 

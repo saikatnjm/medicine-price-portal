@@ -1,7 +1,10 @@
 import type { Repositories } from "../repositories";
+import { BrowseService } from "./browse-service";
+import { CompanyService } from "./company-service";
 import { DirectoryService } from "./directory-service";
 import { DoctorService } from "./doctor-service";
 import { FacilityService } from "./facility-service";
+import { GenericService } from "./generic-service";
 import { LocationService } from "./location-service";
 import { MedicineService } from "./medicine-service";
 import { PharmacyService } from "./pharmacy-service";
@@ -17,6 +20,9 @@ export interface Services {
   specialties: SpecialtyService;
   directory: DirectoryService;
   search: SearchService;
+  generics: GenericService;
+  companies: CompanyService;
+  browse: BrowseService;
 }
 
 export function createServices(repos: Repositories): Services {
@@ -29,11 +35,17 @@ export function createServices(repos: Repositories): Services {
     specialties: new SpecialtyService(repos),
     directory: new DirectoryService(repos),
     search: new SearchService(repos),
+    generics: new GenericService(repos),
+    companies: new CompanyService(repos),
+    browse: new BrowseService(repos),
   };
 }
 
 export {
+  BrowseService,
+  CompanyService,
   DirectoryService,
+  GenericService,
   DoctorService,
   FacilityService,
   LocationService,

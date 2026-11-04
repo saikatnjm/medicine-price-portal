@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { GUIDES } from "@/content/guides";
 import { services } from "@/data";
 import { LOCALES, localizePath } from "@/i18n/config";
 import { routes } from "@/lib/routes";
@@ -19,12 +20,30 @@ export async function generateSitemaps(): Promise<{ id: string }[]> {
 }
 
 async function coreEntries(): Promise<Entries> {
-  const [specialties, locations, combinations] = await Promise.all([
+  const [specialties, locations, combinations, generics, companies, forms, initials] = await Promise.all([
     services.specialties.listSpecialties(),
     services.locations.listIndexable(),
     services.directory.listCombinations(),
+    services.generics.listIndexable(),
+    services.companies.listIndexable(),
+    services.companies.listDosageForms(),
+    services.browse.listInitials(),
   ]);
-  const sections = [routes.hospitals(), routes.pharmacies(), routes.doctors(), routes.specialties(), routes.locations(), routes.about()];
+  const sections = [
+    routes.hospitals(),
+    routes.pharmacies(),
+    routes.doctors(),
+    routes.specialties(),
+    routes.locations(),
+    routes.about(),
+    routes.generics(),
+    routes.companies(),
+    routes.dosageForms(),
+    routes.medicines(),
+    routes.verify(),
+    routes.guides(),
+    routes.emergency(),
+  ];
   return [
     ...localized(routes.home(), { changeFrequency: "weekly", priority: 1 }),
     ...sections.flatMap((path) => localized(path, { changeFrequency: "weekly", priority: 0.8 })),
@@ -32,6 +51,15 @@ async function coreEntries(): Promise<Entries> {
       localized(routes.specialty(specialty.slug), { changeFrequency: "monthly", priority: 0.6 }),
     ),
     ...locations.flatMap(({ location }) => localized(routes.location(location.slug), { changeFrequency: "monthly", priority: 0.6 })),
+    ...generics.flatMap(({ generic }) => localized(routes.generic(generic.slug), { changeFrequency: "monthly", priority: 0.7 })),
+    ...companies.flatMap(({ manufacturer }) =>
+      localized(routes.company(manufacturer.slug), { changeFrequency: "monthly", priority: 0.7 }),
+    ),
+    ...forms.flatMap(({ form }) => localized(routes.dosageForm(form), { changeFrequency: "monthly", priority: 0.6 })),
+    ...initials.flatMap(({ initial }) => localized(routes.medicines(initial), { changeFrequency: "monthly", priority: 0.6 })),
+    ...GUIDES.flatMap((guide) =>
+      localized(routes.guide(guide.slug), { lastModified: guide.updatedAt, changeFrequency: "monthly", priority: 0.7 }),
+    ),
     ...combinations.flatMap((entry) =>
       localized(
         entry.type === "hospitals"
