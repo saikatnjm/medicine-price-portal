@@ -7,11 +7,19 @@ services:
     image: bangladesh-healthcare-search:dev
     ports:
       - "3000:3000"
-    env_file:
-      - path: .env
-        required: false
+    # Values come from an optional .env file (see .env.example) via variable substitution,
+    # which works with both `docker compose` (v2) and the legacy `docker-compose` (v1).
+    # A missing .env is fine: every variable defaults to empty.
     environment:
       NEXT_TELEMETRY_DISABLED: "1"
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-}
+      SITE_INDEXABLE: ${SITE_INDEXABLE:-}
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: ${NEXT_PUBLIC_GA_MEASUREMENT_ID:-}
+      NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: ${NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION:-}
+      NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY: ${NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY:-}
+      NEXT_PUBLIC_REPORT_URL: ${NEXT_PUBLIC_REPORT_URL:-}
+      GOOGLE_PLACES_API_KEY: ${GOOGLE_PLACES_API_KEY:-}
+      GOOGLE_PLACES_LIVE_DETAILS: ${GOOGLE_PLACES_LIVE_DETAILS:-}
       # Uncomment if file changes are not detected (e.g. Docker Desktop on macOS/Windows):
       # WATCHPACK_POLLING: "true"
     volumes:
