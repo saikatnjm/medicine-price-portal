@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 /*
- * Design tokens (see docs/UI-REDESIGN-BRIEF.md). The `brand-*` scale is kept for existing pages;
- * pine / mist / ink are the refreshed core palette. Category tints are soft background + strong
+ * Design tokens — palette in docs/PALETTE.md (contrast ratios listed there). The `brand-*` scale is
+ * the national-green family used across pages; pine / mist / ink are the core surfaces and text.
+ * `accent-*` is a warm marigold for a few call-to-action highlights (never for warnings: those are
+ * notice-*; never for emergencies: that is flag). Category tints are soft background + strong
  * foreground pairs: they always sit next to an icon and a text label, never colour alone.
  */
 @theme {
@@ -11,15 +13,25 @@
     var(--font-latin), var(--font-bn), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Noto Sans", "Noto Sans Bengali", "Helvetica Neue", Arial, sans-serif;
 
-  --color-brand-50: #effaf8;
-  --color-brand-100: #d5f0ec;
-  --color-brand-600: #0f766e;
-  --color-brand-700: #115e59;
-  --color-brand-800: #134e4a;
+  /* Primary: Bangladesh national green (#006a4e = brand-700). */
+  --color-brand-50: #edf7f2;
+  --color-brand-100: #d3ecdf;
+  --color-brand-600: #00795c;
+  --color-brand-700: #006a4e;
+  --color-brand-800: #00543f;
 
-  --color-pine: #0b4f4a;
-  --color-mist: #eaf4f2;
-  --color-ink: #12302e;
+  --color-pine: #0b4a3c;
+  --color-mist: #edf5f1;
+  --color-ink: #0f2a22;
+  /* Calm neutral section fill (slightly green-grey, quieter than mist). */
+  --color-surface: #f6f8f7;
+
+  /* Warm marigold accent for call-to-action highlights. */
+  --color-accent-50: #fff4e8;
+  --color-accent-100: #ffe3c7;
+  --color-accent-600: #b34700;
+  --color-accent-700: #8f3900;
+
   /* Emergency / urgent markers only, always with an icon and text. */
   --color-flag: #c8102e;
 
@@ -27,18 +39,18 @@
   --color-notice-200: #fde68a;
   --color-notice-900: #78350f;
 
-  --color-cat-medicine-bg: #dff3f0;
-  --color-cat-medicine-fg: #0f6b63;
-  --color-cat-doctor-bg: #e8e9fd;
-  --color-cat-doctor-fg: #3f3fc4;
-  --color-cat-hospital-bg: #def0fc;
-  --color-cat-hospital-fg: #035c8c;
-  --color-cat-pharmacy-bg: #dbf5e3;
-  --color-cat-pharmacy-fg: #13703a;
-  --color-cat-location-bg: #fdf0cc;
-  --color-cat-location-fg: #8a4208;
-  --color-cat-specialty-bg: #f1e6fd;
-  --color-cat-specialty-fg: #6d22b3;
+  --color-cat-medicine-bg: #daf0f1;
+  --color-cat-medicine-fg: #08636b;
+  --color-cat-doctor-bg: #e7e9fc;
+  --color-cat-doctor-fg: #3a3db8;
+  --color-cat-hospital-bg: #ddeefb;
+  --color-cat-hospital-fg: #0b5a8a;
+  --color-cat-pharmacy-bg: #ddf3e3;
+  --color-cat-pharmacy-fg: #16683a;
+  --color-cat-location-bg: #fdefd0;
+  --color-cat-location-fg: #874107;
+  --color-cat-specialty-bg: #f0e7fc;
+  --color-cat-specialty-fg: #6a2bb0;
 }
 
 @layer base {
@@ -75,5 +87,69 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+}
+
+/*
+ * Print: medicine and hospital pages print as a clean fact sheet. Site chrome, navigation and
+ * interactive controls (buttons, forms, toolbars, maps) are hidden; external links show their
+ * address once, in small text.
+ */
+@media print {
+  @page {
+    margin: 1.5cm;
+  }
+
+  header,
+  footer,
+  nav,
+  button,
+  form,
+  [role="group"],
+  [role="status"],
+  iframe,
+  .leaflet-container,
+  [data-print="hide"] {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+
+  /* Tinted cards print as plain, bordered blocks (backgrounds are usually not printed). */
+  .rounded-2xl {
+    border: 1px solid #ccc;
+    box-shadow: none !important;
+  }
+
+  a {
+    color: inherit !important;
+    text-decoration: underline;
+  }
+
+  /* Map and share links are long and useless on paper; websites and sources keep their address. */
+  main a[href^="http"]:not([href*="google.com/maps"]):not([href*="openstreetmap.org"]):not([href*="wa.me"])::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    word-break: break-all;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  dl,
+  li {
+    break-inside: avoid;
   }
 }

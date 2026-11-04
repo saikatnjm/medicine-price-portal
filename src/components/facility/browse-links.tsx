@@ -11,7 +11,7 @@ function Chip({ href, label, count }: { href: string; label: string; count: numb
   return (
     <Link href={href} className={CHIP_CLASS}>
       {label}
-      <span className="ml-0.5 font-normal text-pine/70">({count.toLocaleString("en-US")})</span>
+      <span className="ml-0.5 font-normal text-pine/80">({count.toLocaleString("en-US")})</span>
     </Link>
   );
 }

@@ -43,7 +43,7 @@ export function SearchForm({ defaultValue = "", size = "md", id = "site-search",
         />
         <button
           type="submit"
-          className={`inline-flex shrink-0 items-center justify-center gap-2 bg-pine font-semibold text-white transition-colors hover:bg-brand-700 ${large ? "h-12 rounded-full px-5 text-base sm:px-7" : "h-11 rounded-xl px-4 text-sm"}`}
+          className={`inline-flex shrink-0 items-center justify-center gap-2 font-semibold text-white transition-colors ${large ? "h-12 rounded-full bg-accent-600 px-5 text-base hover:bg-accent-700 sm:px-7" : "h-11 rounded-xl bg-pine px-4 text-sm hover:bg-brand-700"}`}
         >
           <SearchIcon className="size-5" />
           {t("search.form.submit")}
