@@ -435,3 +435,53 @@ export interface DosageFormDetail {
   pagination: CatalogPagination;
   indexable: boolean;
 }
+
+// ------------------------------------------------- brand A–Z index and DAR check
+
+/** Brand initial ("a"–"z" or "0-9") with its number of registered products. */
+export interface BrandInitialCount {
+  initial: string;
+  productCount: number;
+}
+
+/** One row of the brand A–Z list (compact: no manufacturer or price lookups). */
+export interface BrandIndexItem {
+  slug: string;
+  brandName: string;
+  strength: string;
+  dosageFormLabel: string;
+  genericName: string;
+}
+
+/** One page of brands starting with an initial. */
+export interface BrandInitialPage {
+  initial: string;
+  items: BrandIndexItem[];
+  /** 1-based. */
+  page: number;
+  totalPages: number;
+  pageSize: number;
+  /** All products starting with this initial. */
+  total: number;
+}
+
+/** Headline counts for the A–Z hub and the DAR check, from the published catalogue. */
+export interface BrowseSummary {
+  medicineCount: number;
+  /** Generics and manufacturers with at least one published product. */
+  genericCount: number;
+  companyCount: number;
+  initials: BrandInitialCount[];
+  /** The registry snapshot the catalogue is built from; null when unknown. */
+  source: DataSource | null;
+}
+
+/** Result of a DGDA registration (DAR number) lookup in the registry snapshot. */
+export interface DarCheckResult {
+  /** Input as entered (whitespace collapsed). */
+  input: string;
+  /** "000-0000-000" form, or null when the input is not a 10-digit DAR number. */
+  darNumber: string | null;
+  status: "empty" | "invalid" | "found" | "not_found";
+  matches: MedicineSummary[];
+}
