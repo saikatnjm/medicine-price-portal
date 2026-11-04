@@ -4,6 +4,13 @@ const nextConfig: NextConfig = {
   // Self-contained server output for the Docker production image.
   // Vercel ignores this and uses its own build output.
   output: "standalone",
+  // Seed data is read with fs at runtime (src/data/local/dataset.ts), not bundled,
+  // so it must be shipped next to the server code (standalone and Vercel functions).
+  outputFileTracingIncludes: { "/**": ["./src/data/local/seed/**/*.json"] },
+  experimental: {
+    // Server source maps added ~200 MB to .next/server; stack traces still name files.
+    serverSourceMaps: false,
+  },
   poweredByHeader: false,
   reactStrictMode: true,
   // Singular forms are accepted and redirected to the canonical plural paths.

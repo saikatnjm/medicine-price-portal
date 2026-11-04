@@ -11,12 +11,13 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildQualityReport, summarizeReport } from "./lib/quality-report.mjs";
+import { expandSeed } from "../../src/data/local/seed-format.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../..");
 const SEED = join(ROOT, "src/data/local/seed");
 const OUT = join(ROOT, "reports/data-quality.json");
 
-const load = (name) => JSON.parse(readFileSync(join(SEED, `${name}.json`), "utf8"));
+const load = (name) => expandSeed(JSON.parse(readFileSync(join(SEED, `${name}.json`), "utf8")));
 const data = Object.fromEntries(["facilities", "pharmacies", "doctors", "locations", "medicines"].map((n) => [n, load(n)]));
 
 const report = buildQualityReport(data);

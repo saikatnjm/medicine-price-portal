@@ -59,6 +59,8 @@ src/
   data/
     index.ts        composition root (server-only)
     local/          createLocalRepositories, repository implementations, seed loader
+                    (getSeedDataset: read with fs at runtime, cached per process, D41),
+                    seed-format.mjs (compact medicines/facilities/pharmacies files, D40)
     local/seed/     medicines.json, generics.json, manufacturers.json, sources.json,
                     pharmacies.json (empty), prices.json (empty), facilities.json,
                     locations.json, specialties.json, directory-sources.json, doctors.json (empty)

@@ -46,6 +46,17 @@ Fields available from the registry: DAR (registration) number, trade name, compa
 
 **Provenance.** Every medicine has `provenance: { sourceId, recordId, darNumber?, status: "registered" }`. The DAR number is withheld when the source flags it (`dar_truncated`, `dar_malformed`, …). "Registered" means present in the official registry; it does not mean currently marketed.
 
+## Seed file format (D40)
+
+`medicines.json`, `facilities.json` and `pharmacies.json` are stored in a compact format to keep the repository and server bundle small (15.7 MB → 5.9 MB for medicines). The format lives in `src/data/local/seed-format.mjs`, shared by the app (`src/data/local/dataset.ts`), the data scripts and the tests. `expandSeed` turns a file back into exactly the objects the build scripts produce: same values and key order. The other seed files stay plain JSON arrays.
+
+- **medicines** (`"format": "medicines/v1"`): the header holds `idPrefix` (`dgda-`), `updatedAt`, the shared provenance (`sourceId`, `status`), `darNumberExceptions` and `columns`. Each record is one array per line: `[recordId, slug, brandName, genericId, manufacturerId, strength, dosageForm, dosageFormLabel, registeredName?]`. Derived on expansion: `id` = `idPrefix + recordId`, and `provenance.darNumber` = the record id before `--`. Records whose DAR number is different are listed in `darNumberExceptions` (`null` = withheld).
+- **facilities / pharmacies** (`"format": "directory/v1"`): the header holds `idPrefix` (`fac_` / `pha_`), `recordUrlPrefix` (OpenStreetMap), `updatedAt` and the shared provenance (`sourceId`, `status`, `sourceUpdatedAt`, `lastCheckedAt`). Each record is one object per line: `recordId` plus the record's own fields. Derived on expansion: `id` = `idPrefix + recordId` with `/` → `_`, plus `provenance.recordUrl`.
+
+The build scripts write these files through `writeCompactSeedFile` (`scripts/data/lib/json-files.mjs`). It refuses to write if expanding the result would not give back the built records, so a future change that the format cannot represent (for example per-record timestamps) fails the build instead of losing data. Scripts that read the seed files directly expand them with `expandSeed` or `readSeedFile`. `validate:data` checks the expanded objects. `tests/seed-format.test.ts` compares the shipped files with records copied from the original files before compaction (`tests/fixtures/seed-sample.json`).
+
+The `data/reports/*.json` reports are written with one entry per line (`writeReportJson`), not pretty-printed. The `data/raw/*.json` snapshots are already one record per line and are left as they are.
+
 ## Current snapshot (retrieved 2026-10-04)
 
 | | |
@@ -152,4 +163,4 @@ Curated taxonomy (`scripts/data/taxonomy/specialties.mjs`, 22 specialties) maps 
 
 ### Provenance
 
-Every facility and pharmacy has `provenance: { sourceId → "osm", recordId, status: "unverified" }`. Source metadata (retrieval date, attribution) is in `directory-sources.json`.
+Every facility and pharmacy has `provenance: { sourceId → "osm", recordId, recordUrl, status: "unverified", sourceUpdatedAt, lastCheckedAt }` (stored compactly, see "Seed file format"). Source metadata (retrieval date, attribution) is in `directory-sources.json`.

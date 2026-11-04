@@ -1,8 +1,9 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { buildDoctors, COLUMNS, isValidPhone, mergeSources, parseCsv } from "../scripts/data/import-doctors.mjs";
+import { buildDoctors, COLUMNS, isValidPhone, mergeSources, parseCsv, type DoctorImportInput } from "../scripts/data/import-doctors.mjs";
 import { validateDataset } from "../scripts/data/validate-data.mjs";
 import type { DatasetFiles } from "../scripts/data/validate-data.mjs";
+import { expandSeed } from "../src/data/local/seed-format.mjs";
 import { fixtureDataset } from "./fixtures";
 
 const NOW = "2026-10-05T00:00:00.000Z";
@@ -163,8 +164,15 @@ describe("shipped doctor data", () => {
   it("keeps the example file valid only with --allow-examples", () => {
     const csvText = readFileSync("data/doctors/doctors.example.csv", "utf8");
     const sources = JSON.parse(readFileSync("data/doctors/sources.example.json", "utf8"));
-    const real = (f: string) => JSON.parse(readFileSync(`src/data/local/seed/${f}.json`, "utf8"));
-    const input = { csvText, sources, specialties: real("specialties"), facilities: real("facilities"), locations: real("locations"), now: NOW };
+    const real = <T,>(f: string) => expandSeed<T>(JSON.parse(readFileSync(`src/data/local/seed/${f}.json`, "utf8")));
+    const input: DoctorImportInput = {
+      csvText,
+      sources,
+      specialties: real("specialties"),
+      facilities: real("facilities"),
+      locations: real("locations"),
+      now: NOW,
+    };
     expect(buildDoctors(input).errors.length).toBeGreaterThan(0);
     const ok = buildDoctors({ ...input, allowExamples: true });
     expect(ok.errors).toEqual([]);

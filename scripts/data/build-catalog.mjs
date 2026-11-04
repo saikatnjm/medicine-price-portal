@@ -5,6 +5,7 @@
  *   data/raw/dgda-drug-registry.json
  *     → parse → normalise → validate → deduplicate
  *     → src/data/local/seed/{medicines,generics,manufacturers,sources,popular}.json
+ *       (medicines.json in the compact format of src/data/local/seed-format.mjs)
  *     → data/reports/dgda-import-report.{md,json}
  *
  *   docker compose run --rm app npm run data:build
@@ -27,12 +28,16 @@ import {
   slugify,
   splitGenericContent,
 } from "./lib/normalize.mjs";
+import { writeCompactSeedFile, writeReportJson } from "./lib/json-files.mjs";
+import { compactMedicines } from "../../src/data/local/seed-format.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../..");
 const RAW_FILE = join(ROOT, "data/raw/dgda-drug-registry.json");
 const SEED_DIR = join(ROOT, "src/data/local/seed");
 const REPORT_DIR = join(ROOT, "data/reports");
 const SOURCE_ID = "dgda-registry";
+/** Medicine id = this prefix + DGDA record id (the compact seed format relies on it). */
+const ID_PREFIX = "dgda-";
 /** Forms whose slug omits the form (the most common, plain forms). */
 const PLAIN_FORM_LABELS = new Set(["Tablet", "Capsule"]);
 /** Strength components included in a slug; more than this and the strength is omitted. */
@@ -239,7 +244,7 @@ export function buildCatalog(raw) {
 
     const flaggedDar = Boolean(p.record.darQualityFlag);
     const medicine = {
-      id: `dgda-${p.record.id}`,
+      id: `${ID_PREFIX}${p.record.id}`,
       slug,
       brandName: p.brandName,
       genericId: genericIdByKey.get(p.genericKey),
@@ -274,7 +279,7 @@ export function buildCatalog(raw) {
       missingPopular.push(`${brand} ${strength} ${label}`);
       return [];
     }
-    return [`dgda-${hit.record.id}`];
+    return [`${ID_PREFIX}${hit.record.id}`];
   });
 
   const sources = [
@@ -383,15 +388,18 @@ function main() {
   const result = buildCatalog(raw);
   mkdirSync(SEED_DIR, { recursive: true });
   mkdirSync(REPORT_DIR, { recursive: true });
-  writeJsonLines(join(SEED_DIR, "medicines.json"), result.medicines);
+  writeCompactSeedFile(join(SEED_DIR, "medicines.json"), result.medicines, (items) =>
+    compactMedicines(items, { idPrefix: ID_PREFIX }),
+  );
   writeJsonLines(join(SEED_DIR, "generics.json"), result.generics);
   writeJsonLines(join(SEED_DIR, "manufacturers.json"), result.manufacturers);
   writeJsonLines(join(SEED_DIR, "sources.json"), result.sources);
   writeFileSync(join(SEED_DIR, "popular.json"), `${JSON.stringify(result.popular, null, 2)}\n`);
-  writeFileSync(
-    join(REPORT_DIR, "dgda-import-report.json"),
-    `${JSON.stringify({ ...result.report, rejectedRecords: result.rejected, duplicateRecords: result.duplicates }, null, 2)}\n`,
-  );
+  writeReportJson(join(REPORT_DIR, "dgda-import-report.json"), {
+    ...result.report,
+    rejectedRecords: result.rejected,
+    duplicateRecords: result.duplicates,
+  });
   writeFileSync(join(REPORT_DIR, "dgda-import-report.md"), renderReport(result.report));
   const r = result.report;
   console.log(
