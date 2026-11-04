@@ -7,6 +7,7 @@ import { PRICE_SECTION_ID } from "@/components/medicine/price-comparison";
 import type { MedicineDetail } from "@/domain/read-models";
 import { getT } from "@/i18n/server";
 import { formatMedicineName, formatPackSize } from "@/lib/format";
+import { routes } from "@/lib/routes";
 import { searchHref } from "@/lib/search-params";
 
 const chip = "inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold";
@@ -18,8 +19,8 @@ const chip = "inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font
 export function MedicineOverview({ detail }: { detail: MedicineDetail }) {
   const t = getT();
   const { medicine, generic, manufacturer, priceStats } = detail;
-  const facts: { label: string; value: string }[] = [
-    { label: t("medicine.overview.maker"), value: manufacturer.name },
+  const facts: { label: string; value: string; href?: string }[] = [
+    { label: t("medicine.overview.maker"), value: manufacturer.name, href: routes.company(manufacturer.slug) },
     ...(medicine.packSize
       ? [{ label: t("medicine.overview.pack"), value: formatPackSize(medicine.packSize) }]
       : []),
@@ -57,10 +58,18 @@ export function MedicineOverview({ detail }: { detail: MedicineDetail }) {
             </span>
           </dd>
         </div>
-        {facts.map(({ label, value }) => (
+        {facts.map(({ label, value, href }) => (
           <div key={label}>
             <dt className="text-sm text-slate-600">{label}</dt>
-            <dd className="font-medium break-words text-slate-900">{value}</dd>
+            <dd className="font-medium break-words text-slate-900">
+              {href ? (
+                <Link href={href} className="text-brand-800 underline underline-offset-2">
+                  {value}
+                </Link>
+              ) : (
+                value
+              )}
+            </dd>
           </div>
         ))}
       </dl>
