@@ -6,8 +6,14 @@ export type GuideBlock =
   | { type: "h2"; text: string }
   | { type: "ul"; items: string[] }
   | { type: "ol"; items: string[] }
+  /** Highlighted callout, e.g. "ask a registered doctor or pharmacist". */
+  | { type: "note"; text: string }
   /** Internal link card, `href` is an unlocalised path from `routes`. */
-  | { type: "link"; href: string; label: string };
+  | { type: "link"; href: string; label: string }
+  /** Chips linking every specialty page, filled from `services.specialties` by the page. */
+  | { type: "specialtyLinks" };
+
+export type GuideCategory = "medicines" | "registration" | "healthcare" | "using-the-site";
 
 export interface GuideContent {
   title: string;
@@ -23,7 +29,7 @@ export interface GuideContent {
 export interface Guide {
   slug: string;
   /** Grouping on the /guides index. */
-  category: "medicines" | "registration" | "healthcare" | "using-the-site";
+  category: GuideCategory;
   /** ISO date the guide was last reviewed. */
   updatedAt: string;
   /** External sources the guide's facts come from (shown at the end). */
