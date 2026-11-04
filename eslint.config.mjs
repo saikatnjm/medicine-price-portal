@@ -33,5 +33,5 @@ export default defineConfig([
       ],
     },
   },
-  globalIgnores([".next/**", "out/**", "build/**", "coverage/**", "data/**", "next-env.d.ts"]),
+  globalIgnores([".claude/**", ".next/**", "out/**", "build/**", "coverage/**", "data/**", "next-env.d.ts"]),
 ]);

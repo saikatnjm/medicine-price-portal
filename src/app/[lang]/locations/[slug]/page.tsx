@@ -116,7 +116,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
                 <li key={kind}>
                   <Link href={kindHref(kind)} className={CHIP_CLASS}>
                     {t(KIND_LABEL_KEY[kind])}
-                    <span className="font-normal text-pine/80">{count}</span>
+                    <span className="font-normal text-brand-800">{count}</span>
                   </Link>
                 </li>
               ))}
@@ -124,7 +124,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
                 <li>
                   <Link href={routes.pharmacies(slug)} className={CHIP_CLASS}>
                     {t("location.page.pharmacies")}
-                    <span className="font-normal text-pine/80">{detail.pharmacyCount}</span>
+                    <span className="font-normal text-brand-800">{detail.pharmacyCount}</span>
                   </Link>
                 </li>
               )}

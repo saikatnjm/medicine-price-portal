@@ -6,30 +6,37 @@ Tokens live in `src/app/globals.css` (`@theme`), so every Tailwind class (`bg-pi
 `src/app/[lang]/layout.tsx` (`viewport.themeColor`), `src/app/manifest.ts` (`theme_color`) and
 `src/app/opengraph-image.tsx`.
 
-Idea: a deep green taken from the Bangladesh flag (#006a4e) as the trustworthy primary, calm green-grey
-surfaces, one warm marigold accent kept for a few call-to-action highlights, and flag red reserved for
-emergencies. Meaning is never carried by colour alone: category tints, emergency markers and notices always
-come with an icon and a text label.
+Chosen palette: **Clinical Blue** (picked 2026-11-04 from four options: Clinical Blue, Hospital Teal,
+Navy & Mint and National Green). Hospital blue on white reads as a medical service; deep navy headings,
+calm blue-grey surfaces, one clinical teal accent for positive states and a few call-to-action highlights,
+and red reserved for emergencies. Meaning is never carried by colour alone: category tints, emergency
+markers and notices always come with an icon and a text label.
 
 ## Core
 
-| Token | Hex | Role |
-| --- | --- | --- |
-| `pine` | `#0b4a3c` | Primary buttons, logo, active tab, headings on tints; browser theme colour |
-| `brand-50` | `#edf7f2` | Faint green fill (info panels, OG background) |
-| `brand-100` | `#d3ecdf` | Chip hover, OG gradient end |
-| `brand-600` | `#00795c` | Focus outline, input focus border, rare filled buttons |
-| `brand-700` | `#006a4e` | National green; button hover, OG logo tile |
-| `brand-800` | `#00543f` | Inline links on white/mist |
-| `mist` | `#edf5f1` | Soft section fill (hero, footer, chips) |
-| `surface` | `#f6f8f7` | Calm neutral card fill (new) |
-| `ink` | `#0f2a22` | Headings and strong text |
-| `accent-50` | `#fff4e8` | Warm call-out card fill (new) |
-| `accent-100` | `#ffe3c7` | Accent hover fill (new) |
-| `accent-600` | `#b34700` | Main CTA fill: homepage search button, "Read the guides" (new) |
-| `accent-700` | `#8f3900` | Accent hover, accent icons on white (new) |
-| `flag` | `#c8102e` | Emergency / urgent markers only |
-| `notice-50` / `-200` / `-900` | `#fffbeb` / `#fde68a` / `#78350f` | "Sample data" and caution notices (unchanged) |
+Contrast is against white unless noted (WCAG AA: 4.5:1 body text, 3:1 large text / UI).
+
+| Token | Hex | Role | Contrast |
+| --- | --- | --- | --- |
+| `pine` | `#0a5ca8` | Primary buttons, logo, active tab; browser theme colour | 6.75 · 5.98 on mist · 5.26 on brand-100 |
+| `brand-50` | `#eaf2fb` | Faint blue fill (info panels, OG background) | ink on it 13.74 |
+| `brand-100` | `#d4e5f7` | Chip hover, OG gradient end | pine on it 5.26 |
+| `brand-600` | `#0a5ca8` | Focus outline, input focus border | 6.75 |
+| `brand-700` | `#094f91` | Button hover | white on it 8.27 |
+| `brand-800` | `#08427a` | Inline links, counts in chips | 10.14 · 8.98 on mist |
+| `mist` | `#eaf2fb` | Soft section fill (hero, footer, chips) | slate-700 on it 9.3 |
+| `surface` | `#f5f8fb` | Calm neutral card fill | slate-700 9.71 · flag 5.52 |
+| `ink` | `#0b2540` | Headings and strong text | 15.52 · 13.74 on mist |
+| `accent-50` | `#e3f4f1` | Teal call-out card fill | accent-700 on it 6.65 |
+| `accent-100` | `#c8ebe4` | Accent hover fill (no text on it below 18px) | accent-600 on it 4.04 (large text only) |
+| `accent-600` | `#0f7b6c` | Teal CTA fill (homepage search, "Read the guides") | white on it 5.16 |
+| `accent-700` | `#0b5f54` | Accent hover, accent icons | 7.56 |
+| `flag` | `#c8102e` | Emergency / urgent markers only | 5.88 |
+| `notice-50` / `-200` / `-900` | `#fffbeb` / `#fde68a` / `#78350f` | "Sample data" and caution notices (unchanged) | 8.75 |
+
+`text-pine/80` was replaced by solid `text-brand-800`: with a blue primary, 80 % opacity would fall to
+4.36:1. `src/app/icon.svg` keeps its previous colours because it carries an embedded C2PA content-credentials
+manifest that an edit would invalidate; replace it with a new icon file if a blue favicon is wanted.
 
 Body text stays Tailwind `slate-900` / `slate-700` / `slate-600` on these surfaces.
 

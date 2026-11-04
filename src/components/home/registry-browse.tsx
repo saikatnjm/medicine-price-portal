@@ -58,7 +58,7 @@ export function RegistryBrowse({ initials, counts }: RegistryBrowseProps) {
             <Link href={hub.href} className={WHITE_CHIP_CLASS}>
               {hub.label}
               {hub.count > 0 && (
-                <span className="font-normal text-pine/80">{t(hub.key, { n: numberFormatter.format(hub.count) })}</span>
+                <span className="font-normal text-brand-800">{t(hub.key, { n: numberFormatter.format(hub.count) })}</span>
               )}
             </Link>
           </li>
@@ -67,7 +67,7 @@ export function RegistryBrowse({ initials, counts }: RegistryBrowseProps) {
           <Link href={routes.verify()} className={WHITE_CHIP_CLASS}>
             <CheckBadgeIcon className="size-4" />
             {t("home.registry.verify")}
-            <span className="font-normal text-pine/80">{t("home.registry.verifyHint")}</span>
+            <span className="font-normal text-brand-800">{t("home.registry.verifyHint")}</span>
           </Link>
         </li>
         <li>

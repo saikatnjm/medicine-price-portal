@@ -3,6 +3,8 @@ import { GUIDES } from "@/content/guides";
 import { services } from "@/data";
 import { LOCALES, localizePath } from "@/i18n/config";
 import { routes } from "@/lib/routes";
+import { BRAND_PAGE_SIZE, medicinesPage } from "@/lib/routes-browse";
+import { companyPage, dosageFormPage } from "@/lib/routes-catalog";
 import { absoluteUrl } from "@/lib/seo";
 import { listSitemapIds, parseSitemapId, SITEMAP_CHUNK_SIZE } from "@/lib/sitemap-ids";
 
@@ -29,6 +31,7 @@ async function coreEntries(): Promise<Entries> {
     services.companies.listDosageForms(),
     services.browse.listInitials(),
   ]);
+  const catalogPages = await services.companies.listIndexablePages();
   const sections = [
     routes.hospitals(),
     routes.pharmacies(),
@@ -57,6 +60,18 @@ async function coreEntries(): Promise<Entries> {
     ),
     ...forms.flatMap(({ form }) => localized(routes.dosageForm(form), { changeFrequency: "monthly", priority: 0.6 })),
     ...initials.flatMap(({ initial }) => localized(routes.medicines(initial), { changeFrequency: "monthly", priority: 0.6 })),
+    // Page 2+ of the brand A–Z lists, company product lists and dosage-form lists (path-segment pagination).
+    ...initials.flatMap(({ initial, productCount }) =>
+      Array.from({ length: Math.max(0, Math.ceil(productCount / BRAND_PAGE_SIZE) - 1) }, (_, i) =>
+        localized(medicinesPage(initial, i + 2), { changeFrequency: "monthly", priority: 0.4 }),
+      ).flat(),
+    ),
+    ...catalogPages.flatMap((p) =>
+      localized(p.type === "company" ? companyPage(p.slug, p.page) : dosageFormPage(p.slug, p.page), {
+        changeFrequency: "monthly",
+        priority: 0.4,
+      }),
+    ),
     ...GUIDES.flatMap((guide) =>
       localized(routes.guide(guide.slug), { lastModified: guide.updatedAt, changeFrequency: "monthly", priority: 0.7 }),
     ),

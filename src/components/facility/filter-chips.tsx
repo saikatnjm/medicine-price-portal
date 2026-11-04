@@ -38,7 +38,7 @@ export function FilterChips({ path, keep, kinds, selectedKind, emergency }: Filt
                 className={active ? on : off}
               >
                 {facilityKindLabel(t, kind)}
-                <span className={active ? "text-white/80" : "text-pine/80"}>{count.toLocaleString("en-US")}</span>
+                <span className={active ? "text-white/80" : "text-brand-800"}>{count.toLocaleString("en-US")}</span>
               </Link>
             </li>
           );

@@ -1,11 +1,12 @@
 @import "tailwindcss";
 
 /*
- * Design tokens — palette in docs/PALETTE.md (contrast ratios listed there). The `brand-*` scale is
- * the national-green family used across pages; pine / mist / ink are the core surfaces and text.
- * `accent-*` is a warm marigold for a few call-to-action highlights (never for warnings: those are
- * notice-*; never for emergencies: that is flag). Category tints are soft background + strong
- * foreground pairs: they always sit next to an icon and a text label, never colour alone.
+ * Design tokens — "Clinical Blue" palette, see docs/PALETTE.md (contrast ratios listed there).
+ * Hospital blue (brand-*, pine) on white with calm blue-grey surfaces; ink is a deep navy for
+ * headings. `accent-*` is a clinical teal for a few positive / call-to-action highlights (never for
+ * warnings: those are notice-*; never for emergencies: that is flag). Category tints are soft
+ * background + strong foreground pairs: they always sit next to an icon and a text label.
+ * Token names are unchanged from earlier palettes so every page follows automatically.
  */
 @theme {
   /* --font-latin / --font-bn are set by next/font on <html> (src/app/[lang]/layout.tsx). */
@@ -13,24 +14,25 @@
     var(--font-latin), var(--font-bn), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Noto Sans", "Noto Sans Bengali", "Helvetica Neue", Arial, sans-serif;
 
-  /* Primary: Bangladesh national green (#006a4e = brand-700). */
-  --color-brand-50: #edf7f2;
-  --color-brand-100: #d3ecdf;
-  --color-brand-600: #00795c;
-  --color-brand-700: #006a4e;
-  --color-brand-800: #00543f;
+  /* Primary: clinical blue (#0a5ca8 = brand-600 = pine). */
+  --color-brand-50: #eaf2fb;
+  --color-brand-100: #d4e5f7;
+  --color-brand-600: #0a5ca8;
+  --color-brand-700: #094f91;
+  --color-brand-800: #08427a;
 
-  --color-pine: #0b4a3c;
-  --color-mist: #edf5f1;
-  --color-ink: #0f2a22;
-  /* Calm neutral section fill (slightly green-grey, quieter than mist). */
-  --color-surface: #f6f8f7;
+  /* Primary buttons, logo tile, theme colour. */
+  --color-pine: #0a5ca8;
+  --color-mist: #eaf2fb;
+  --color-ink: #0b2540;
+  /* Calm neutral section fill (slightly blue-grey, quieter than mist). */
+  --color-surface: #f5f8fb;
 
-  /* Warm marigold accent for call-to-action highlights. */
-  --color-accent-50: #fff4e8;
-  --color-accent-100: #ffe3c7;
-  --color-accent-600: #b34700;
-  --color-accent-700: #8f3900;
+  /* Clinical teal accent for positive / call-to-action highlights. */
+  --color-accent-50: #e3f4f1;
+  --color-accent-100: #c8ebe4;
+  --color-accent-600: #0f7b6c;
+  --color-accent-700: #0b5f54;
 
   /* Emergency / urgent markers only, always with an icon and text. */
   --color-flag: #c8102e;
