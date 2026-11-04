@@ -167,3 +167,21 @@ English stays at unprefixed URLs; Bangla is served under `/bn`. All routes live 
 
 Supersedes the "seed JSON is imported (bundled), never read via `fs`" part of D11. Turbopack copied the imported seed dataset (~20 MB before D40) into each server chunk group (about nine: search/hospitals, home/compare/about, locations/specialties, medicine, hospital/pharmacy detail, doctors, sitemap/api, …). Every group parsed its own copy at runtime, so memory grew about ninefold, and the output would grow with every new route group against Vercel's 250 MB function limit. `src/data/local/dataset.ts` now exposes `getSeedDataset()`. It reads the seed files with `node:fs` from `process.cwd()/src/data/local/seed` on first use and caches the parsed dataset once per process on `globalThis` (a `Symbol.for` key), so all chunk groups share one copy. `next.config.ts` adds `outputFileTracingIncludes: { "/**": ["./src/data/local/seed/**/*.json"] }` so the standalone output and Vercel functions ship the files (the standalone `server.js` changes to its own directory, which holds `src/data/local/seed`). It also sets `experimental.serverSourceMaps: false`. Measured on a production build: `.next/standalone` 227 MB → 105 MB and `.next/server` 429 MB → 56 MB. No static `import … .json` of seed files remains in `src`. Trade-off: the data files must be present next to the server at runtime; a missing file fails the first request instead of the build.
 
+
+## D42 — Registry hubs, guides and Clinical Blue palette (SEO growth)
+
+Keyword research (docs/SEO-KEYWORDS.md, proxy-based tiers, no paid tool) showed that the biggest
+medicine queries need price or usage data we do not have, so new pages target what the DGDA registry
+and OpenStreetMap can answer truthfully: `/generics/[slug]` (brands of a generic), `/companies/[slug]`
+(a company's registered products), `/dosage-forms/[form]`, the brand A–Z index `/medicines/[initial]`
+(crawlable links to every medicine page), `/verify` (DAR number / brand registration check against the
+dated snapshot; a match never proves a pack is genuine), 25 editorial guides under `/guides` (EN + BN,
+no medical advice, only verified facts with sources) and `/emergency` (999 plus hospitals whose OSM data
+states emergency services). Long lists paginate by path segment (`/companies/x/2`) because robots.txt
+blocks `?page=`; `/x/1` redirects to the base URL. Catalogue pages are noindex below
+`SEO_THRESHOLDS.minCatalogProducts` (2). Only the top 12 generics and companies are prerendered; the
+rest render on first request and are cached. A sitemap index is served at `/sitemap-index.xml`
+(`/sitemap.xml` redirects there because Next reserves that path for `app/sitemap.ts`).
+
+Palette: "Clinical Blue" (docs/PALETTE.md), chosen by the owner from four previewed options; token
+names are unchanged, every text pair meets WCAG AA.
