@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createLocalRepositories } from "@/data/local/repositories";
-import { seedDataset } from "@/data/local/dataset";
+import { getSeedDataset } from "@/data/local/dataset";
 import { hasSafetyContent, SAFETY_SOURCE_TYPES, type MedicineSafetyInfo } from "@/domain/medicine-safety";
 import { MedicineService } from "@/services/medicine-service";
 import { fixtureDataset } from "./fixtures";
@@ -57,7 +57,7 @@ describe("medicine safety information", () => {
   });
 
   it("seed records are cited, licensed and use a known source type", () => {
-    for (const info of seedDataset.safety ?? []) {
+    for (const info of getSeedDataset().safety ?? []) {
       expect(info.sourceUrl).toMatch(/^https:\/\//);
       expect(info.licenceNote.length).toBeGreaterThan(0);
       expect(SAFETY_SOURCE_TYPES).toContain(info.sourceType);

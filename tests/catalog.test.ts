@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { seedDataset } from "@/data/local/dataset";
+import { getSeedDataset } from "@/data/local/dataset";
 import { createLocalRepositories } from "@/data/local/repositories";
 import { DOSAGE_FORMS } from "@/domain/types";
 import { SearchService } from "@/services/search-service";
@@ -18,8 +18,8 @@ const {
   locations,
   specialties,
   doctors,
-} = seedDataset;
-const search = new SearchService(createLocalRepositories(seedDataset));
+} = getSeedDataset();
+const search = new SearchService(createLocalRepositories(getSeedDataset()));
 const genericName = new Map(generics.map((g) => [g.id, g.name.toLowerCase()]));
 
 describe("real medicine catalogue", () => {

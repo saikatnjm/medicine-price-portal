@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { seedDataset } from "@/data/local/dataset";
+import { getSeedDataset } from "@/data/local/dataset";
 import type { Facility } from "@/domain/healthcare";
 import type { Medicine, Pharmacy } from "@/domain/types";
 import {
@@ -28,9 +28,9 @@ describe("compact seed format", () => {
   it("expands the shipped files into exactly the pre-compaction objects", () => {
     const byId = <T extends { id: string }>(list: T[]) => new Map(list.map((r) => [r.id, r]));
     const shipped = {
-      medicines: byId(seedDataset.medicines),
-      facilities: byId(seedDataset.facilities),
-      pharmacies: byId(seedDataset.pharmacies),
+      medicines: byId(getSeedDataset().medicines),
+      facilities: byId(getSeedDataset().facilities),
+      pharmacies: byId(getSeedDataset().pharmacies),
     };
     for (const kind of ["medicines", "facilities", "pharmacies"] as const) {
       expect(sample[kind].length).toBeGreaterThan(5);

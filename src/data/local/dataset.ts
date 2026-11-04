@@ -9,20 +9,10 @@ import type {
   MedicinePrice,
   Pharmacy,
 } from "../../domain/types";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import type { CompactDirectory, CompactMedicines } from "./seed-format.mjs";
 import { expandDirectory, expandMedicines } from "./seed-format.mjs";
-import directorySourcesJson from "./seed/directory-sources.json";
-import doctorsJson from "./seed/doctors.json";
-import facilitiesJson from "./seed/facilities.json";
-import genericsJson from "./seed/generics.json";
-import locationsJson from "./seed/locations.json";
-import manufacturersJson from "./seed/manufacturers.json";
-import medicinesJson from "./seed/medicines.json";
-import medicineSafetyJson from "./seed/medicine-safety.json";
-import pharmaciesJson from "./seed/pharmacies.json";
-import popularJson from "./seed/popular.json";
-import pricesJson from "./seed/prices.json";
-import sourcesJson from "./seed/sources.json";
-import specialtiesJson from "./seed/specialties.json";
 
 /** In-memory dataset backing the local provider. */
 export interface LocalDataset {
@@ -47,24 +37,43 @@ export interface LocalDataset {
  * scripts/data/build-catalog.mjs from the DGDA registry snapshot. Facilities,
  * pharmacies, locations and specialties come from scripts/data/build-healthcare.mjs
  * (OpenStreetMap + curated taxonomy). Prices and doctors are empty until a
- * sourced dataset exists. Data is imported (not read
- * with fs) so it is bundled into every server function, including on Vercel.
- * medicines, facilities and pharmacies are stored in a compact format
- * (./seed-format.mjs, D40) and expanded here into the same objects as before.
- * JSON widens string literals, so the casts are verified by
- * scripts/data/validate-data.mjs.
+ * sourced dataset exists.
+ *
+ * The seed files are read with fs at runtime, not imported: bundling them copied
+ * the whole dataset into every server chunk group (D41). next.config.ts
+ * (`outputFileTracingIncludes`) ships them with the standalone build and Vercel
+ * functions. The standalone server and Vercel run with the project root (or its
+ * copy) as the working directory, so paths are resolved from process.cwd().
+ * medicines, facilities and pharmacies use a compact format (./seed-format.mjs,
+ * D40) and are expanded into the same objects as before. JSON widens string
+ * literals, so the casts are verified by scripts/data/validate-data.mjs.
  */
-export const seedDataset: LocalDataset = {
-  generics: genericsJson as Generic[],
-  manufacturers: manufacturersJson as Manufacturer[],
-  medicines: expandMedicines(medicinesJson),
-  pharmacies: expandDirectory<Pharmacy>(pharmaciesJson),
-  prices: pricesJson as MedicinePrice[],
-  popularMedicineIds: popularJson as ID[],
-  sources: [...(sourcesJson as DataSource[]), ...(directorySourcesJson as DataSource[])],
-  facilities: expandDirectory<Facility>(facilitiesJson),
-  locations: locationsJson as Location[],
-  specialties: specialtiesJson as Specialty[],
-  doctors: doctorsJson as Doctor[],
-  safety: medicineSafetyJson as MedicineSafetyInfo[],
-};
+const SEED_DIR = join(process.cwd(), "src/data/local/seed");
+
+const read = <T>(name: string): T => JSON.parse(readFileSync(join(SEED_DIR, `${name}.json`), "utf8")) as T;
+
+function loadSeedDataset(): LocalDataset {
+  return {
+    generics: read<Generic[]>("generics"),
+    manufacturers: read<Manufacturer[]>("manufacturers"),
+    medicines: expandMedicines(read<CompactMedicines>("medicines")),
+    pharmacies: expandDirectory<Pharmacy>(read<CompactDirectory>("pharmacies")),
+    prices: read<MedicinePrice[]>("prices"),
+    popularMedicineIds: read<ID[]>("popular"),
+    sources: [...read<DataSource[]>("sources"), ...read<DataSource[]>("directory-sources")],
+    facilities: expandDirectory<Facility>(read<CompactDirectory>("facilities")),
+    locations: read<Location[]>("locations"),
+    specialties: read<Specialty[]>("specialties"),
+    doctors: read<Doctor[]>("doctors"),
+    safety: read<MedicineSafetyInfo[]>("medicine-safety"),
+  };
+}
+
+/** Process-wide cache: every server chunk group that imports this module shares one parsed dataset. */
+const CACHE_KEY = Symbol.for("bangladesh-healthcare-search.seedDataset");
+const cache = globalThis as typeof globalThis & { [CACHE_KEY]?: LocalDataset };
+
+/** The seed dataset, read on first use and then cached for the life of the process. */
+export function getSeedDataset(): LocalDataset {
+  return (cache[CACHE_KEY] ??= loadSeedDataset());
+}
