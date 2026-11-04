@@ -4,7 +4,8 @@ import { useLocale, useT } from "@/i18n/client";
 import { localizePath } from "@/i18n/config";
 import Link from "@/i18n/link";
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { CompareIcon, HeartIcon, LinkIcon, ShareIcon } from "@/components/ui/icons";
+import { ShareButton } from "@/components/common/share-button";
+import { CompareIcon, HeartIcon, LinkIcon } from "@/components/ui/icons";
 import { track } from "@/lib/events";
 import {
   addView,
@@ -35,9 +36,9 @@ const button =
   "inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 text-sm font-medium text-slate-800 hover:bg-slate-50";
 
 /**
- * Save / Share / Copy link (and Compare for medicines), plus the "recently viewed" record for this page.
- * Everything is stored in this browser only. Share uses the Web Share API when the device has it and
- * otherwise copies the link.
+ * Save / Share / WhatsApp / Copy link (and Compare for medicines), plus the "recently viewed" record for
+ * this page. Everything is stored in this browser only. Share (components/common/share-button.tsx) uses the
+ * Web Share API when the device has it and otherwise copies the link. Hidden when printing.
  */
 export function EntityToolbar({ type, slug, name, subtitle, path, compare = false }: EntityToolbarProps) {
   const savedRaw = useSyncExternalStore(subscribeStore, () => readRaw(STORE_KEYS.saved), () => "");
@@ -66,18 +67,8 @@ export function EntityToolbar({ type, slug, name, subtitle, path, compare = fals
     }
   }
 
-  async function share() {
-    if (typeof navigator.share !== "function") return copy();
-    try {
-      await navigator.share({ title: name, url: url() });
-      track({ name: "share", method: "native" });
-    } catch {
-      // Closing the share sheet is not an error.
-    }
-  }
-
   return (
-    <div className="space-y-2">
+    <div className="space-y-2" data-print="hide">
       <div role="group" aria-label={t("retention.toolbar.group", { name })} className="flex flex-wrap gap-2">
         <button
           type="button"
@@ -93,10 +84,7 @@ export function EntityToolbar({ type, slug, name, subtitle, path, compare = fals
           {saved ? t("retention.toolbar.saved") : t("retention.toolbar.save")}
           <span className="sr-only"> {name}</span>
         </button>
-        <button type="button" onClick={share} className={button}>
-          <ShareIcon className="size-5" />
-          {t("retention.toolbar.share")}<span className="sr-only"> {name}</span>
-        </button>
+        <ShareButton title={name} path={path} onStatus={setMessage} className={button} />
         <button type="button" onClick={copy} className={button}>
           <LinkIcon className="size-5" />
           {t("retention.toolbar.copy")}

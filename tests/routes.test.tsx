@@ -39,6 +39,14 @@ describe("routes (real seed data)", () => {
     expect(screen.getByRole("link", { name: /^Doctors.*Coming soon/ })).toBeTruthy();
     expect(screen.getByRole("heading", { level: 2, name: "Where our data comes from" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "More about the data" }).getAttribute("href")).toBe("/about");
+    // Medicine registry hubs: A–Z strip (only initials with brands) and hub chips with real counts.
+    expect(screen.getByRole("heading", { level: 2, name: "Browse the medicine registry" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Brands starting with N" }).getAttribute("href")).toBe("/medicines/n");
+    expect(screen.getByRole("link", { name: /^Generics \d[\d,]* generics$/ }).getAttribute("href")).toBe("/generics");
+    expect(screen.getByRole("link", { name: /^Companies \d[\d,]* companies$/ }).getAttribute("href")).toBe("/companies");
+    expect(screen.getByRole("link", { name: /^Check a registration/ }).getAttribute("href")).toBe("/verify");
+    expect(screen.getByRole("link", { name: "Read the guides" }).getAttribute("href")).toBe("/guides");
+    expect(screen.getByRole("link", { name: "Find emergency care" }).getAttribute("href")).toBe("/emergency");
     // WebSite structured data with a search action.
     const ld = document.querySelector('script[type="application/ld+json"]')?.textContent ?? "";
     expect(ld).toContain('"@type":"WebSite"');

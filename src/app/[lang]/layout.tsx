@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: Pick<LayoutProps, "params">):
 }
 
 export const viewport: Viewport = {
-  themeColor: "#0b4f4a",
+  themeColor: "#0b4a3c",
   viewportFit: "cover",
 };
 

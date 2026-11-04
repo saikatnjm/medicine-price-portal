@@ -12,7 +12,7 @@ export type AppEvent =
   | { name: "search_no_results"; query: string }
   | { name: "view_entity"; entity: EntityKind; slug: string }
   | { name: "save_toggle"; entity: string; saved: boolean }
-  | { name: "share"; method: "native" | "copy" }
+  | { name: "share"; method: "native" | "copy" | "whatsapp" }
   | { name: "use_my_location"; outcome: "granted" | "denied" | "unavailable" }
   | { name: "maps_click"; entity: EntityKind; slug?: string }
   | { name: "phone_click"; entity: EntityKind; slug?: string }
