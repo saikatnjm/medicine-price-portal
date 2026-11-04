@@ -46,6 +46,16 @@ export interface MedicineRepository {
   findByIds(ids: readonly ID[]): Promise<Medicine[]>;
   /** All medicines with the given generic, in deterministic order. */
   findByGeneric(genericId: ID): Promise<Medicine[]>;
+  /** All medicines of a manufacturer, in deterministic order. */
+  findByManufacturer(manufacturerId: ID): Promise<Medicine[]>;
+  /** All medicines with a dosage form, in deterministic order. */
+  findByDosageForm(dosageForm: DosageForm): Promise<Medicine[]>;
+  /** Medicines whose brand name starts with the letter ("a"–"z"), or with a digit/symbol for "0-9". */
+  findByBrandInitial(initial: string): Promise<Medicine[]>;
+  /** Exact DAR registration number match (e.g. "186-0030-006"); [] when none. */
+  findByDarNumber(darNumber: string): Promise<Medicine[]>;
+  /** Number of medicines per generic id, per manufacturer id and per dosage form. */
+  countBy(key: "genericId" | "manufacturerId" | "dosageForm"): Promise<Map<string, number>>;
   /**
    * Matches brand name, generic name, strength and slug; deterministically ordered.
    * `facets` count ALL matches of the query, before filters, sorted by count then name.
@@ -62,11 +72,15 @@ export interface MedicineRepository {
 export interface GenericRepository {
   findBySlug(slug: string): Promise<Generic | null>;
   findByIds(ids: readonly ID[]): Promise<Generic[]>;
+  /** All generics, sorted by name. */
+  listAll(): Promise<Generic[]>;
 }
 
 export interface ManufacturerRepository {
   findBySlug(slug: string): Promise<Manufacturer | null>;
   findByIds(ids: readonly ID[]): Promise<Manufacturer[]>;
+  /** All manufacturers, sorted by name. */
+  listAll(): Promise<Manufacturer[]>;
 }
 
 export interface PharmacyRepository {
