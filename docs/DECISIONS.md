@@ -185,3 +185,14 @@ rest render on first request and are cached. A sitemap index is served at `/site
 
 Palette: "Clinical Blue" (docs/PALETTE.md), chosen by the owner from four previewed options; token
 names are unchanged, every text pair meets WCAG AA.
+
+## D43 — Keep Vercel Hobby ISR and transfer usage in budget
+
+Vercel usage (2026-11-09) projected ~4M ISR reads and ~1.1M ISR write units a month against Hobby's
+1M / 200K, mostly from crawlers (Google Analytics showed little human traffic). Three changes:
+`@/i18n/link` defaults to `prefetch={false}` (viewport prefetching turned one visit to a list page into
+hundreds of ISR requests, also for JS-rendering crawlers; pages still load on click, `prefetch` can be
+passed per link); robots.txt disallows SEO-tool and AI-training crawlers (search engines unaffected;
+enforce with the Vercel Firewall bot rules); medicine-page related lists are capped at 12 instead of 30
+(supersedes the cap in D23), reducing HTML/RSC size per page. Each production deploy starts with an
+empty ISR cache, so batch deploys.

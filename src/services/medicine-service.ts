@@ -10,8 +10,12 @@ import type { MedicinePrice } from "../domain/types";
 import type { Repositories } from "../repositories";
 import { computePriceStats, toMedicineListItems, toMedicineSummaries } from "./summaries";
 
-/** Maximum items per related list on a medicine page; the rest are reachable via search. */
-export const RELATED_LIST_LIMIT = 30;
+/**
+ * Maximum items per related list on a medicine page; the rest are reachable via the generic page.
+ * Kept small: every item adds HTML and RSC payload to each of ~72k medicine pages (ISR write
+ * units and origin transfer on Vercel).
+ */
+export const RELATED_LIST_LIMIT = 12;
 
 function comparePrices(a: PriceWithPharmacy, b: PriceWithPharmacy): number {
   return a.price.amount - b.price.amount || a.pharmacy.name.localeCompare(b.pharmacy.name, "en");
